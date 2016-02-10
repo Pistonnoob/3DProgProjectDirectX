@@ -144,23 +144,25 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3DClass.cpp" />
+    <ClCompile Include="D3Object.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ObjectModel.cpp" />
-    <ClCompile Include="ShaderHandler.cpp" />
-    <ClCompile Include="ShaderTexture.cpp" />
+    <ClCompile Include="D2Object.cpp" />
+    <ClCompile Include="ObjectFactory.cpp" />
+    <ClCompile Include="TextureHandler.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="D3DClass.h" />
+    <ClInclude Include="D3Object.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="ObjectModel.h" />
-    <ClInclude Include="ShaderHandler.h" />
-    <ClInclude Include="ShaderTexture.h" />
+    <ClInclude Include="D2Object.h" />
+    <ClInclude Include="ObjectFactory.h" />
+    <ClInclude Include="TextureHandler.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="StructLibrary.h" />
     <ClInclude Include="System.h" />

@@ -178,7 +178,7 @@ bool System::Frame()
 	}
 
 	//Do the frame processing for the graphics object.
-	result = m_Graphics->Frame();	//PROBLEM
+	result = m_Graphics->Frame();	
 	if (!result)
 	{
 		return false;
@@ -253,7 +253,7 @@ void System::InitializeWindows(int & width, int & height)
 
 	//Create the window with the screen settings and get the handle to it.
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		WS_OVERLAPPEDWINDOW,
 		posX, posY, width, height, NULL, NULL, m_hinstance, NULL);
 
 	//Bring the window up on the screen and set it as main focus.
