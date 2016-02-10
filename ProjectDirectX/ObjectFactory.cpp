@@ -73,6 +73,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			newObject->InitializeBuffers(device);
 			//Load the texture for this model
 			newObject->LoadTexture(device, deviceContext, "");
+			storeIn.push_back(newObject);
 		}
 
 		inputString.str(line2);
