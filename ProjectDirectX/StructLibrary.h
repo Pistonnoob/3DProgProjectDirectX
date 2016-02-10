@@ -34,6 +34,14 @@ struct MatrixBufferStruct
 	Matrix projection;
 };
 
+struct lightBufferStruct
+{
+	Vector3 light;
+	Vector3 cam;
+	Vector3 rayO;
+	Vector3 rayD;
+};
+
 struct TargaHeader
 {
 	unsigned char data1[12];
@@ -66,15 +74,6 @@ enum TextureFormat
 	TARGA,
 	PNG,
 	JPEG
-};
-
-enum Keyboard_Key
-{
-	KEY_W = 87,
-	KEY_A = 65,
-	KEY_S = 83,
-	KEY_D = 68,
-	KEY_RESET = 82
 };
 
 // input layout (verified using vertex shader)

@@ -145,7 +145,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="D3Object.cpp" />
-    <ClCompile Include="FPSHandler.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -154,13 +153,11 @@
     <ClCompile Include="TextureHandler.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureObject.cpp" />
-    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="D3Object.h" />
-    <ClInclude Include="FPSHandler.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
@@ -170,7 +167,6 @@
     <ClInclude Include="StructLibrary.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureObject.h" />
-    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="GeometryShader.hlsl">

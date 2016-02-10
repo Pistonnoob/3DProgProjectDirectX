@@ -29,13 +29,9 @@ bool D3Object::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceConte
 	switch (format)
 	{
 	case OBJ:
-		result = this->LoadModelObj(modelFilename);
-		break;
 	case OBJ_LH:
-		result = this->LoadModelObjLH(modelFilename);
-		break;
 	case OBJ_RH:
-		result = this->LoadModelObjRH(modelFilename);
+		result = this->LoadModel(modelFilename);
 		break;
 	case TXT:
 		result = this->LoadModelTXT(modelFilename);
@@ -43,7 +39,7 @@ bool D3Object::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceConte
 	default:
 		break;
 	}
-//	result = this->LoadModelObj(modelFilename);
+//	result = this->LoadModel(modelFilename);
 	if (!result)
 		return false;
 
@@ -59,7 +55,6 @@ bool D3Object::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceConte
 
 	return true;
 }
-
 
 void D3Object::Shutdown()
 {
@@ -82,7 +77,7 @@ void D3Object::Render(ID3D11DeviceContext * deviceContext)
 	return;
 }
 
-int D3Object::GetIndexCount()const
+int D3Object::GetIndexCount()
 {
 	return this->m_indexCount;
 }
@@ -90,17 +85,6 @@ int D3Object::GetIndexCount()const
 ID3D11ShaderResourceView * D3Object::GetTexture()
 {
 	return this->m_texture->GetTextureView();
-}
-
-bool D3Object::CreateFromData(vector<VertexModel> vertexData)
-{
-	this->m_vertexCount = vertexData.size();
-	this->m_indexCount = vertexData.size();//vertices.size();
-	for (int j = 0; j < m_vertexCount; j++)
-	{
-		this->m_model[j] = vertexData[m_vertexCount - j - 1];
-	}
-	return true;
 }
 
 bool D3Object::InitializeBuffers(ID3D11Device *device)
@@ -257,17 +241,7 @@ void D3Object::ReleaseTexture()
 	return;
 }
 
-bool D3Object::LoadModelObjLH(char * fileName)
-{
-	return this->LoadModelObj(fileName, 1);
-}
-
-bool D3Object::LoadModelObjRH(char * fileName)
-{
-	return this->LoadModelObj(fileName, -1);
-}
-
-bool D3Object::LoadModelObj(char * fileName, int invert)
+bool D3Object::LoadModel(char * fileName)
 {
 	ifstream fileIn;
 	string special = "", line = "", line2 = "";
@@ -298,7 +272,6 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 		{
 			// Vertex Position
 			sscanf(temp, "%s %f %f %f\n", specialChar, &vtx.x, &vtx.y, &vtx.z);
-			vtx.z *= invert;
 			//inputString >> special >> vtx.x >> vtx.y >> vtx.z;
 			vertices.push_back(vtx);
 		}
@@ -320,7 +293,7 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 		{
 			//Group name
 		}
-		else if (line2.substr(0, 7) == "mtllib")
+		else if (line2.substr(0, 8) == "mtllib ")
 		{
 			//Material name
 		}

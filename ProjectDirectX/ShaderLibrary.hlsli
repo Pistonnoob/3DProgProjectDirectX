@@ -29,6 +29,13 @@ struct GS_IN_UV
 	float2 UV : TEXCOORD;
 };
 
+struct GS_IN_3D
+{
+	float4 Pos : SV_POSITION;
+	float4 Normal : NORMAL;
+	float2 UV : TEXCOORD;
+};
+
 struct PS_IN
 {
 	float4 Pos : SV_POSITION;

@@ -6,7 +6,6 @@
 #include <mmsystem.h>
 class FPSHandler
 {
-private:
 	int m_FPS, m_count;
 	unsigned long m_start;
 public:

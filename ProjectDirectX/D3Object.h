@@ -27,23 +27,20 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext* deviceContext);	//Move model geometry to device context / Graphicscard
 #pragma region
-	int GetIndexCount()const;
+	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
 #pragma endregion getters
 
-	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for external definition of vertices into a D3Object
-	bool InitializeBuffers(ID3D11Device* device);
-	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName);
 private:
 
+	bool InitializeBuffers(ID3D11Device* device);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext* deviceContext);
 
+	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName);
 	void ReleaseTexture();
 
-	bool LoadModelObjLH(char* fileName);
-	bool LoadModelObjRH(char* fileName);
-	bool LoadModelObj(char* fileName, int invert = 1);
+	bool LoadModel(char* fileName);
 	bool LoadModelTXT(char* filename);
 	void ReleaseModel();
 };
