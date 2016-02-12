@@ -42,12 +42,12 @@ void TextureHandler::Shutdown()
 	return;
 }
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct light, ID3D11ShaderResourceView * resourceView)
 {
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, resourceView);
+	result = SetShaderParameters(deviceContext, matrices, light, resourceView);
 	if (!result)
 	{
 		return false;
@@ -60,10 +60,10 @@ bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount,
 }
 
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct light, ID3D11ShaderResourceView * resourceView)
 {
 
-	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, resourceView);
+	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, light, resourceView);
 }
 
 bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * gsFilename, WCHAR * psFilename)
@@ -326,14 +326,14 @@ void TextureHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hw
 
 }
 
-bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView * resourceView)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	WVPBufferStruct* dataPtr = NULL;
 	unsigned int bufferNumber = 0;
 
-	//Transpose the matrices to prepare them for the shader (direct11 requires it?)
+	//Transpose the matrices to prepare them for the shader
 	matrices.world = matrices.world.Transpose();
 	matrices.view = matrices.view.Transpose();
 	matrices.projection = matrices.projection.Transpose();
@@ -362,7 +362,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	//Set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
-	//deviceContext->PSSetConstantBuffers(0, 0, NULL);
+	//deviceContext->PSSetConstantBuffers(0, 1, NULL);
 	//Set the shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &resourceView);
 

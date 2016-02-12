@@ -221,7 +221,7 @@ bool GraphicsHandler::Render()
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
 
 		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, (*model)->GetTexture());
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture());
 		if (!result)
 		{
 			return false;
