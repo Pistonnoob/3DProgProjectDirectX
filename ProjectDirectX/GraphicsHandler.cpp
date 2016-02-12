@@ -71,12 +71,12 @@ void GraphicsHandler::ShutDown()
 	}
 
 	// Release the model object.
-	if (m_Model)
+	/*if (m_Model)
 	{
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-	}
+	}*/
 
 	// Release the models within the model list.
 	while(!m_Models.empty())
@@ -119,6 +119,7 @@ bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 
 bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 {
+#pragma region
 	float verticalConstant = 2, horizontalConstant = 2;
 	//Change dT based on vertical vs horizontal movement
 	float origDT = dT;
@@ -150,6 +151,10 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	{
 		m_Camera->SetPosition(ORIG);
 	}
+	
+#pragma endregion keyboard
+#pragma region
+#pragma endregion mouse
 	return true;
 }
 
@@ -190,31 +195,34 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 bool GraphicsHandler::Render()
 {
-	Matrix viewMatrix, projectionMatrix, worldMatrix;
-	bool result = false;
-
-
-	// Clear the buffers to begin the scene.
-	this->m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	this->m_Direct3D->GetWorldMatrix(worldMatrix);
-	this->m_Camera->GetViewMatrix(viewMatrix);
-	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	worldMatrix = DirectX::XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(this->m_Direct3D->GetDeviceContext());
-
-	// Render the model using the texture shader.
-	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture());
-	if (!result)
+	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
-		return false;
+		Matrix viewMatrix, projectionMatrix, worldMatrix;
+		bool result = false;
+
+
+		// Clear the buffers to begin the scene.
+		this->m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+		// Generate the view matrix based on the camera's position.
+		m_Camera->Render();
+
+		// Get the world, view, and projection matrices from the camera and d3d objects.
+		this->m_Direct3D->GetWorldMatrix(worldMatrix);
+		this->m_Camera->GetViewMatrix(viewMatrix);
+		this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+		worldMatrix = DirectX::XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
+
+		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+		(*model)->Render(this->m_Direct3D->GetDeviceContext());
+
+		// Render the model using the texture shader.
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, (*model)->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
 	}
 
 	//Present the rendered scene to the screen.
