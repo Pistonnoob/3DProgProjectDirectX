@@ -24,8 +24,6 @@ const Vector3 D_A = D_LEFT;
 const Vector3 D_RIGHT = { 1, 0, 0 };
 const Vector3 D_D = D_RIGHT;
 
-const Vector3 Y_ROTATION = { -1, -1, 0 };
-
 const int INPUT_CAP = 4;
 const Vector3 DIRECTION_V[INPUT_CAP] = { D_UP, D_LEFT, D_DOWN, D_RIGHT };
 
