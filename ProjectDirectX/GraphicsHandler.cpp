@@ -5,7 +5,6 @@ GraphicsHandler::GraphicsHandler()
 {
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
-	m_Model = nullptr;
 	m_TextureShader = nullptr;
 	rotation = 0.0f;
 	//m_shaderHandler = nullptr;
@@ -173,14 +172,14 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Create the model objects.
-	m_Model = new D3Object();
-	if (!m_Model)
+	D3Object* temp = new D3Object();
+	if (!temp)
 	{
 		return false;
 	}
 
 	// Initialize the model objects.
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
+	result = temp->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
 	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
 	if (!result)
 	{
@@ -188,7 +187,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		return false;
 	}
 
-	this->m_Models.push_back(m_Model);
+	this->m_Models.push_back(temp);
 
 	return true;
 }
@@ -218,7 +217,7 @@ bool GraphicsHandler::Render()
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
 
 		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, (*model)->GetTexture());
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, (*model)->GetTexture());
 		if (!result)
 		{
 			return false;
