@@ -355,6 +355,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	WVPBufferStruct* dataPtr = NULL;
+	LightStruct* lightPtr = NULL;
 	unsigned int bufferNumber = 0;
 
 	//Transpose the matrices to prepare them for the shader
@@ -383,10 +384,27 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	//set the position of the constant buffer in the vertex shader
 	bufferNumber = 0;
 
+	//Lock the m_light
+	result = deviceContext->Map(this->m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get a pointer to the data
+	lightPtr = (LightStruct*)mappedResource.pData;
+	lightPtr->lightColor = light.lightColor;
+	lightPtr->lightPos = light.lightPos;
+	lightPtr->lightDir = light.lightDir;
+
+	//Unlock/unmap the constant buffer
+	deviceContext->Unmap(this->m_matrixBuffer, 0);
+
+
 	//Set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
-	//deviceContext->PSSetConstantBuffers(0, 1, NULL);
+	deviceContext->PSSetConstantBuffers(0, 1, &this->m_lightBuffer);
 	//Set the shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &resourceView);
 
