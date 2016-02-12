@@ -32,6 +32,7 @@ class GraphicsHandler
 private:
 	D3DClass* m_Direct3D;
 	Camera* m_Camera;
+	std::vector<D3Object*> m_Models;
 	D3Object* m_Model;
 	TextureHandler* m_TextureShader;
 	float rotation;
@@ -48,6 +49,7 @@ public:
 
 private:
 	bool UpdateInput(InputHandler* inputObj, float dT);
+	bool LoadScene(HWND hwnd);
 };
 
 #endif

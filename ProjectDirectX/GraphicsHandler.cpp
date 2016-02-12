@@ -22,7 +22,7 @@ GraphicsHandler::~GraphicsHandler()
 
 bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	bool result;
+	bool result = false;
 
 
 	// Create the Direct3D object.
@@ -40,31 +40,7 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create the camera object.
-	m_Camera = new Camera();
-	if (!m_Camera)
-	{
-		return false;
-	}
-
-	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
-
-	// Create the model object.
-	m_Model = new D3Object();
-	if (!m_Model)
-	{
-		return false;
-	}
-
-	// Initialize the model object.
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
-	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	this->LoadScene(hwnd);
 
 	// Create the TextureShader object.
 	m_TextureShader = new TextureHandler();
@@ -164,6 +140,38 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	if (inputObj->IsKeyPressed(DIK_R))
 	{
 		m_Camera->SetPosition(ORIG);
+	}
+	return true;
+}
+
+bool GraphicsHandler::LoadScene(HWND hwnd)
+{
+	bool result = false;
+
+	// Create the camera object.
+	m_Camera = new Camera();
+	if (!m_Camera)
+	{
+		return false;
+	}
+
+	// Set the initial position of the camera.
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+
+	// Create the model objects.
+	m_Model = new D3Object();
+	if (!m_Model)
+	{
+		return false;
+	}
+
+	// Initialize the model objects.
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
+	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
 	}
 	return true;
 }
