@@ -78,6 +78,15 @@ void GraphicsHandler::ShutDown()
 		m_Model = 0;
 	}
 
+	// Release the models within the model list.
+	while(!m_Models.empty())
+	{
+		D3Object* temp = NULL;
+		temp = m_Models.back();
+		m_Models.pop_back();
+		delete temp;
+	}
+
 	// Release the camera object.
 	if (m_Camera)
 	{
@@ -173,6 +182,9 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+
+	this->m_Models.push_back(m_Model);
+
 	return true;
 }
 
