@@ -35,7 +35,6 @@ public:
 
 	bool IsEscapePressed();
 	bool IsKeyPressed(int keyboardScanCode);
-	bool IsKeyDown(unsigned int key);
 	void GetMouse(int& x, int& y);
 private:
 	bool ReadKeyboard();
