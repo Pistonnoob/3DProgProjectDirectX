@@ -119,7 +119,7 @@ void GraphicsHandler::ShutDown()
 	return;
 }
 
-bool GraphicsHandler::Frame(float fps, float frameTime, InputHandler* inputObj)
+bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 {
 	this->UpdateInput(inputObj, frameTime / 1000);
 	bool result = true;

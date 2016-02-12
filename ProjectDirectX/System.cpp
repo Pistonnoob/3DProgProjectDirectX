@@ -209,7 +209,7 @@ bool System::Frame()
 	this->m_timer->Frame();
 
 
-	float FPS = this->m_FPS->GetFps();	//Set FPS
+	int FPS = this->m_FPS->GetFps();	//Set FPS
 	float frameTime = this->m_timer->GetTime();
 	if (FPS <= 0)	//Correct the 
 		FPS = 0.00000001;
