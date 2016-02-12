@@ -34,6 +34,13 @@ struct WVPBufferStruct
 	Matrix projection;
 };
 
+struct LightStruct
+{
+	Vector4 lightColor;
+	Vector4 lightPos;
+	Vector4 lightDir;
+};
+
 struct TargaHeader
 {
 	unsigned char data1[12];
