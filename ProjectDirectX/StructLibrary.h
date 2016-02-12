@@ -34,6 +34,13 @@ struct MatrixBufferStruct
 	Matrix projection;
 };
 
+struct lightStruct
+{
+	Vector3 light;
+	Vector3 rayO;
+	Vector3 rayD;
+};
+
 struct TargaHeader
 {
 	unsigned char data1[12];
