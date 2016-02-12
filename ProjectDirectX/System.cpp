@@ -212,7 +212,7 @@ bool System::Frame()
 	int FPS = this->m_FPS->GetFps();	//Set FPS
 	float frameTime = this->m_timer->GetTime();
 	if (FPS <= 0)	//Correct the 
-		FPS = 0.00000001;
+		FPS = 1;
 
 	//Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(FPS, frameTime, m_Input);	
