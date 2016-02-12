@@ -27,7 +27,7 @@ struct VertexModel
 };
 
 
-struct MatrixBufferStruct
+struct WVPBufferStruct
 {
 	Matrix world;
 	Matrix view;

@@ -28,7 +28,7 @@ private:
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, MatrixBufferStruct & matrices, ID3D11ShaderResourceView* resourceView);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct & matrices, ID3D11ShaderResourceView* resourceView);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 public:
 	TextureHandler();
@@ -37,7 +37,7 @@ public:
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, MatrixBufferStruct &matrices, ID3D11ShaderResourceView* resourceView);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct &matrices, ID3D11ShaderResourceView* resourceView);
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix &world, Matrix &view, Matrix &projection, ID3D11ShaderResourceView* resourceView);
 
 };

@@ -42,7 +42,7 @@ void TextureHandler::Shutdown()
 	return;
 }
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, MatrixBufferStruct &matrices, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, ID3D11ShaderResourceView * resourceView)
 {
 	bool result = false;
 
@@ -63,7 +63,7 @@ bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount,
 bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, ID3D11ShaderResourceView * resourceView)
 {
 
-	return this->Render(deviceContext, indexCount, MatrixBufferStruct{world, view, projection}, resourceView);
+	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, resourceView);
 }
 
 bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * gsFilename, WCHAR * psFilename)
@@ -211,7 +211,7 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 
 	//Setup the constant buffer for the vertices
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferStruct);
+	matrixBufferDesc.ByteWidth = sizeof(WVPBufferStruct);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
@@ -301,7 +301,7 @@ void TextureHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hw
 	compileErrors = (char*)(errorMessage->GetBufferPointer());
 
 	// Get the length of the message.
-	bufferSize = errorMessage->GetBufferSize();
+	bufferSize = (unsigned long)errorMessage->GetBufferSize();
 
 	// Open a file to write the error message to.
 	fout.open("shader-error.txt");
@@ -326,11 +326,11 @@ void TextureHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hw
 
 }
 
-bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, MatrixBufferStruct & matrices, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, ID3D11ShaderResourceView * resourceView)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	MatrixBufferStruct* dataPtr = NULL;
+	WVPBufferStruct* dataPtr = NULL;
 	unsigned int bufferNumber = 0;
 
 	//Transpose the matrices to prepare them for the shader (direct11 requires it?)
@@ -346,7 +346,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, Ma
 	}
 
 	//Get a pointer to the data
-	dataPtr = (MatrixBufferStruct*)mappedResource.pData;
+	dataPtr = (WVPBufferStruct*)mappedResource.pData;
 
 	//Now we copy the matrices into the mapped data
 	dataPtr->world = matrices.world;

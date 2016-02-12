@@ -109,7 +109,7 @@ void Camera::GetViewMatrix(Matrix & storeIn)
 	return;
 }
 
-void Camera::GetViewMatrix(MatrixBufferStruct & storeIn)
+void Camera::GetViewMatrix(WVPBufferStruct & storeIn)
 {
 	//this->GetViewMatrix(storeIn.view);
 	storeIn.view = this->m_viewMatrix;

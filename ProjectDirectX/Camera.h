@@ -31,7 +31,7 @@ public:
 	void Render();
 
 	void GetViewMatrix(Matrix& storeIn);
-	void GetViewMatrix(MatrixBufferStruct& storeIn);
+	void GetViewMatrix(WVPBufferStruct& storeIn);
 };
 
 #endif
