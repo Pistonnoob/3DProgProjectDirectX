@@ -7,6 +7,7 @@ TextureHandler::TextureHandler()
 	this->m_pixelShader = NULL;
 	this->m_layout = NULL;
 	this->m_matrixBuffer = NULL;
+	this->m_lightBuffer = NULL;
 
 	this->m_samplerState = NULL;
 }
@@ -74,6 +75,7 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 	ID3DBlob* pGS = nullptr;
 	ID3DBlob* pPS = nullptr;
 	D3D11_BUFFER_DESC  matrixBufferDesc;
+	D3D11_BUFFER_DESC lightBufferDesc;
 
 	D3D11_SAMPLER_DESC samplerDesc;
 
@@ -222,6 +224,20 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 	{
 		return false;
 	}
+	//Create the light buffer
+	memset(&lightBufferDesc, 0, sizeof(lightBufferDesc));
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	lightBufferDesc.MiscFlags = 0;
+	lightBufferDesc.StructureByteStride = 0;
+	lightBufferDesc.ByteWidth = sizeof(LightStruct);
+
+	hResult = device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+	if (FAILED(hResult))
+	{
+		return false;
+	}
 
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -247,6 +263,7 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 	return true;
 }
 
+
 void TextureHandler::FreeMemory()
 {
 	//Release the sampler state
@@ -261,6 +278,13 @@ void TextureHandler::FreeMemory()
 	{
 		m_matrixBuffer->Release();
 		m_matrixBuffer = NULL;
+	}
+
+	//Release the light buffer
+	if (this->m_lightBuffer != NULL)
+	{
+		m_lightBuffer->Release();
+		m_lightBuffer = NULL;
 	}
 
 	//Release the layout
