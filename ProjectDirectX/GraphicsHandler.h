@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "D2Object.h"
 #include "D3Object.h"
+#include "ObjectFactory.h"
 #include "TextureHandler.h"
 #include "InputHandler.h"
 

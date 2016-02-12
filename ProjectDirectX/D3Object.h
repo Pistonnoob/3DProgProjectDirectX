@@ -1,5 +1,5 @@
 #ifndef _D3OBJECT_H_
-#define _D3DOBJECT_H_
+#define _D3OBJECT_H_
 
 #include <d3d11.h>
 #include "SimpleMath.h"
