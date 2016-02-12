@@ -6,6 +6,7 @@ GraphicsHandler::GraphicsHandler()
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
 	m_TextureShader = nullptr;
+	m_Light = { Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0)};
 	rotation = 0.0f;
 	//m_shaderHandler = nullptr;
 }
@@ -170,6 +171,9 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+
+	//Create the lights.
+	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 0, -2, 1), Vector4(0, 0, 1, 0)};
 
 	// Create the model objects.
 	D3Object* temp = new D3Object();
