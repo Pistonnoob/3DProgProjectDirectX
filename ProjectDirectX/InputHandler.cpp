@@ -171,11 +171,6 @@ bool InputHandler::IsKeyPressed(int keyboardScanCode)
 	return result;
 }
 
-bool InputHandler::IsKeyDown(unsigned int key)
-{
-	return m_keys[key];
-}
-
 void InputHandler::GetMouse(int & x, int & y)
 {
 	x = this->m_mouseX;

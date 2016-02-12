@@ -27,11 +27,18 @@ struct VertexModel
 };
 
 
-struct MatrixBufferStruct
+struct WVPBufferStruct
 {
 	Matrix world;
 	Matrix view;
 	Matrix projection;
+};
+
+struct LightStruct
+{
+	Vector4 lightColor;
+	Vector4 lightPos;
+	Vector4 lightDir;
 };
 
 struct TargaHeader

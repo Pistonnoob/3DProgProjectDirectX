@@ -5,12 +5,13 @@
 #include "Camera.h"
 #include "D2Object.h"
 #include "D3Object.h"
+#include "ObjectFactory.h"
 #include "TextureHandler.h"
 #include "InputHandler.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_DEPTH = 500.0f;
 const float SCREEN_NEAR = 0.1f;
 
 const Vector3 ORIG = { 0, 0, -10 };
@@ -31,7 +32,8 @@ class GraphicsHandler
 private:
 	D3DClass* m_Direct3D;
 	Camera* m_Camera;
-	D3Object* m_Model;
+	std::vector<D3Object*> m_Models;
+	LightStruct m_Light;
 	TextureHandler* m_TextureShader;
 	float rotation;
 	//ShaderHandler* m_shaderHandler;
@@ -42,11 +44,12 @@ public:
 
 	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void ShutDown();
-	bool Frame(float fps, float frameTime, InputHandler* inputObj);
+	bool Frame(int fps, float frameTime, InputHandler* inputObj);
 	bool Render();
 
 private:
 	bool UpdateInput(InputHandler* inputObj, float dT);
+	bool LoadScene(HWND hwnd);
 };
 
 #endif

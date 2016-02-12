@@ -3,6 +3,12 @@
 Texture2D c_text : register(t0);
 SamplerState samplerType;
 
+cbuffer LightBuffer : register(b0) {
+	float4 lightColor;
+	float4 lightPos;
+	float4 lightDir;
+};
+
 //float4 main(PS_IN_TEST input) : SV_TARGET
 //{
 //	float4 m_color = (float4)0;

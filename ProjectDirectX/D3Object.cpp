@@ -94,8 +94,8 @@ ID3D11ShaderResourceView * D3Object::GetTexture()
 
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
-	this->m_vertexCount = vertexData.size();
-	this->m_indexCount = vertexData.size();//vertices.size();
+	this->m_vertexCount = (int)vertexData.size();
+	this->m_indexCount = (int)vertexData.size();//vertices.size();
 	for (int j = 0; j < m_vertexCount; j++)
 	{
 		this->m_model[j] = vertexData[m_vertexCount - j - 1];
@@ -271,7 +271,8 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 {
 	ifstream fileIn;
 	string special = "", line = "", line2 = "";
-	char specialChar[10];
+	const unsigned int SPECIALCHARSIZE = 10;
+	char specialChar[SPECIALCHARSIZE];
 	istringstream inputString;
 	vector<Vector3> vertices;
 	vector<Vector3> normals;
@@ -290,14 +291,14 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 
 	while (std::getline(fileIn, line2))
 	{
-		strncpy(temp, line2.c_str(), sizeof(temp));
+		strncpy_s(temp, 512, line2.c_str(), sizeof(temp));
 		temp[sizeof(temp) - 1] = 0;
 
 		inputString.str(line2);
 		if (line2.substr(0, 2) == "v ")
 		{
 			// Vertex Position
-			sscanf(temp, "%s %f %f %f\n", specialChar, &vtx.x, &vtx.y, &vtx.z);
+			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vtx.x, &vtx.y, &vtx.z);
 			vtx.z *= invert;
 			//inputString >> special >> vtx.x >> vtx.y >> vtx.z;
 			vertices.push_back(vtx);
@@ -305,14 +306,14 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 		else if (line2.substr(0, 2) == "vt")
 		{
 			// Vertex UV
-			sscanf(temp, "%s %f %f\n", specialChar, &vt.x, &vt.y);
+			sscanf_s(temp, "%s %f %f\n", specialChar, SPECIALCHARSIZE, &vt.x, &vt.y);
 			//inputString >> special >> vt.x >> vt.y;
 			UV.push_back(vt);
 		}
 		else if (line2.substr(0, 2) == "vn")
 		{
 			// Vertex Norma
-			sscanf(temp, "%s %f %f %f\n", specialChar, &vn.x, &vn.y, &vn.z);
+			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vn.x, &vn.y, &vn.z);
 			//inputString >> special >> vn.x >> vn.y >> vn.z;
 			normals.push_back(vn);
 		}
@@ -328,7 +329,7 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 		{
 			//Vertex Normal Indices in format f v1/vt1/vn1
 			struct IndexStruct { int v; int vt; int vn; } faceIndices[3];
-			sscanf(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar,
+			sscanf_s(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar, SPECIALCHARSIZE,
 				&faceIndices[0].v, &faceIndices[0].vt, &faceIndices[0].vn,
 				&faceIndices[1].v, &faceIndices[1].vt, &faceIndices[1].vn,
 				&faceIndices[2].v, &faceIndices[2].vt, &faceIndices[2].vn);
@@ -340,8 +341,8 @@ bool D3Object::LoadModelObj(char * fileName, int invert)
 	}
 	fileIn.close();
 
-	this->m_vertexCount = vertexData.size();
-	this->m_indexCount = vertexData.size();//vertices.size();
+	this->m_vertexCount = (int)vertexData.size();
+	this->m_indexCount = (int)vertexData.size();//vertices.size();
 	this->m_model = new VertexModel[this->m_vertexCount];
 	for (int j = 0; j < m_vertexCount; j++)
 	{

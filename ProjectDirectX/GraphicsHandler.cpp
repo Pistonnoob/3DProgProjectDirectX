@@ -5,8 +5,8 @@ GraphicsHandler::GraphicsHandler()
 {
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
-	m_Model = nullptr;
 	m_TextureShader = nullptr;
+	m_Light = { Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0)};
 	rotation = 0.0f;
 	//m_shaderHandler = nullptr;
 }
@@ -22,7 +22,7 @@ GraphicsHandler::~GraphicsHandler()
 
 bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	bool result;
+	bool result = false;
 
 
 	// Create the Direct3D object.
@@ -40,31 +40,7 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create the camera object.
-	m_Camera = new Camera();
-	if (!m_Camera)
-	{
-		return false;
-	}
-
-	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
-
-	// Create the model object.
-	m_Model = new D3Object();
-	if (!m_Model)
-	{
-		return false;
-	}
-
-	// Initialize the model object.
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
-	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	this->LoadScene(hwnd);
 
 	// Create the TextureShader object.
 	m_TextureShader = new TextureHandler();
@@ -95,11 +71,20 @@ void GraphicsHandler::ShutDown()
 	}
 
 	// Release the model object.
-	if (m_Model)
+	/*if (m_Model)
 	{
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}*/
+
+	// Release the models within the model list.
+	while(!m_Models.empty())
+	{
+		D3Object* temp = NULL;
+		temp = m_Models.back();
+		m_Models.pop_back();
+		delete temp;
 	}
 
 	// Release the camera object.
@@ -119,7 +104,7 @@ void GraphicsHandler::ShutDown()
 	return;
 }
 
-bool GraphicsHandler::Frame(float fps, float frameTime, InputHandler* inputObj)
+bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 {
 	this->UpdateInput(inputObj, frameTime / 1000);
 	bool result = true;
@@ -134,6 +119,7 @@ bool GraphicsHandler::Frame(float fps, float frameTime, InputHandler* inputObj)
 
 bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 {
+#pragma region
 	float verticalConstant = 2, horizontalConstant = 2;
 	//Change dT based on vertical vs horizontal movement
 	float origDT = dT;
@@ -165,36 +151,81 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	{
 		m_Camera->SetPosition(ORIG);
 	}
+	
+#pragma endregion keyboard
+#pragma region
+#pragma endregion mouse
+	return true;
+}
+
+bool GraphicsHandler::LoadScene(HWND hwnd)
+{
+	bool result = false;
+
+	// Create the camera object.
+	m_Camera = new Camera();
+	if (!m_Camera)
+	{
+		return false;
+	}
+
+	// Set the initial position of the camera.
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+
+	//Create the lights.
+	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 0, -2, 1), Vector4(0, 0, 1, 0)};
+
+	// Create the model objects.
+	D3Object* temp = new D3Object();
+	if (!temp)
+	{
+		return false;
+	}
+
+	// Initialize the model objects.
+	result = temp->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
+	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	this->m_Models.push_back(temp);
+
 	return true;
 }
 
 bool GraphicsHandler::Render()
 {
-	Matrix viewMatrix, projectionMatrix, worldMatrix;
-	bool result = false;
-
-
-	// Clear the buffers to begin the scene.
-	this->m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	this->m_Direct3D->GetWorldMatrix(worldMatrix);
-	this->m_Camera->GetViewMatrix(viewMatrix);
-	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	worldMatrix = DirectX::XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(this->m_Direct3D->GetDeviceContext());
-
-	// Render the model using the texture shader.
-	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture());
-	if (!result)
+	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
-		return false;
+		Matrix viewMatrix, projectionMatrix, worldMatrix;
+		bool result = false;
+
+
+		// Clear the buffers to begin the scene.
+		this->m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+		// Generate the view matrix based on the camera's position.
+		m_Camera->Render();
+
+		// Get the world, view, and projection matrices from the camera and d3d objects.
+		this->m_Direct3D->GetWorldMatrix(worldMatrix);
+		this->m_Camera->GetViewMatrix(viewMatrix);
+		this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+		worldMatrix = DirectX::XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
+
+		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+		(*model)->Render(this->m_Direct3D->GetDeviceContext());
+
+		// Render the model using the texture shader.
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
 	}
 
 	//Present the rendered scene to the screen.
