@@ -155,6 +155,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 #pragma endregion keyboard
 #pragma region
 
+	this->m_Camera->SetRotation(this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().x, inputObj->GetMouseDelta().y, 0 });
 
 #pragma endregion mouse
 	return true;
