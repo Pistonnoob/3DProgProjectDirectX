@@ -7,6 +7,8 @@
 
 #include "WICTextureLoader.h"
 
+using namespace DirectX;
+
 class TextureObject
 {
 private:

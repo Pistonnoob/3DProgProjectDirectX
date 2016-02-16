@@ -110,9 +110,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WICTextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Libraries</Filter>
     </ClInclude>
@@ -120,6 +117,9 @@
       <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="DirectXHelpers.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader.h">
       <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
