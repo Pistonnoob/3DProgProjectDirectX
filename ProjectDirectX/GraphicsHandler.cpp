@@ -126,11 +126,27 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	dT *= verticalConstant;	//Update the vertical movement
 	if (inputObj->IsKeyPressed(DIK_W))
 	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + D_UP * dT);
+		Vector4 tempPos = Vector4(D_UP.x, D_UP.y, D_UP.z, 0);
+		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+		Vector3 rotation = m_Camera->GetRotation();
+		rotation *= DEGREES_TO_RADIANS;
+		//Create the rotation matrix
+		Matrix rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		tempPos = DirectX::XMVector4Transform(tempPos, rotationMatrix);
+		tempPos *= dT;
+		m_Camera->SetPosition(m_Camera->GetPosition() + Vector3(tempPos));
 	}
 	if (inputObj->IsKeyPressed(DIK_S))
 	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + D_DOWN * dT);
+		Vector4 tempPos = Vector4(D_DOWN.x, D_DOWN.y, D_DOWN.z, 0);
+		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+		Vector3 rotation = m_Camera->GetRotation();
+		rotation *= DEGREES_TO_RADIANS;
+		//Create the rotation matrix
+		Matrix rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		tempPos = DirectX::XMVector4Transform(tempPos, rotationMatrix);
+		tempPos *= dT;
+		m_Camera->SetPosition(m_Camera->GetPosition() + Vector3(tempPos));
 	}
 
 	dT = origDT;	//Change the vertical movement back
@@ -138,11 +154,27 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	dT *= horizontalConstant;	//Update the horizontal movement
 	if (inputObj->IsKeyPressed(DIK_A))
 	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + D_LEFT * dT);
+		Vector4 tempPos = Vector4(D_LEFT.x, D_LEFT.y, D_LEFT.z, 0);
+		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+		Vector3 rotation = m_Camera->GetRotation();
+		rotation *= DEGREES_TO_RADIANS;
+		//Create the rotation matrix
+		Matrix rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		tempPos = DirectX::XMVector4Transform(tempPos, rotationMatrix);
+		tempPos *= dT;
+		m_Camera->SetPosition(m_Camera->GetPosition() + Vector3(tempPos));
 	}
 	if (inputObj->IsKeyPressed(DIK_D))
 	{
-		m_Camera->SetPosition(m_Camera->GetPosition() + D_RIGHT * dT);
+		Vector4 tempPos = Vector4(D_RIGHT.x, D_RIGHT.y, D_RIGHT.z, 0);
+		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+		Vector3 rotation = m_Camera->GetRotation();
+		rotation *= DEGREES_TO_RADIANS;
+		//Create the rotation matrix
+		Matrix rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		tempPos = DirectX::XMVector4Transform(tempPos, rotationMatrix);
+		tempPos *= dT;
+		m_Camera->SetPosition(m_Camera->GetPosition() + Vector3(tempPos));
 	}
 	dT = origDT;	//Change the horizontal movement back
 
@@ -156,7 +188,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 #pragma endregion keyboard
 #pragma region
 
-	this->m_Camera->SetRotation(this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().y, inputObj->GetMouseDelta().x, 0 });
+	this->m_Camera->SetRotation(this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 });
 
 #pragma endregion mouse
 	return true;
