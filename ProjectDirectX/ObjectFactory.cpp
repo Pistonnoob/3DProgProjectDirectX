@@ -120,10 +120,16 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		{
 			//Vertex Normal Indices in format f v1/vt1/vn1
 			struct IndexStruct { int v; int vt; int vn; } faceIndices[3];
-			sscanf_s(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar, SPECIALCHARSIZE,
-				&faceIndices[0].v, &faceIndices[0].vt, &faceIndices[0].vn,
-				&faceIndices[1].v, &faceIndices[1].vt, &faceIndices[1].vn,
-				&faceIndices[2].v, &faceIndices[2].vt, &faceIndices[2].vn);
+			if(invert > 0)
+				sscanf_s(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar, SPECIALCHARSIZE,
+					&faceIndices[0].v, &faceIndices[0].vt, &faceIndices[0].vn,
+					&faceIndices[1].v, &faceIndices[1].vt, &faceIndices[1].vn,
+					&faceIndices[2].v, &faceIndices[2].vt, &faceIndices[2].vn);
+			else
+				sscanf_s(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar, SPECIALCHARSIZE,
+					&faceIndices[0].v, &faceIndices[0].vt, &faceIndices[0].vn,
+					&faceIndices[2].v, &faceIndices[2].vt, &faceIndices[2].vn,
+					&faceIndices[1].v, &faceIndices[1].vt, &faceIndices[1].vn);
 			//VertexModel tempModelData = {vertices[&faceIndices[0].v - 1], UV[&faceIndices[0].v], normals[&faceIndices[0].vn]};
 			for (int i = 0; i < 3; i++)
 				vertexData.push_back({ vertices[faceIndices[i].v - 1], UV[faceIndices[i].vt - 1], normals[faceIndices[i].vn - 1] });
