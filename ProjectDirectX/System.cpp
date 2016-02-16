@@ -204,6 +204,16 @@ bool System::Frame()
 	{
 		return false;
 	}
+	
+	int width = 800, height = 600;
+	int posX = 0, posY = 0;
+
+	RECT rcClient, rcWind;
+	GetClientRect(m_hwnd, &rcClient);
+	GetWindowRect(m_hwnd, &rcWind);
+
+	SetCursorPos(posX, posY);
+
 	//Let the FPS and Timer objects to their frame processing.
 	this->m_FPS->Frame();
 	this->m_timer->Frame();
