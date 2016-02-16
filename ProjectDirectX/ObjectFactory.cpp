@@ -165,7 +165,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		}
 	}
 	//Load the texture for this model
-	newObject->LoadTexture(device, deviceContext, "stone01.tga");
+	newObject->LoadTexture(device, deviceContext, localMaterial.texture);
 	storeIn.push_back(newObject);
 
 	return true;
@@ -245,7 +245,7 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				{
 					mat.textureFormat = TextureFormat::PNG;
 				}
-				else if (textureType == "targa")
+				else if (textureType == "tga")
 				{
 					mat.textureFormat = TextureFormat::TARGA;
 				}
