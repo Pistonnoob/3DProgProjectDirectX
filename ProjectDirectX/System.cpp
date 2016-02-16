@@ -205,15 +205,19 @@ bool System::Frame()
 	{
 		return false;
 	}
-	if (m_Input->IsKeyPressed(DIK_L))
+	if (m_Input->WasKeyPressed(DIK_L))
 	{
+		ShowCursor(m_lockCursor);
 		if (m_lockCursor)
+		{
 			m_lockCursor = false;
+		}
 		else
+		{
 			m_lockCursor = true;
+		}
 	}
-
-	if (m_lockCursor)
+	if (m_lockCursor && GetActiveWindow() != NULL)
 	{
 		int posX = 0, posY = 0;
 
@@ -328,8 +332,7 @@ void System::InitializeWindows(int & width, int & height)
 	SetFocus(m_hwnd);
 
 	//Hide the mouse cursor
-	ShowCursor(true);
-
+	//ShowCursor(true);
 	return;
 }
 
