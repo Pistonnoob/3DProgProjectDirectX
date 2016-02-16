@@ -218,8 +218,11 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		return false;
 	}
 
+	//Test factory creating model objects.
+	ObjectFactory factory;
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	// Initialize the model objects.
-	result = temp->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
+	//result = temp->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
 	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
 	if (!result)
 	{
@@ -227,8 +230,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		return false;
 	}
 
-	this->m_Models.push_back(temp);
-
+	//this->m_Models.push_back(temp);
 	return true;
 }
 

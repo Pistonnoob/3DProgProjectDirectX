@@ -21,7 +21,7 @@ public:
 
 
 	vector<D3Object*> CreateFromFile(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* fileName, FactoryObjectFormat objectFormat);
-	void CreateFromFile(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* fileName, FactoryObjectFormat objectFormat, vector<D3Object*> &storeIn);
+	bool CreateFromFile(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* fileName, FactoryObjectFormat objectFormat, vector<D3Object*> &storeIn);
 	bool CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* fileName, vector<D3Object*> &storeIn, int invert);
 
 	void ReadObjMaterial(string filename, vector<ObjMaterial>& storeIn);

@@ -18,22 +18,24 @@ vector<D3Object*> ObjectFactory::CreateFromFile(ID3D11Device* device, ID3D11Devi
 	return storeIn;
 }
 
-void ObjectFactory::CreateFromFile(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char * fileName, FactoryObjectFormat objectFormat, vector<D3Object*> &storeIn)
+bool ObjectFactory::CreateFromFile(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char * fileName, FactoryObjectFormat objectFormat, vector<D3Object*> &storeIn)
 {
+	bool result = false;
 	switch (objectFormat)
 	{
 	case OBJ:
 	case OBJ_LH:
-		this->CreateFromObj(device, deviceContext, fileName, storeIn, 1);
-			break;
+		result = this->CreateFromObj(device, deviceContext, fileName, storeIn, 1);
+		break;
 	case OBJ_RH:
-		this->CreateFromObj(device, deviceContext, fileName, storeIn, -1);
+		result = this->CreateFromObj(device, deviceContext, fileName, storeIn, -1);
 		break;
 	case TXT:
 		break;
 	default:
 		break;
 	}
+	return result;
 }
 
 bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char * fileName, vector<D3Object*>& storeIn, int invert)
@@ -72,7 +74,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		inputString.str(line2);
 		if (line2.substr(0, 2) == "v ")
 		{
-			if (specialChar == "f")
+			if (specialChar == "f ")
 			{
 				//Create a new 3DObject using the vectors
 				D3Object* newObject = new D3Object();
@@ -145,6 +147,26 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		}
 	}
 	fileIn.close();
+
+	//Create a new 3DObject using the vectors
+	D3Object* newObject = new D3Object();
+	//Load the model data
+	newObject->CreateFromData(vertexData);
+	//Initialize vertex and index buffers.
+	newObject->InitializeBuffers(device);
+	//Get the matrial name
+	string textureName = "";
+	ObjMaterial localMaterial;
+	for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
+	{
+		if ((*mat).name == objectMaterial)
+		{
+			localMaterial = (*mat);
+		}
+	}
+	//Load the texture for this model
+	newObject->LoadTexture(device, deviceContext, localMaterial.texture);
+	storeIn.push_back(newObject);
 
 	return true;
 }
