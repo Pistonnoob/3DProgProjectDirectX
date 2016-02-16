@@ -27,6 +27,8 @@ bool InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int width, int hei
 	this->m_mouseX = 0;
 	this->m_mouseY = 0;
 
+	this->m_dMouse = Vector2( 0.0f, 0.0f );
+
 	// Initialize the main direct input interface.
 	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
 	if (FAILED(result))
@@ -225,6 +227,8 @@ bool InputHandler::ReadMouse()
 
 void InputHandler::ProcessInput()
 {
+	// Update the change in mouse position
+	m_dMouse = Vector2(m_mouseState.lX, m_mouseState.lY);
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 	m_mouseX += m_mouseState.lX;
 	m_mouseY += m_mouseState.lY;

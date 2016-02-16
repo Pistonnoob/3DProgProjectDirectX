@@ -24,6 +24,7 @@ private:
 	int m_screenHeight;
 	int m_mouseX;
 	int m_mouseY;
+	Vector2 m_dMouse;
 public:
 	InputHandler();
 	InputHandler(const InputHandler& input);
