@@ -241,11 +241,11 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				{
 					mat.textureFormat = TextureFormat::JPEG;
 				}
-				else if (textureType == "PNG")
+				else if (textureType == "png")
 				{
 					mat.textureFormat = TextureFormat::PNG;
 				}
-				else if (textureType == "TARGA")
+				else if (textureType == "targa")
 				{
 					mat.textureFormat = TextureFormat::TARGA;
 				}
