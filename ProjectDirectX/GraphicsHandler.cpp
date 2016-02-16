@@ -150,12 +150,13 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	if (inputObj->IsKeyPressed(DIK_R))
 	{
 		m_Camera->SetPosition(ORIG);
+		m_Camera->SetRotation(Vector3(0, 0, 0));
 	}
 	
 #pragma endregion keyboard
 #pragma region
 
-	this->m_Camera->SetRotation(this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().x, inputObj->GetMouseDelta().y, 0 });
+	this->m_Camera->SetRotation(this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().y, inputObj->GetMouseDelta().x, 0 });
 
 #pragma endregion mouse
 	return true;
