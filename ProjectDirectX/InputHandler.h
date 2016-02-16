@@ -37,6 +37,7 @@ public:
 
 	bool IsEscapePressed();
 	bool IsKeyPressed(int keyboardScanCode);
+	bool WasKeyPressed(int keyboardScanCode);
 	void GetMouse(int& x, int& y);
 	void GetMouseDelta(int& x, int& y);
 	void GetMouseDelta(Vector2 &storeIn);

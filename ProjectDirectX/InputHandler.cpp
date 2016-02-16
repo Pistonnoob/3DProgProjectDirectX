@@ -173,6 +173,22 @@ bool InputHandler::IsKeyPressed(int keyboardScanCode)
 	return result;
 }
 
+bool InputHandler::WasKeyPressed(int keyboardScanCode)
+{
+	bool result = false;
+	if (keyboardScanCode < sizeof(this->m_keys) && keyboardScanCode > 0)
+	{
+		if (!this->m_oldKeys[keyboardScanCode])
+		{
+			if (this->m_keys[keyboardScanCode] & 0x80)
+			{
+				return true;
+			}
+		}
+	}
+	return result;
+}
+
 void InputHandler::GetMouse(int & x, int & y)
 {
 	x = this->m_mouseX;
