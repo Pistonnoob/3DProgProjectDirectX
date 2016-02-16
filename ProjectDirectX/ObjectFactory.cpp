@@ -41,12 +41,16 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	ifstream fileIn;
 	string special = "", line = "", line2 = "";
 	bool objectFinished = false;
+	const unsigned int NAMELENGTH = 20;
 	const unsigned int SPECIALCHARSIZE = 10;
 	char specialChar[SPECIALCHARSIZE];
 	istringstream inputString;
 	vector<Vector3> vertices;
 	vector<Vector3> normals;
 	vector<Vector2> UV;
+	char name[NAMELENGTH];
+	char materialFile[NAMELENGTH];
+	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
@@ -95,18 +99,10 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		}
 		else if (line2.substr(0, 2) == "vn")
 		{
-			// Vertex Norma
+			// Vertex Normal
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vn.x, &vn.y, &vn.z);
 			//inputString >> special >> vn.x >> vn.y >> vn.z;
 			normals.push_back(vn);
-		}
-		else if (line2.substr(0, 2) == "g ")
-		{
-			//Group name
-		}
-		else if (line2.substr(0, 7) == "mtllib")
-		{
-			//Material name
 		}
 		else if (line2.substr(0, 2) == "f ")
 		{
@@ -120,6 +116,21 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			for (int i = 0; i < 3; i++)
 				vertexData.push_back({ vertices[faceIndices[i].v - 1], UV[faceIndices[i].vt - 1], normals[faceIndices[i].vn - 1] });
 
+		}
+		else if (line2.substr(0, 2) == "g ")
+		{
+			//Group name
+			sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, name, NAMELENGTH);
+		}
+		else if (line2.substr(0, 6) == "mtllib")
+		{
+			//Material File
+			sscanf_s(temp, "%S %S\n", specialChar, SPECIALCHARSIZE, materialFile, NAMELENGTH);
+		}
+		else if (line2.substr(0, 6) == "usemtl")
+		{
+			//Material name for object / group
+			sscanf_s(temp, "%S %S\n", specialChar, SPECIALCHARSIZE, objectMaterial, NAMELENGTH);
 		}
 	}
 	fileIn.close();
