@@ -231,8 +231,12 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 			else if (line.substr(0, 6) == "map_Kd")
 			{
 				// map_Kd
-				char textureType[NAMELENGTH];
-				sscanf_s(temp, "%s %s.%s\n", specialChar, SPECIALCHARSIZE, &mat.texture, mat.MATERIAL_NAME_LENGTH, &textureType, NAMELENGTH);
+				string textureType = "";
+				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.texture, mat.MATERIAL_NAME_LENGTH);
+				textureType = mat.texture;
+				textureType = textureType.substr(textureType.find('.', 0), 20);
+				if (textureType.size() > 1)
+					textureType = textureType.substr(1, 20);
 				if (textureType == "jpg")
 				{
 					mat.textureFormat = TextureFormat::JPEG;
