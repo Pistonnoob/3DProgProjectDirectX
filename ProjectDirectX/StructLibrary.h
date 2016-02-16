@@ -86,12 +86,12 @@ struct JPEGHeader
 struct ObjMaterial
 {
 	static const int MATERIAL_NAME_LENGTH = 30;
-	unsigned char name[MATERIAL_NAME_LENGTH];
+	char name[MATERIAL_NAME_LENGTH];
 	int illum;
 	Vector3 Kd;
 	Vector3 Ka;
 	Vector3 Tf;
-	unsigned char texture[MATERIAL_NAME_LENGTH];
+	char texture[MATERIAL_NAME_LENGTH];
 	TextureFormat textureFormat;
 	int Ni;
 };

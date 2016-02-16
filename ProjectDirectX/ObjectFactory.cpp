@@ -53,7 +53,6 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
 	vector<ObjMaterial> materials;
-
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
 
@@ -82,6 +81,15 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
 				//Get the matrial name
+				string textureName = "";
+				ObjMaterial localMaterial;
+				for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
+				{
+					if ((*mat).name == objectMaterial)
+					{
+						localMaterial = (*mat);
+					}
+				}
 				//Load the texture for this model
 				newObject->LoadTexture(device, deviceContext, "");
 				storeIn.push_back(newObject);
@@ -156,6 +164,7 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 	string special = "", line = "";
 	istringstream inputString;
 
+	const unsigned int NAMELENGTH = 30;
 	const unsigned int SPECIALCHARSIZE = 10;
 	char specialChar[SPECIALCHARSIZE];
 
@@ -200,8 +209,8 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 			else if (line.substr(0, 6) == "map_Kd")
 			{
 				// map_Kd
-				char textureType[SPECIALCHARSIZE];
-				sscanf_s(temp, "%s %s.%s\n", specialChar, SPECIALCHARSIZE, &mat.texture, mat.MATERIAL_NAME_LENGTH, &textureType, SPECIALCHARSIZE);
+				char textureType[NAMELENGTH];
+				sscanf_s(temp, "%s %s.%s\n", specialChar, SPECIALCHARSIZE, &mat.texture, mat.MATERIAL_NAME_LENGTH, &textureType, NAMELENGTH);
 				if (textureType == "jpg")
 				{
 					mat.textureFormat = TextureFormat::JPEG;
