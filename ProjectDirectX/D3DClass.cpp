@@ -357,7 +357,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	m_deviceContext->RSSetViewports(1, &viewport);
 
 	// Setup the projection matrix.
-	fieldOfView = 3.141592654f / 4.0f;
+	fieldOfView = 3.141592654f / 2.0f;
 	screenAspect = (float)screenWidth / (float)screenHeight;
 
 	//MATRICES------------------------------------------------------------------------------------------
