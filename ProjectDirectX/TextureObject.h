@@ -1,8 +1,6 @@
 #ifndef _TEXTUREOBJECT_H_
 #define _TEXTUREOBJECT_H_
 
-#include "WICTextureLoader.h"
-
 #include "StructLibrary.h"
 #include <d3d11.h>
 #include <stdio.h>
