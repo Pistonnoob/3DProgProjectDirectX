@@ -6,6 +6,29 @@ using namespace DirectX::SimpleMath;
 
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
+enum FactoryObjectFormat
+{
+	OBJ,
+	OBJ_RH,
+	OBJ_LH,
+	TXT
+};
+
+enum TextureFormat
+{
+	TARGA,
+	PNG,
+	JPEG
+};
+
+enum Keyboard_Key
+{
+	KEY_W = 87,
+	KEY_A = 65,
+	KEY_S = 83,
+	KEY_D = 68,
+	KEY_RESET = 82
+};
 
 struct Vertex
 {
@@ -69,32 +92,11 @@ struct ObjMaterial
 	Vector3 Ka;
 	Vector3 Tf;
 	unsigned char texture[MATERIAL_NAME_LENGTH];
+	TextureFormat textureFormat;
 	int Ni;
 };
 
-enum FactoryObjectFormat
-{
-	OBJ,
-	OBJ_RH,
-	OBJ_LH,
-	TXT
-};
 
-enum TextureFormat
-{
-	TARGA,
-	PNG,
-	JPEG
-};
-
-enum Keyboard_Key
-{
-	KEY_W = 87,
-	KEY_A = 65,
-	KEY_S = 83,
-	KEY_D = 68,
-	KEY_RESET = 82
-};
 
 // input layout (verified using vertex shader)
 //static const D3D11_INPUT_ELEMENT_DESC inputDescColor[] = {

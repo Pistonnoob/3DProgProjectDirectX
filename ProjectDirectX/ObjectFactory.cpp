@@ -41,7 +41,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	ifstream fileIn;
 	string special = "", line = "", line2 = "";
 	bool objectFinished = false;
-	const unsigned int NAMELENGTH = 20;
+	const unsigned int NAMELENGTH = 30;
 	const unsigned int SPECIALCHARSIZE = 10;
 	char specialChar[SPECIALCHARSIZE];
 	istringstream inputString;
@@ -69,11 +69,6 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	{
 		strncpy_s(temp, 512, line2.c_str(), sizeof(temp));
 		temp[sizeof(temp) - 1] = 0;
-
-		if (objectFinished)
-		{
-			
-		}
 
 		inputString.str(line2);
 		if (line2.substr(0, 2) == "v ")
@@ -132,15 +127,103 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		else if (line2.substr(0, 6) == "mtllib")
 		{
 			//Material File
-			sscanf_s(temp, "%S %S\n", specialChar, SPECIALCHARSIZE, materialFile, NAMELENGTH);
+			sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, materialFile, NAMELENGTH);
+			this->ReadObjMaterial(materialFile, materials);
 		}
 		else if (line2.substr(0, 6) == "usemtl")
 		{
 			//Material name for object / group
-			sscanf_s(temp, "%S %S\n", specialChar, SPECIALCHARSIZE, objectMaterial, NAMELENGTH);
+			sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, objectMaterial, NAMELENGTH);
 		}
 	}
 	fileIn.close();
 
 	return true;
+}
+
+
+void ObjectFactory::ReadObjMaterial(string filename, vector<ObjMaterial>& storeIn)
+{
+	storeIn = ReadObjMaterial(filename);
+}
+
+
+vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
+{
+	vector<ObjMaterial> materialData;
+
+	ifstream fileIn;
+	string special = "", line = "";
+	istringstream inputString;
+
+	const unsigned int SPECIALCHARSIZE = 10;
+	char specialChar[SPECIALCHARSIZE];
+
+	char temp[512];
+
+	ObjMaterial mat;
+
+	fileIn.open(filename, ios::in);
+	if (fileIn.is_open())
+	{
+		while (std::getline(fileIn, line))
+		{
+			strncpy_s(temp, 512, line.c_str(), sizeof(temp));
+			temp[sizeof(temp) - 1] = 0;
+
+			inputString.str(line);
+			if (line.substr(0, 6) == "newmtl")
+			{
+				// newmtl
+				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.name, mat.MATERIAL_NAME_LENGTH);
+			}
+			else if (line.substr(0, 5) == "illum")
+			{
+				// illum
+				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.illum);
+			}
+			else if (line.substr(0, 2) == "Kd")
+			{
+				// Kd
+				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Kd.x, &mat.Kd.y, &mat.Kd.z);
+			}
+			else if (line.substr(0, 2) == "Ka")
+			{
+				// Ka
+				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ka.x, &mat.Ka.y, &mat.Ka.z);
+			}
+			else if (line.substr(0, 2) == "Tf")
+			{
+				// Tf
+				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Tf.x, &mat.Tf.y, &mat.Tf.z);
+			}
+			else if (line.substr(0, 6) == "map_Kd")
+			{
+				// map_Kd
+				char textureType[SPECIALCHARSIZE];
+				sscanf_s(temp, "%s %s.%s\n", specialChar, SPECIALCHARSIZE, &mat.texture, mat.MATERIAL_NAME_LENGTH, &textureType, SPECIALCHARSIZE);
+				if (textureType == "jpg")
+				{
+					mat.textureFormat = TextureFormat::JPEG;
+				}
+				else if (textureType == "PNG")
+				{
+					mat.textureFormat = TextureFormat::PNG;
+				}
+				else if (textureType == "TARGA")
+				{
+					mat.textureFormat = TextureFormat::TARGA;
+				}
+			}
+			else if (line.substr(0, 2) == "Ni")
+			{
+				// Ni
+				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.Ni);
+				materialData.push_back(mat);
+			}
+		}
+	}
+	fileIn.close();
+
+	return materialData;
 }
