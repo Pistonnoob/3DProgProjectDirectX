@@ -151,26 +151,32 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="D2Object.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="TextureHandler.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="D3Object.h" />
+    <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="FPSHandler.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
     <ClInclude Include="ObjectFactory.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="PlatformHelpers.h" />
     <ClInclude Include="TextureHandler.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="StructLibrary.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="GeometryShader.hlsl">

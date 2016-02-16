@@ -5,6 +5,8 @@
 #include <d3d11.h>
 #include <stdio.h>
 
+#include "WICTextureLoader.h"
+
 class TextureObject
 {
 private:
