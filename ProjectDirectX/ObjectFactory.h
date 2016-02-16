@@ -1,10 +1,11 @@
 #ifndef _OBJECTFACTORY_H_
 #define _OBJECTFACTORY_H_
 
+#include "SimpleMath.h"
+
 #include "StructLibrary.h"
 #include "D3Object.h"
 #include "TextureHandler.h"
-#include "SimpleMath.h"
 #include "StructLibrary.h"
 #include "TextureObject.h"
 #include <fstream>
