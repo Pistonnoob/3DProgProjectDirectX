@@ -19,6 +19,7 @@ private:
 	
 	//Contains ths currect state of the keyboard and the mouse.
 	unsigned char m_keys[256];
+	unsigned char m_oldKeys[256];
 	DIMOUSESTATE m_mouseState;
 	int m_screenWidth;
 	int m_screenHeight;

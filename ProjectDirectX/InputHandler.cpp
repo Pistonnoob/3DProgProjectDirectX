@@ -201,6 +201,8 @@ bool InputHandler::ReadKeyboard()
 	HRESULT result;
 
 	// Read the keyboard device.
+	for (int i = 0; i < 256; i++)
+		m_oldKeys[i] = m_keys[i];
 	result = this->m_keyboard->GetDeviceState(sizeof(this->m_keys), (LPVOID)&this->m_keys);
 	if (FAILED(result))
 	{
