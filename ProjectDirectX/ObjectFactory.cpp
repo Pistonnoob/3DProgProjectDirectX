@@ -84,6 +84,10 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		inputString.str(line2);
 		if (line2.substr(0, 2) == "v ")
 		{
+			if (specialChar == "f")
+			{
+
+			}
 			// Vertex Position
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vtx.x, &vtx.y, &vtx.z);
 			vtx.z *= invert;
