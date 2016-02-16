@@ -52,6 +52,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	char materialFile[NAMELENGTH];
 	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
+	vector<ObjMaterial> materials;
+
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
 
@@ -70,15 +72,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 
 		if (objectFinished)
 		{
-			//Create a new 3DObject using the vectors
-			D3Object* newObject = new D3Object();
-			//Load the model data
-			newObject->CreateFromData(vertexData);
-			//Initialize vertex and index buffers.
-			newObject->InitializeBuffers(device);
-			//Load the texture for this model
-			newObject->LoadTexture(device, deviceContext, "");
-			storeIn.push_back(newObject);
+			
 		}
 
 		inputString.str(line2);
@@ -86,7 +80,16 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		{
 			if (specialChar == "f")
 			{
-
+				//Create a new 3DObject using the vectors
+				D3Object* newObject = new D3Object();
+				//Load the model data
+				newObject->CreateFromData(vertexData);
+				//Initialize vertex and index buffers.
+				newObject->InitializeBuffers(device);
+				//Get the matrial name
+				//Load the texture for this model
+				newObject->LoadTexture(device, deviceContext, "");
+				storeIn.push_back(newObject);
 			}
 			// Vertex Position
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vtx.x, &vtx.y, &vtx.z);
