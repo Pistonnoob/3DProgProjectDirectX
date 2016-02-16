@@ -164,7 +164,7 @@ bool InputHandler::IsKeyPressed(int keyboardScanCode)
 	bool result = false;
 	if (keyboardScanCode < sizeof(this->m_keys) && keyboardScanCode > 0)
 	{
-		if (this->m_keys[keyboardScanCode])
+		if (this->m_keys[keyboardScanCode] & 0x80)
 		{
 			return true;
 		}
