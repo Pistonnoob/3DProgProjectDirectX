@@ -22,11 +22,11 @@ TextureObject::~TextureObject()
 bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName)
 {
 	bool result = false;
-	int width = 0, height = 0;
+	int width = 1024, height = 1024;
 	HRESULT hResult;
 	unsigned int rowPitch = 0;
-	/*D3D11_TEXTURE2D_DESC textureDesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;*/
+	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 
 	//Load the image!!!!
 	/*result = LoadTarga(fileName, height, width);
@@ -57,13 +57,18 @@ bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * devi
 	const size_t cSize = strlen(fileName) + 1;
 	std::wstring wc(cSize, L'#');
 	mbstowcs(&wc[0], fileName, cSize);
-
+	ID3D11Resource* Res;
 	//CreateWICTextureFromFile(device, deviceContext, "", m_texture, &m_textureView, 0);
-	hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 64);
+	//hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 0);
+	hResult = CreateWICTextureFromFile(device, wc.c_str(), &Res, &m_textureView);
 	if (FAILED(hResult))
 	{
 		return false;
 	}
+
+#ifdef _DEBUG
+	hResult = SaveWICTextureToFile(deviceContext, Res, GUID_ContainerFormatBmp, L"SCREENSHOT.BMP");
+#endif
 	////Set the row pitch of the targa image data.
 	//rowPitch = (width * 4) * sizeof(unsigned char);
 	////Copy the targa image data into the texture.

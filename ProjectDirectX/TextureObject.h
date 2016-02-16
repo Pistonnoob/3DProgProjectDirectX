@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 #include "WICTextureLoader.h"
+#include "ScreenGrab.h"
+#include <wincodec.h>
 
 using namespace DirectX;
 
@@ -14,6 +16,7 @@ class TextureObject
 private:
 	unsigned char* m_targaData;
 	ID3D11Texture2D* m_texture;
+	ID3D11Resource* m_anotherData;
 	ID3D11ShaderResourceView* m_textureView;
 
 	//Extend with more loading functions to support other file formats. Also other headers.

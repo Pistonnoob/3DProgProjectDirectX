@@ -66,6 +66,9 @@
     <ClCompile Include="pch.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenGrab.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -120,6 +123,12 @@
       <Filter>Libraries</Filter>
     </ClInclude>
     <ClInclude Include="WICTextureLoader.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenGrab.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="dds.h">
       <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
