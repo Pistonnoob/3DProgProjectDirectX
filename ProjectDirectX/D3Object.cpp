@@ -96,6 +96,7 @@ bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();
 	this->m_indexCount = (int)vertexData.size();//vertices.size();
+	this->m_model = new VertexModel[this->m_vertexCount];
 	for (int j = 0; j < m_vertexCount; j++)
 	{
 		this->m_model[j] = vertexData[m_vertexCount - j - 1];
