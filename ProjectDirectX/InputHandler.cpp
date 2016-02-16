@@ -180,6 +180,22 @@ void InputHandler::GetMouse(int & x, int & y)
 	return;
 }
 
+void InputHandler::GetMouseDelta(int & x, int & y)
+{
+	x = this->m_dMouse.x;
+	y = this->m_dMouse.y;
+}
+
+void InputHandler::GetMouseDelta(Vector2 & storeIn)
+{
+	storeIn = this->GetMouseDelta();
+}
+
+Vector2 InputHandler::GetMouseDelta()
+{
+	return this->m_dMouse;
+}
+
 bool InputHandler::ReadKeyboard()
 {
 	HRESULT result;
