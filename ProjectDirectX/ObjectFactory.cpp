@@ -159,7 +159,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	ObjMaterial localMaterial;
 	for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
 	{
-		if ((*mat).name == objectMaterial)
+		char *name = (*mat).name;
+		if (*name == *objectMaterial)
 		{
 			localMaterial = (*mat);
 		}
