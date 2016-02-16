@@ -91,7 +91,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 					}
 				}
 				//Load the texture for this model
-				newObject->LoadTexture(device, deviceContext, "");
+				newObject->LoadTexture(device, deviceContext, localMaterial.texture);
 				storeIn.push_back(newObject);
 			}
 			// Vertex Position
