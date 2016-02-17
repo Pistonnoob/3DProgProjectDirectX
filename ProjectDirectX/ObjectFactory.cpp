@@ -58,7 +58,27 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	ObjMaterial missingMaterial;
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
-
+	
+	char missingMaterialName[] = "missing";
+	memcpy(&missingMaterial.name, &missingMaterialName, sizeof(missingMaterialName));
+	missingMaterial.illum = 0;
+	missingMaterial.Kd = Vector3(0.0f, 0.0f, 0.0f);
+	missingMaterial.Ka = Vector3(0.0f, 0.0f, 0.0f);
+	missingMaterial.Tf = Vector3(0.0f, 0.0f, 0.0f);
+	int size_ttt = sizeof(DEFAULT_TEXTURE);
+	memcpy(&missingMaterial.texture, DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+#pragma region
+	string missingTextureNameTemp = missingMaterial.texture;
+	TextureFormat missingTextureFormat = TextureFormat::JPEG;
+	missingTextureNameTemp = missingTextureNameTemp.substr(missingTextureNameTemp.find('.', 0), 20);
+	if (missingTextureNameTemp.size() > 1)
+		missingTextureNameTemp = missingTextureNameTemp.substr(1, sizeof(missingMaterialName));
+	if (missingTextureNameTemp == "jpg"){			missingTextureFormat = TextureFormat::JPEG;
+	}else if (missingTextureNameTemp == "png"){		missingTextureFormat = TextureFormat::PNG;
+	}else if (missingTextureNameTemp == "tga") {	missingTextureFormat = TextureFormat::TARGA; }
+	missingMaterial.textureFormat = missingTextureFormat;
+#pragma endregion fixing texture format
+	missingMaterial.Ni = 0;
 	char temp[512];
 
 	fileIn.open(fileName, ios::in);
@@ -83,12 +103,10 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				newObject->CreateFromData(vertexData);
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
-				//Get the matrial name
+				//Get the material name
 				string textureName = "";
-				ObjMaterial localMaterial;
-				//Set the default material
-				localMaterial.texture = (char*)DEFAULT_TEXTURE;
-				localMaterial.textureLength = sizeof(DEFAULT_TEXTURE) / sizeof(DEFAULT_TEXTURE[0]);
+				//Initialize the material as "missing material"
+				ObjMaterial localMaterial = missingMaterial;
 				for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
 				{
 					if ((*mat).name == objectMaterial)
@@ -209,8 +227,8 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 
 	ObjMaterial mat;
 	//Set the default texture for materials without texturing
-	mat.texture = (char*)DEFAULT_TEXTURE;
-	mat.textureLength = sizeof(DEFAULT_TEXTURE) / sizeof(char);
+	memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+
 	fileIn.open(filename, ios::in);
 	if (fileIn.is_open())
 	{
