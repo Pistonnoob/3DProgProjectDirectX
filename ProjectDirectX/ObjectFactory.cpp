@@ -106,6 +106,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		{
 			// Vertex UV
 			sscanf_s(temp, "%s %f %f\n", specialChar, SPECIALCHARSIZE, &vt.x, &vt.y);
+			if(invert < 0)
+				vt.y = 1 - vt.y;
 			//inputString >> special >> vt.x >> vt.y;
 			UV.push_back(vt);
 		}
@@ -114,6 +116,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			// Vertex Normal
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vn.x, &vn.y, &vn.z);
 			//inputString >> special >> vn.x >> vn.y >> vn.z;
+			if (invert < 0)
+				vn.z = -vn.z;
 			normals.push_back(vn);
 		}
 		else if (line2.substr(0, 2) == "f ")
