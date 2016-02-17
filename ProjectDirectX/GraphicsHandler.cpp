@@ -265,7 +265,7 @@ bool GraphicsHandler::Render()
 		m_Camera->Render();
 
 		// Get the world, view, and projection matrices from the camera and d3d objects.
-		this->m_Direct3D->GetWorldMatrix(worldMatrix);
+		(*model)->GetWorldMatrix(worldMatrix);
 		this->m_Camera->GetViewMatrix(viewMatrix);
 		this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
