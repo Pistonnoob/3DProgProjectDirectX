@@ -98,7 +98,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			}
 			// Vertex Position
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vtx.x, &vtx.y, &vtx.z);
-			vtx.z *= invert;
+			//vtx.z *= invert;
 			//inputString >> special >> vtx.x >> vtx.y >> vtx.z;
 			vertices.push_back(vtx);
 		}
@@ -172,7 +172,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		}
 	}
 	//Load the texture for this model
-	newObject->LoadTexture(device, deviceContext, "stone01.tga");
+	newObject->LoadTexture(device, deviceContext, localMaterial.texture);
 	storeIn.push_back(newObject);
 
 	return true;

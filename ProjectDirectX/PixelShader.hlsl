@@ -27,7 +27,7 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	m_color = c_text.Sample(samplerType, input.UV);
 	//m_color = float4(input.Normal.x, input.Normal.y, 0.0f, 1.0f);
 	//m_color = input.Normal;
-	m_color = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	//m_color = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	return m_color;
 }
 
