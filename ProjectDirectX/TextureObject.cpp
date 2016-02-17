@@ -19,7 +19,7 @@ TextureObject::~TextureObject()
 {
 }
 
-bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName)
+bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName, TextureFormat fileFormat)
 {
 	bool result = false;
 	int width = 0, height = 0;
@@ -28,71 +28,86 @@ bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * devi
 	D3D11_TEXTURE2D_DESC textureDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 
-	////Load the image!!!!
-	//result = LoadTarga(fileName, height, width);
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	//textureDesc.Height = height;
-	//textureDesc.Width = width;
-	//textureDesc.MipLevels = 0;
-	//textureDesc.ArraySize = 1;
-	//textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//textureDesc.SampleDesc.Count = 1;
-	//textureDesc.SampleDesc.Quality = 0;
-	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	//textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	//textureDesc.CPUAccessFlags = 0;
-	//textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
-
-	////Create the empty picture and update it with the data. We could have initiated it with the data but this works.
-	//hResult = device->CreateTexture2D(&textureDesc, NULL, &m_texture);
-	//if (FAILED(hResult))
-	//{
-	//	return false;
-	//}
-
-	const size_t cSize = strlen(fileName) + 1;
-	std::wstring wc(cSize, L'#');
-	mbstowcs(&wc[0], fileName, cSize);
-	ID3D11Resource* Res;
-	//CreateWICTextureFromFile(device, deviceContext, "", m_texture, &m_textureView, 0);
-	//hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 0);
-	hResult = CreateWICTextureFromFile(device, wc.c_str(), &Res, &m_textureView);
-	if (FAILED(hResult))
+	if (fileFormat == TARGA)
 	{
-		return false;
+		//Load the image!!!!
+		result = LoadTarga(fileName, height, width);
+		if (!result)
+		{
+			return false;
+		}
+
+		textureDesc.Height = height;
+		textureDesc.Width = width;
+		textureDesc.MipLevels = 0;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+		//Create the empty picture and update it with the data. We could have initiated it with the data but this works.
+		hResult = device->CreateTexture2D(&textureDesc, NULL, &m_texture);
+		if (FAILED(hResult))
+		{
+			return false;
+		}
+
+		//Set the row pitch of the targa image data.
+		rowPitch = (width * 4) * sizeof(unsigned char);
+		//Copy the targa image data into the texture.
+		deviceContext->UpdateSubresource(this->m_texture, 0, NULL, m_targaData, rowPitch, 0);
+
+		//Setup the shader resource view description
+		srvDesc.Format = textureDesc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+		srvDesc.Texture2D.MipLevels = -1;
+
+		//Create the shader resource view for the texture
+		hResult = device->CreateShaderResourceView(this->m_texture, &srvDesc, &this->m_textureView);
+		if (FAILED(hResult))
+		{
+			return false;
+		}
+
+		//Generate mipmaps for this texture. For higher quality we may want to load our own MipMap levels manually.
+		deviceContext->GenerateMips(m_textureView);
+
+		//Release the targa image data now that the image data has been loaded into the texture
+		delete[] this->m_targaData;
+		this->m_targaData = NULL;
 	}
+	else
+	{
+		const size_t cSize = strlen(fileName) + 1;
+		std::wstring wc(cSize, L'#');
+		mbstowcs(&wc[0], fileName, cSize);
 
+		ID3D11Resource* Res;
+
+
+
+		//CreateWICTextureFromFile(device, deviceContext, "", m_texture, &m_textureView, 0);
+		////hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 0);
+		hResult = CreateWICTextureFromFile(device, wc.c_str(), &Res, &m_textureView);
+		if (FAILED(hResult))
+		{
+			return false;
+		}
 #ifdef _DEBUG
-	hResult = SaveWICTextureToFile(deviceContext, Res, GUID_ContainerFormatBmp, L"SCREENSHOT.BMP");
+		hResult = SaveWICTextureToFile(deviceContext, Res, GUID_ContainerFormatBmp, L"SCREENSHOT.BMP");
 #endif
-	////Set the row pitch of the targa image data.
-	//rowPitch = (width * 4) * sizeof(unsigned char);
-	////Copy the targa image data into the texture.
-	//deviceContext->UpdateSubresource(this->m_texture, 0, NULL, m_targaData, rowPitch, 0);
+	}
+	
 
-	////Setup the shader resource view description
-	//srvDesc.Format = textureDesc.Format;
-	//srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	//srvDesc.Texture2D.MostDetailedMip = 0;
-	//srvDesc.Texture2D.MipLevels = -1;
+	
 
-	////Create the shader resource view for the texture
-	//hResult = device->CreateShaderResourceView(this->m_texture, &srvDesc, &this->m_textureView);
-	//if (FAILED(hResult))
-	//{
-	//	return false;
-	//}
 
-	////Generate mipmaps for this texture. For higher quality we may want to load our own MipMap levels manually.
-	//deviceContext->GenerateMips(m_textureView);
-	//
-	////Release the targa image data now that the image data has been loaded into the texture
-	//delete[] this->m_targaData;
-	//this->m_targaData = NULL;
+	
 
 	return true;
 }

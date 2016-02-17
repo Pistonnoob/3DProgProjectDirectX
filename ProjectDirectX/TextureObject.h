@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "WICTextureLoader.h"
+
 #include "ScreenGrab.h"
 #include <wincodec.h>
 
@@ -26,7 +27,7 @@ public:
 	TextureObject(const TextureObject& original);
 	virtual ~TextureObject();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* fileName);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* fileName, TextureFormat fileFormat = TextureFormat::JPEG);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTextureView();
