@@ -2,7 +2,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	setlocale(LC_ALL, "");
+	//setlocale(LC_ALL, "");
 	CoInitialize(NULL);
 	System* system = NULL;
 	bool result = false;
