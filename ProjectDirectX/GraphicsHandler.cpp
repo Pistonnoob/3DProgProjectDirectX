@@ -231,25 +231,22 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 0, -2, 1), Vector4(0, 0, 1, 0)};
 
 	// Create the model objects.
-	D3Object* temp = new D3Object();
-	if (!temp)
-	{
-		return false;
-	}
-
 	//Test factory creating model objects.
 	ObjectFactory factory;
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "sphere1.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	// Initialize the model objects.
-	//result = temp->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
-	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	int size = m_Models.size();
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}*/
 
-	//this->m_Models.push_back(temp);
 	return true;
 }
 
