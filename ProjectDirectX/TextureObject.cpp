@@ -19,7 +19,7 @@ TextureObject::~TextureObject()
 {
 }
 
-bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName)
+bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName, TextureFormat fileFormat)
 {
 	bool result = false;
 	int width = 0, height = 0;
@@ -59,8 +59,14 @@ bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * devi
 	std::wstring wc(cSize, L'#');
 	mbstowcs(&wc[0], fileName, cSize);
 
+	if (fileFormat == TARGA)
+	{
+
+	}
 	ScratchImage testing();
 	ID3D11Resource* Res;
+
+
 
 	//CreateWICTextureFromFile(device, deviceContext, "", m_texture, &m_textureView, 0);
 	////hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 0);

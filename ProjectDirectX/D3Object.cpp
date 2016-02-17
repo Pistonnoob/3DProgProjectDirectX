@@ -25,39 +25,39 @@ D3Object::~D3Object()
 
 bool D3Object::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFileName, FactoryObjectFormat format)
 {
-	bool result = false;
-
-	//Load the model data
-	switch (format)
-	{
-	case OBJ:
-		result = this->LoadModelObj(modelFilename);
-		break;
-	case OBJ_LH:
-		result = this->LoadModelObjLH(modelFilename);
-		break;
-	case OBJ_RH:
-		result = this->LoadModelObjRH(modelFilename);
-		break;
-	case TXT:
-		result = this->LoadModelTXT(modelFilename);
-		break;
-	default:
-		break;
-	}
-//	result = this->LoadModelObj(modelFilename);
-	if (!result)
-		return false;
-
-	//Initialize vertex and index buffers.
-	result = InitializeBuffers(device);
-	if (!result)
-		return false;
-
-	//Load the texture for this model
-	result = this->LoadTexture(device, deviceContext, textureFileName);
-	if (!result)
-		return false;
+//	bool result = false;
+//
+//	//Load the model data
+//	switch (format)
+//	{
+//	case OBJ:
+//		result = this->LoadModelObj(modelFilename);
+//		break;
+//	case OBJ_LH:
+//		result = this->LoadModelObjLH(modelFilename);
+//		break;
+//	case OBJ_RH:
+//		result = this->LoadModelObjRH(modelFilename);
+//		break;
+//	case TXT:
+//		result = this->LoadModelTXT(modelFilename);
+//		break;
+//	default:
+//		break;
+//	}
+////	result = this->LoadModelObj(modelFilename);
+//	if (!result)
+//		return false;
+//
+//	//Initialize vertex and index buffers.
+//	result = InitializeBuffers(device);
+//	if (!result)
+//		return false;
+//
+//	//Load the texture for this model
+//	result = this->LoadTexture(device, deviceContext, textureFileName);
+//	if (!result)
+//		return false;
 
 	return true;
 }
@@ -225,7 +225,7 @@ void D3Object::RenderBuffers(ID3D11DeviceContext *deviceContext)
 	return;
 }
 
-bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceContext, char * fileName)
+bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceContext, char * fileName, TextureFormat fileFormat)
 {
 	bool result = false;
 
@@ -237,7 +237,7 @@ bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceCont
 	}
 
 	//Now initialize the texture object
-	result = m_texture->Initialize(device, deviceContext, fileName);
+	result = m_texture->Initialize(device, deviceContext, fileName, fileFormat);
 	if (!result)
 	{
 		return false;
