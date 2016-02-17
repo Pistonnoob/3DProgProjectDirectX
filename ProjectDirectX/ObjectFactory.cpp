@@ -55,6 +55,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
 	vector<ObjMaterial> materials;
+	ObjMaterial missingMaterial;
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
 
@@ -85,6 +86,9 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				//Get the matrial name
 				string textureName = "";
 				ObjMaterial localMaterial;
+				//Set the default material
+				localMaterial.texture = (char*)DEFAULT_TEXTURE;
+				localMaterial.textureLength = sizeof(DEFAULT_TEXTURE) / sizeof(DEFAULT_TEXTURE[0]);
 				for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
 				{
 					if ((*mat).name == objectMaterial)
@@ -204,7 +208,9 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 	char temp[512];
 
 	ObjMaterial mat;
-
+	//Set the default texture for materials without texturing
+	mat.texture = (char*)DEFAULT_TEXTURE;
+	mat.textureLength = sizeof(DEFAULT_TEXTURE) / sizeof(char);
 	fileIn.open(filename, ios::in);
 	if (fileIn.is_open())
 	{

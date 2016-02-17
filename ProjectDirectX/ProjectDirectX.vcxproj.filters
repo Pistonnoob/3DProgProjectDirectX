@@ -19,6 +19,9 @@
     <Filter Include="Libraries">
       <UniqueIdentifier>{8b149845-0802-4c4e-8e82-0f410e3e36da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\Imported">
+      <UniqueIdentifier>{a9db1cfe-d101-4bd5-b01e-b575b35eb3fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,14 +63,14 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WICTextureLoader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ScreenGrab.cpp">
+      <Filter>Libraries\Imported</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>Libraries</Filter>
+      <Filter>Libraries\Imported</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenGrab.cpp">
-      <Filter>Libraries</Filter>
+    <ClCompile Include="WICTextureLoader.cpp">
+      <Filter>Libraries\Imported</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,23 +116,23 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformHelpers.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXHelpers.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="WICTextureLoader.h">
-      <Filter>Libraries</Filter>
+      <Filter>Libraries\Imported</Filter>
     </ClInclude>
     <ClInclude Include="ScreenGrab.h">
-      <Filter>Libraries</Filter>
+      <Filter>Libraries\Imported</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformHelpers.h">
+      <Filter>Libraries\Imported</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Libraries\Imported</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXHelpers.h">
+      <Filter>Libraries\Imported</Filter>
     </ClInclude>
     <ClInclude Include="dds.h">
-      <Filter>Libraries</Filter>
+      <Filter>Libraries\Imported</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -144,11 +147,11 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SimpleMath.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="ShaderLibrary.hlsli">
       <Filter>Libraries</Filter>
+    </None>
+    <None Include="SimpleMath.inl">
+      <Filter>Libraries\Imported</Filter>
     </None>
   </ItemGroup>
 </Project>
