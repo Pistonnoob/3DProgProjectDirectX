@@ -28,6 +28,7 @@ bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * devi
 	D3D11_TEXTURE2D_DESC textureDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 
+
 	////Load the image!!!!
 	//result = LoadTarga(fileName, height, width);
 	//if (!result)
@@ -57,10 +58,13 @@ bool TextureObject::Initialize(ID3D11Device * device, ID3D11DeviceContext * devi
 	const size_t cSize = strlen(fileName) + 1;
 	std::wstring wc(cSize, L'#');
 	mbstowcs(&wc[0], fileName, cSize);
+
+	ScratchImage testing();
 	ID3D11Resource* Res;
+
 	//CreateWICTextureFromFile(device, deviceContext, "", m_texture, &m_textureView, 0);
-	//hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 0);
-	hResult = CreateWICTextureFromFile(device, wc.c_str(), &Res, &m_textureView);
+	////hResult = CreateWICTextureFromFile(device, deviceContext, wc.c_str(), NULL, &m_textureView, 0);
+	//hResult = CreateWICTextureFromFile(device, wc.c_str(), &Res, &m_textureView);
 	if (FAILED(hResult))
 	{
 		return false;
