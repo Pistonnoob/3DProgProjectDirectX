@@ -239,6 +239,24 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "sphere1.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+	if (m_Models.size() > 0)
+	{
+		Matrix tempWorld;
+		Matrix temp2World;
+		m_Models[0]->GetWorldMatrix(tempWorld);
+		m_Models[0]->ApplyMatrix(XMMatrixTranslation(5.0f, 0.0f, 5.0f));
+		m_Models[0]->GetWorldMatrix(temp2World);
+		if (temp2World != tempWorld)
+		{
+			int thereWasNoAppliedMatrix = 0;
+		}
+	}
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	int size = m_Models.size();
 	if (!result)
