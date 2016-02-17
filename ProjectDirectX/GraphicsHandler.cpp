@@ -126,7 +126,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	dT *= verticalConstant;	//Update the vertical movement
 	if (inputObj->IsKeyPressed(DIK_W))
 	{
-		Vector4 tempPos = Vector4(D_UP.x, D_UP.y, D_UP.z, 0);
+		Vector4 tempPos = Vector4(D_FRONT.x, D_FRONT.y, D_FRONT.z, 0);
 		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 		Vector3 rotation = m_Camera->GetRotation();
 		rotation *= DEGREES_TO_RADIANS;
@@ -138,7 +138,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	}
 	if (inputObj->IsKeyPressed(DIK_S))
 	{
-		Vector4 tempPos = Vector4(D_DOWN.x, D_DOWN.y, D_DOWN.z, 0);
+		Vector4 tempPos = Vector4(D_BACK.x, D_BACK.y, D_BACK.z, 0);
 		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 		Vector3 rotation = m_Camera->GetRotation();
 		rotation *= DEGREES_TO_RADIANS;
@@ -177,6 +177,25 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 		m_Camera->SetPosition(m_Camera->GetPosition() + Vector3(tempPos));
 	}
 	dT = origDT;	//Change the horizontal movement back
+	//Move upwards
+	if (inputObj->IsKeyPressed(DIK_SPACE))
+	{
+		int up = 1;
+		if (inputObj->IsKeyPressed(DIK_LSHIFT))
+		{
+			up *= -1;
+		}
+		Vector4 tempPos = Vector4(D_UP.x, D_UP.y, D_UP.z, 0);
+		tempPos *= up;
+		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+		Vector3 rotation = m_Camera->GetRotation();
+		rotation *= DEGREES_TO_RADIANS;
+		//Create the rotation matrix
+		Matrix rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		tempPos = DirectX::XMVector4Transform(tempPos, rotationMatrix);
+		tempPos *= dT;
+		m_Camera->SetPosition(m_Camera->GetPosition() + Vector3(tempPos));
+	}
 
 	//Allow for resetting the camera back to its origin
 	if (inputObj->IsKeyPressed(DIK_R))
@@ -220,7 +239,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 	//Test factory creating model objects.
 	ObjectFactory factory;
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "sphere1.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	// Initialize the model objects.
 	//result = temp->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", "stone01.tga", FactoryObjectFormat::OBJ_RH);
 	//result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cube.txt", "stone01.tga", FactoryObjectFormat::TXT);
@@ -243,7 +262,7 @@ bool GraphicsHandler::Render()
 
 
 		// Clear the buffers to begin the scene.
-		this->m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+		this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
 
 		// Generate the view matrix based on the camera's position.
 		m_Camera->Render();

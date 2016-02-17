@@ -15,17 +15,18 @@ const float SCREEN_DEPTH = 500.0f;
 const float SCREEN_NEAR = 0.1f;
 
 const Vector3 ORIG = { 0, 0, -10 };
-const Vector3 D_UP = { 0, 0, 1 };
-const Vector3 D_W = D_UP;
-const Vector3 D_DOWN = { 0, 0, -1 };
-const Vector3 D_S = D_DOWN;
+const Vector3 D_FRONT = { 0, 0, 1 };
+const Vector3 D_W = D_FRONT;
+const Vector3 D_BACK = { 0, 0, -1 };
+const Vector3 D_S = D_BACK;
 const Vector3 D_LEFT = { -1, 0, 0 };
 const Vector3 D_A = D_LEFT;
 const Vector3 D_RIGHT = { 1, 0, 0 };
 const Vector3 D_D = D_RIGHT;
+const Vector3 D_UP = { 0, 2, 0 };
 
 const int INPUT_CAP = 4;
-const Vector3 DIRECTION_V[INPUT_CAP] = { D_UP, D_LEFT, D_DOWN, D_RIGHT };
+const Vector3 DIRECTION_V[INPUT_CAP] = { D_FRONT, D_LEFT, D_BACK, D_RIGHT };
 
 class GraphicsHandler
 {
