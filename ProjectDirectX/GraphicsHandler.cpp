@@ -186,7 +186,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 			up *= -1;
 		}
 		Vector4 tempPos = Vector4(D_UP.x, D_UP.y, D_UP.z, 0);
-		tempPos *= up;
+		tempPos *= (float)up;
 		//Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 		Vector3 rotation = m_Camera->GetRotation();
 		rotation *= DEGREES_TO_RADIANS;
