@@ -14,6 +14,7 @@ Camera::Camera(const Camera & original)
 {
 	m_position = original.m_position;
 	m_rotation = original.m_rotation;
+	m_up = original.m_up;
 	m_viewMatrix = original.m_viewMatrix;
 }
 

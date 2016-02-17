@@ -36,20 +36,19 @@ public:
 	void SetWorldMatrix(const Matrix worldMatrix);
 	void ApplyMatrix(const Matrix applyToWorld);
 
-	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for external definition of vertices into a D3Object
+	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);
 	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName);
 private:
-
-	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext* deviceContext);
-
-	void ReleaseTexture();
 
 	bool LoadModelObjLH(char* fileName);
 	bool LoadModelObjRH(char* fileName);
 	bool LoadModelObj(char* fileName, int invert = 1);
 	bool LoadModelTXT(char* filename);
+
+	void ShutdownBuffers();
+	void ReleaseTexture();
 	void ReleaseModel();
 };
 

@@ -69,7 +69,6 @@ void D3Object::Shutdown()
 	this->ReleaseTexture();
 	//Release the buffers.
 	this->ShutdownBuffers();
-
 	//Release the model data.
 	this->ReleaseModel();
 
@@ -206,23 +205,6 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 	return true;
 }
 
-void D3Object::ShutdownBuffers()
-{
-	//Release the vertex buffer
-	if (this->m_vertexBuffer != NULL)
-	{
-		this->m_vertexBuffer->Release();
-		this->m_vertexBuffer = NULL;
-	}
-	//Release the index buffer
-	if (this->m_indexBuffer != NULL)
-	{
-		this->m_indexBuffer->Release();
-		this->m_indexBuffer = NULL;
-	}
-
-	return;
-}
 
 void D3Object::RenderBuffers(ID3D11DeviceContext *deviceContext)
 {
@@ -264,16 +246,8 @@ bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceCont
 	return true;
 }
 
-void D3Object::ReleaseTexture()
-{
-	if (m_texture != NULL)
-	{
-		m_texture->Shutdown();
-		delete m_texture;
-		m_texture = NULL;
-	}
-	return;
-}
+
+
 
 bool D3Object::LoadModelObjLH(char * fileName)
 {
@@ -429,7 +403,43 @@ bool D3Object::LoadModelTXT(char * filename)
 	return true;
 }
 
+void D3Object::ShutdownBuffers()
+{
+	//Release the vertex buffer
+	if (this->m_vertexBuffer != NULL)
+	{
+		this->m_vertexBuffer->Release();
+		this->m_vertexBuffer = NULL;
+	}
+	//Release the index buffer
+	if (this->m_indexBuffer != NULL)
+	{
+		this->m_indexBuffer->Release();
+		this->m_indexBuffer = NULL;
+	}
+
+	return;
+}
+
+void D3Object::ReleaseTexture()
+{
+	if (m_texture != NULL)
+	{
+		m_texture->Shutdown();
+		delete m_texture;
+		m_texture = NULL;
+	}
+	return;
+}
+
 void D3Object::ReleaseModel()
 {
-	
+	if (this->m_model != NULL)
+	{
+		delete[] m_model;
+		m_model = NULL;
+	}
 }
+
+
+
