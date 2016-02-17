@@ -65,7 +65,6 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	missingMaterial.Kd = Vector3(1.0f, 1.0f, 1.0f);
 	missingMaterial.Ka = Vector3(1.0f, 1.0f, 1.0f);
 	missingMaterial.Ks = Vector3(0.0f, 0.0f, 0.0f);
-	int size_ttt = sizeof(DEFAULT_TEXTURE);
 	memcpy(&missingMaterial.texture, DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 #pragma region
 	string missingTextureNameTemp = missingMaterial.texture;
