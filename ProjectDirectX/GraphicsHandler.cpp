@@ -233,18 +233,18 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	//Test factory creating model objects.
 	ObjectFactory factory;
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
-	}
+	}*/
 	int modelNr = 0;
 	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
 	{
