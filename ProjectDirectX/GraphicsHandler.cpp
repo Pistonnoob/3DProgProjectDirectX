@@ -239,7 +239,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "sphere1.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -251,10 +251,6 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*modelNr));
 		modelNr++;
 	}
-	/*if (m_Models.size() > 1)
-	{
-		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, 5.0f, 0.0f));
-	}*/
 	return true;
 }
 
