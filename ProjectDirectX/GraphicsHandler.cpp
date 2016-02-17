@@ -245,26 +245,16 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	if (m_Models.size() > 1)
+	int modelNr = 0;
+	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
 	{
-		Matrix tempWorld;
-		Matrix temp2World;
-		m_Models[1]->GetWorldMatrix(tempWorld);
-		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, 5.0f, 0.0f));
-		m_Models[1]->GetWorldMatrix(temp2World);
-		if (temp2World != tempWorld)
-		{
-			int thereWasNoAppliedMatrix = 0;
-		}
+		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*modelNr));
+		modelNr++;
 	}
-	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	int size = m_Models.size();
-	if (!result)
+	/*if (m_Models.size() > 1)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
+		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, 5.0f, 0.0f));
 	}*/
-
 	return true;
 }
 
@@ -288,7 +278,7 @@ bool GraphicsHandler::Render()
 
 		//Get the world matrix from the model / object and rotate it for visibility
 		(*model)->GetWorldMatrix(worldMatrix);
-		worldMatrix *= XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
+		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
