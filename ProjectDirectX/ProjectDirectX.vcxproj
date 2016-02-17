@@ -169,7 +169,6 @@
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
-    <ClInclude Include="libraries\DirectXTex.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlatformHelpers.h" />
@@ -207,7 +206,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libraries\DirectXTex.inl" />
     <None Include="ShaderLibrary.hlsli" />
     <None Include="SimpleMath.inl" />
   </ItemGroup>

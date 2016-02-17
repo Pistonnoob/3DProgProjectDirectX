@@ -134,9 +134,6 @@
     <ClInclude Include="dds.h">
       <Filter>Libraries\Imported</Filter>
     </ClInclude>
-    <ClInclude Include="libraries\DirectXTex.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -154,9 +151,6 @@
       <Filter>Libraries</Filter>
     </None>
     <None Include="SimpleMath.inl">
-      <Filter>Libraries\Imported</Filter>
-    </None>
-    <None Include="libraries\DirectXTex.inl">
       <Filter>Libraries\Imported</Filter>
     </None>
   </ItemGroup>

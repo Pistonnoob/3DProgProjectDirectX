@@ -5,11 +5,10 @@
 #include <d3d11.h>
 #include <stdio.h>
 
-//#include "WICTextureLoader.h"
+#include "WICTextureLoader.h"
 
 #include "ScreenGrab.h"
 #include <wincodec.h>
-#include "libraries\DirectXTex.h"
 
 using namespace DirectX;
 
