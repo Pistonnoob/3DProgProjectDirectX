@@ -233,7 +233,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	//Test factory creating model objects.
 	ObjectFactory factory;
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "sphere1.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "box.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -245,13 +245,13 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	if (m_Models.size() > 0)
+	if (m_Models.size() > 1)
 	{
 		Matrix tempWorld;
 		Matrix temp2World;
-		m_Models[0]->GetWorldMatrix(tempWorld);
-		m_Models[0]->ApplyMatrix(XMMatrixTranslation(5.0f, 0.0f, 5.0f));
-		m_Models[0]->GetWorldMatrix(temp2World);
+		m_Models[1]->GetWorldMatrix(tempWorld);
+		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, 5.0f, 0.0f));
+		m_Models[1]->GetWorldMatrix(temp2World);
 		if (temp2World != tempWorld)
 		{
 			int thereWasNoAppliedMatrix = 0;
@@ -270,24 +270,25 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 bool GraphicsHandler::Render()
 {
+	// Clear the buffers to begin the scene.
+	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
+	Matrix viewMatrix, projectionMatrix, worldMatrix;
+	bool result = false;
+
+	// Generate the view matrix based on the camera's position.
+	m_Camera->Render();
+
+	// Get the view, and projection matrices from the camera and d3d objects.
+	this->m_Camera->GetViewMatrix(viewMatrix);
+	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
 	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
-		Matrix viewMatrix, projectionMatrix, worldMatrix;
-		bool result = false;
+		//Do the logic uniqueue to every model / object
 
-
-		// Clear the buffers to begin the scene.
-		this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
-
-		// Generate the view matrix based on the camera's position.
-		m_Camera->Render();
-
-		// Get the world, view, and projection matrices from the camera and d3d objects.
+		//Get the world matrix from the model / object and rotate it for visibility
 		(*model)->GetWorldMatrix(worldMatrix);
-		this->m_Camera->GetViewMatrix(viewMatrix);
-		this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-		worldMatrix = DirectX::XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
+		worldMatrix *= XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation);
 
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
