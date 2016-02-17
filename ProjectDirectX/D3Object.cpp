@@ -99,6 +99,16 @@ void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 	worldMatrix = this->m_worldMatrix;
 }
 
+void D3Object::SetWorldMatrix(const Matrix worldMatrix)
+{
+	this->m_worldMatrix = worldMatrix;
+}
+
+void D3Object::ApplyMatrix(const Matrix applyToWorld)
+{
+	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();

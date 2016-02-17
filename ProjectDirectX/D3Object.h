@@ -33,6 +33,9 @@ public:
 	void GetWorldMatrix(Matrix& worldMatrix);
 #pragma endregion getters
 
+	void SetWorldMatrix(const Matrix worldMatrix);
+	void ApplyMatrix(const Matrix applyToWorld);
+
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for external definition of vertices into a D3Object
 	bool InitializeBuffers(ID3D11Device* device);
 	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName);
