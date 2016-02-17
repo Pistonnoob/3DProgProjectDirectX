@@ -8,6 +8,7 @@ System::System()
 	m_Graphics = NULL;
 	m_FPS = NULL;
 	m_timer = NULL;
+	m_lockCursor = false;
 }
 
 System::System(const System & orig)
@@ -204,6 +205,31 @@ bool System::Frame()
 	{
 		return false;
 	}
+	if (m_Input->WasKeyPressed(DIK_L))
+	{
+		ShowCursor(m_lockCursor);
+		if (m_lockCursor)
+		{
+			m_lockCursor = false;
+		}
+		else
+		{
+			m_lockCursor = true;
+		}
+	}
+	if (m_lockCursor && GetActiveWindow() != NULL)
+	{
+		int posX = 0, posY = 0;
+
+		RECT rcClient, rcWind;
+		GetClientRect(m_hwnd, &rcClient);
+		GetWindowRect(m_hwnd, &rcWind);
+		posX = rcWind.right - rcClient.right / 2;
+		posY = rcWind.top + rcClient.bottom / 2;
+
+		SetCursorPos(posX, posY);
+	}
+
 	//Let the FPS and Timer objects to their frame processing.
 	this->m_FPS->Frame();
 	this->m_timer->Frame();
@@ -306,8 +332,7 @@ void System::InitializeWindows(int & width, int & height)
 	SetFocus(m_hwnd);
 
 	//Hide the mouse cursor
-	ShowCursor(true);
-
+	//ShowCursor(true);
 	return;
 }
 

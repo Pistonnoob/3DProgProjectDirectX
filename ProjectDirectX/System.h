@@ -25,6 +25,7 @@ private:
 	FPSHandler* m_FPS;
 	Timer* m_timer;
 
+	bool m_lockCursor;
 	bool Frame();
 	void InitializeWindows(int& width, int& height);
 	void ShutdownWindows();

@@ -28,7 +28,6 @@ private:
 	ID3D11RasterizerState* m_rasterState;
 
 	Matrix m_projectionMatrix;
-	Matrix m_worldMatrix;
 	Matrix m_orthoMatrix;
 public:
 	D3DClass();
@@ -45,7 +44,6 @@ public:
 	ID3D11DeviceContext* GetDeviceContext();
 
 	void GetProjectionMatrix(Matrix& projectionMatrix);
-	void GetWorldMatrix(Matrix& worldMatrix);
 	void GetOrthoMatrix(Matrix& orthoMatrix);
 
 	void GetVideoCardInfo(char* cardName, int& memory);

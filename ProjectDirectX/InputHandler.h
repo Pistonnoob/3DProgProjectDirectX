@@ -19,11 +19,13 @@ private:
 	
 	//Contains ths currect state of the keyboard and the mouse.
 	unsigned char m_keys[256];
+	unsigned char m_oldKeys[256];
 	DIMOUSESTATE m_mouseState;
 	int m_screenWidth;
 	int m_screenHeight;
 	int m_mouseX;
 	int m_mouseY;
+	Vector2 m_dMouse;
 public:
 	InputHandler();
 	InputHandler(const InputHandler& input);
@@ -35,7 +37,11 @@ public:
 
 	bool IsEscapePressed();
 	bool IsKeyPressed(int keyboardScanCode);
+	bool WasKeyPressed(int keyboardScanCode);
 	void GetMouse(int& x, int& y);
+	void GetMouseDelta(int& x, int& y);
+	void GetMouseDelta(Vector2 &storeIn);
+	Vector2 GetMouseDelta();
 private:
 	bool ReadKeyboard();
 	bool ReadMouse();

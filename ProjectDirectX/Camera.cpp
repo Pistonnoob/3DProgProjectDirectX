@@ -14,6 +14,7 @@ Camera::Camera(const Camera & original)
 {
 	m_position = original.m_position;
 	m_rotation = original.m_rotation;
+	m_up = original.m_up;
 	m_viewMatrix = original.m_viewMatrix;
 }
 
@@ -75,11 +76,11 @@ Vector3 Camera::GetUpVector()
 
 void Camera::Render()	//Builds and updates the view-matrix
 {
-	Vector4 up(0, 1.0f, 0, 1.0f), position(0, 0, 0, 1), lookAt(0, 0, 1, 1);
+	Vector4 up(0, 1.0f, 0, 0.0f), position(0, 0, 0, 1), lookAt(0, 0, 1, 1);
 	float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
 	Matrix rotationMatrix;
 	//check in how the vector is rotated around its look-at. Normally (0, 1, 0), for standing upright.
-	up = Vector4(m_up.x, m_up.y, m_up.z, 1.0f);
+	up = Vector4(m_up.x, m_up.y, m_up.z, 0.0f);
 	//Setup the possition of the camera in world-space.
 	position = Vector4(m_position.x, m_position.y, m_position.z, 1.0f);
 	//Set where the camera is looking at by default.
@@ -99,8 +100,13 @@ void Camera::Render()	//Builds and updates the view-matrix
 	//Translate the rotated camera position to the location of the viewer
 	lookAt = position + lookAt;
 	//Create the view matrix from our updated vectors
-	this->m_viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(position.x, position.y, position.z, 1), DirectX::XMVectorSet(lookAt.x, lookAt.y, lookAt.z, 1), DirectX::XMVectorSet(up.x, up.y, up.z, 1));
+	this->m_viewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(position.x, position.y, position.z, 1), DirectX::XMVectorSet(lookAt.x, lookAt.y, lookAt.z, 1), DirectX::XMVectorSet(up.x, up.y, up.z, 0));
 	return;
+}
+
+Matrix Camera::GetViewMatrix()
+{
+	return this->m_viewMatrix;
 }
 
 void Camera::GetViewMatrix(Matrix & storeIn)

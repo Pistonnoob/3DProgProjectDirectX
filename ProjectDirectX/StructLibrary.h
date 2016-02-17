@@ -6,6 +6,29 @@ using namespace DirectX::SimpleMath;
 
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
+enum FactoryObjectFormat
+{
+	OBJ,
+	OBJ_RH,
+	OBJ_LH,
+	TXT
+};
+
+enum TextureFormat
+{
+	TARGA,
+	PNG,
+	JPEG
+};
+
+enum Keyboard_Key
+{
+	KEY_W = 87,
+	KEY_A = 65,
+	KEY_S = 83,
+	KEY_D = 68,
+	KEY_RESET = 82
+};
 
 struct Vertex
 {
@@ -60,29 +83,19 @@ struct JPEGHeader
 
 };
 
-enum FactoryObjectFormat
+struct ObjMaterial
 {
-	OBJ,
-	OBJ_RH,
-	OBJ_LH,
-	TXT
+	static const int MATERIAL_NAME_LENGTH = 30;
+	char name[MATERIAL_NAME_LENGTH];	//The mtl name
+	int illum;		//Illumination models
+	Vector3 Kd;		//Diffuse Color
+	Vector3 Ka;		//Ambient Color
+	Vector3 Ks;		//Specular Color
+	char texture[MATERIAL_NAME_LENGTH];	//The texture file
+	TextureFormat textureFormat;		//The texture file type
 };
 
-enum TextureFormat
-{
-	TARGA,
-	PNG,
-	JPEG
-};
 
-enum Keyboard_Key
-{
-	KEY_W = 87,
-	KEY_A = 65,
-	KEY_S = 83,
-	KEY_D = 68,
-	KEY_RESET = 82
-};
 
 // input layout (verified using vertex shader)
 //static const D3D11_INPUT_ELEMENT_DESC inputDescColor[] = {
@@ -102,6 +115,9 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
+
+//Default Texture
+static const char DEFAULT_TEXTURE[] = "missing_texture.png";
 
 //Shader names
 static const char *VERTEXSHADER_NAME = "VertexShader.hlsl", *GEOMETRYSHADER_NAME = "GeometryShader.hlsl", *PIXELSHADER_NAME = "PixelShader.hlsl";

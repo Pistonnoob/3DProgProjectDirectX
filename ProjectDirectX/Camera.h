@@ -30,6 +30,7 @@ public:
 
 	void Render();
 
+	Matrix GetViewMatrix();
 	void GetViewMatrix(Matrix& storeIn);
 	void GetViewMatrix(WVPBufferStruct& storeIn);
 };

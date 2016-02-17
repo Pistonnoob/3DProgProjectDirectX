@@ -10,6 +10,8 @@ D3Object::D3Object()
 	m_indexCount = 0;
 	m_model = NULL;
 	m_texture = NULL;
+	// Initialize the world matrix to the identity matrix.
+	m_worldMatrix = DirectX::XMMatrixIdentity();
 }
 
 D3Object::D3Object(const D3Object & original)
@@ -67,7 +69,6 @@ void D3Object::Shutdown()
 	this->ReleaseTexture();
 	//Release the buffers.
 	this->ShutdownBuffers();
-
 	//Release the model data.
 	this->ReleaseModel();
 
@@ -92,10 +93,26 @@ ID3D11ShaderResourceView * D3Object::GetTexture()
 	return this->m_texture->GetTextureView();
 }
 
+void D3Object::GetWorldMatrix(Matrix & worldMatrix)
+{
+	worldMatrix = this->m_worldMatrix;
+}
+
+void D3Object::SetWorldMatrix(const Matrix worldMatrix)
+{
+	this->m_worldMatrix = worldMatrix;
+}
+
+void D3Object::ApplyMatrix(const Matrix applyToWorld)
+{
+	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();
 	this->m_indexCount = (int)vertexData.size();//vertices.size();
+	this->m_model = new VertexModel[this->m_vertexCount];
 	for (int j = 0; j < m_vertexCount; j++)
 	{
 		this->m_model[j] = vertexData[m_vertexCount - j - 1];
@@ -188,23 +205,6 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 	return true;
 }
 
-void D3Object::ShutdownBuffers()
-{
-	//Release the vertex buffer
-	if (this->m_vertexBuffer != NULL)
-	{
-		this->m_vertexBuffer->Release();
-		this->m_vertexBuffer = NULL;
-	}
-	//Release the index buffer
-	if (this->m_indexBuffer != NULL)
-	{
-		this->m_indexBuffer->Release();
-		this->m_indexBuffer = NULL;
-	}
-
-	return;
-}
 
 void D3Object::RenderBuffers(ID3D11DeviceContext *deviceContext)
 {
@@ -246,16 +246,8 @@ bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceCont
 	return true;
 }
 
-void D3Object::ReleaseTexture()
-{
-	if (m_texture != NULL)
-	{
-		m_texture->Shutdown();
-		delete m_texture;
-		m_texture = NULL;
-	}
-	return;
-}
+
+
 
 bool D3Object::LoadModelObjLH(char * fileName)
 {
@@ -411,7 +403,43 @@ bool D3Object::LoadModelTXT(char * filename)
 	return true;
 }
 
+void D3Object::ShutdownBuffers()
+{
+	//Release the vertex buffer
+	if (this->m_vertexBuffer != NULL)
+	{
+		this->m_vertexBuffer->Release();
+		this->m_vertexBuffer = NULL;
+	}
+	//Release the index buffer
+	if (this->m_indexBuffer != NULL)
+	{
+		this->m_indexBuffer->Release();
+		this->m_indexBuffer = NULL;
+	}
+
+	return;
+}
+
+void D3Object::ReleaseTexture()
+{
+	if (m_texture != NULL)
+	{
+		m_texture->Shutdown();
+		delete m_texture;
+		m_texture = NULL;
+	}
+	return;
+}
+
 void D3Object::ReleaseModel()
 {
-	
+	if (this->m_model != NULL)
+	{
+		delete[] m_model;
+		m_model = NULL;
+	}
 }
+
+
+

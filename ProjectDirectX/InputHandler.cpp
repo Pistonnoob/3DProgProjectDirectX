@@ -27,6 +27,8 @@ bool InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int width, int hei
 	this->m_mouseX = 0;
 	this->m_mouseY = 0;
 
+	this->m_dMouse = Vector2( 0.0f, 0.0f );
+
 	// Initialize the main direct input interface.
 	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
 	if (FAILED(result))
@@ -162,12 +164,28 @@ bool InputHandler::IsKeyPressed(int keyboardScanCode)
 	bool result = false;
 	if (keyboardScanCode < sizeof(this->m_keys) && keyboardScanCode > 0)
 	{
-		if (this->m_keys[keyboardScanCode])
+		if (this->m_keys[keyboardScanCode] & 0x80)
 		{
 			return true;
 		}
 	}
 
+	return result;
+}
+
+bool InputHandler::WasKeyPressed(int keyboardScanCode)
+{
+	bool result = false;
+	if (keyboardScanCode < sizeof(this->m_keys) && keyboardScanCode > 0)
+	{
+		if (!this->m_oldKeys[keyboardScanCode])
+		{
+			if (this->m_keys[keyboardScanCode] & 0x80)
+			{
+				return true;
+			}
+		}
+	}
 	return result;
 }
 
@@ -178,11 +196,29 @@ void InputHandler::GetMouse(int & x, int & y)
 	return;
 }
 
+void InputHandler::GetMouseDelta(int & x, int & y)
+{
+	x = this->m_dMouse.x;
+	y = this->m_dMouse.y;
+}
+
+void InputHandler::GetMouseDelta(Vector2 & storeIn)
+{
+	storeIn = this->GetMouseDelta();
+}
+
+Vector2 InputHandler::GetMouseDelta()
+{
+	return this->m_dMouse;
+}
+
 bool InputHandler::ReadKeyboard()
 {
 	HRESULT result;
 
 	// Read the keyboard device.
+	for (int i = 0; i < 256; i++)
+		m_oldKeys[i] = m_keys[i];
 	result = this->m_keyboard->GetDeviceState(sizeof(this->m_keys), (LPVOID)&this->m_keys);
 	if (FAILED(result))
 	{
@@ -225,6 +261,8 @@ bool InputHandler::ReadMouse()
 
 void InputHandler::ProcessInput()
 {
+	// Update the change in mouse position
+	m_dMouse = Vector2(m_mouseState.lX, m_mouseState.lY);
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 	m_mouseX += m_mouseState.lX;
 	m_mouseY += m_mouseState.lY;
