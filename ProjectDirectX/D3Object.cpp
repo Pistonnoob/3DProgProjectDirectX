@@ -10,6 +10,8 @@ D3Object::D3Object()
 	m_indexCount = 0;
 	m_model = NULL;
 	m_texture = NULL;
+	// Initialize the world matrix to the identity matrix.
+	m_worldMatrix = DirectX::XMMatrixIdentity();
 }
 
 D3Object::D3Object(const D3Object & original)
@@ -94,6 +96,7 @@ ID3D11ShaderResourceView * D3Object::GetTexture()
 
 void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 {
+	worldMatrix = this->m_worldMatrix;
 }
 
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)

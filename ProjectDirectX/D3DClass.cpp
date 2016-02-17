@@ -367,9 +367,6 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	//MATRICES------------------------------------------------------------------------------------------
 	// Create the projection matrix for 3D rendering.
 	m_projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-	
-	// Initialize the world matrix to the identity matrix.
-	m_worldMatrix = DirectX::XMMatrixIdentity();
 
 	// Create an orthographic projection matrix for 2D rendering that we probably won't be using.
 	m_orthoMatrix = DirectX::XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
@@ -491,13 +488,6 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 void D3DClass::GetProjectionMatrix(Matrix& projectionMatrix)
 {
 	projectionMatrix = m_projectionMatrix;
-	return;
-}
-
-
-void D3DClass::GetWorldMatrix(Matrix& worldMatrix)
-{
-	worldMatrix = m_worldMatrix;
 	return;
 }
 
