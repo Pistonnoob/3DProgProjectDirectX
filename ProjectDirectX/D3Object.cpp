@@ -92,6 +92,10 @@ ID3D11ShaderResourceView * D3Object::GetTexture()
 	return this->m_texture->GetTextureView();
 }
 
+void D3Object::GetWorldMatrix(Matrix & worldMatrix)
+{
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();

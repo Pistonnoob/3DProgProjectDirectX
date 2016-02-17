@@ -19,6 +19,7 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureObject* m_texture;
 	VertexModel* m_model;
+	Matrix m_worldMatrix;
 public:
 	D3Object();
 	D3Object(const D3Object& original);
@@ -29,6 +30,7 @@ public:
 #pragma region
 	int GetIndexCount()const;
 	ID3D11ShaderResourceView* GetTexture();
+	void GetWorldMatrix(Matrix& worldMatrix);
 #pragma endregion getters
 
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for external definition of vertices into a D3Object
