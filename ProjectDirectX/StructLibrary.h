@@ -86,14 +86,13 @@ struct JPEGHeader
 struct ObjMaterial
 {
 	static const int MATERIAL_NAME_LENGTH = 30;
-	char name[MATERIAL_NAME_LENGTH];
-	int illum;
-	Vector3 Kd;
-	Vector3 Ka;
-	Vector3 Tf;
-	char texture[MATERIAL_NAME_LENGTH];
-	TextureFormat textureFormat;
-	int Ni;
+	char name[MATERIAL_NAME_LENGTH];	//The mtl name
+	int illum;		//Illumination models
+	Vector3 Kd;		//Diffuse Color
+	Vector3 Ka;		//Ambient Color
+	Vector3 Ks;		//Specular Color
+	char texture[MATERIAL_NAME_LENGTH];	//The texture file
+	TextureFormat textureFormat;		//The texture file type
 };
 
 

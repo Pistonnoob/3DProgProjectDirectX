@@ -61,10 +61,10 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	
 	char missingMaterialName[] = "missing";
 	memcpy(&missingMaterial.name, &missingMaterialName, sizeof(missingMaterialName));
-	missingMaterial.illum = 0;
-	missingMaterial.Kd = Vector3(0.0f, 0.0f, 0.0f);
-	missingMaterial.Ka = Vector3(0.0f, 0.0f, 0.0f);
-	missingMaterial.Tf = Vector3(0.0f, 0.0f, 0.0f);
+	missingMaterial.illum = 1;
+	missingMaterial.Kd = Vector3(1.0f, 1.0f, 1.0f);
+	missingMaterial.Ka = Vector3(1.0f, 1.0f, 1.0f);
+	missingMaterial.Ks = Vector3(0.0f, 0.0f, 0.0f);
 	int size_ttt = sizeof(DEFAULT_TEXTURE);
 	memcpy(&missingMaterial.texture, DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 #pragma region
@@ -78,7 +78,6 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	}else if (missingTextureNameTemp == "tga") {	missingTextureFormat = TextureFormat::TARGA; }
 	missingMaterial.textureFormat = missingTextureFormat;
 #pragma endregion fixing texture format
-	missingMaterial.Ni = 0;
 	char temp[512];
 
 	fileIn.open(fileName, ios::in);
@@ -109,7 +108,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				ObjMaterial localMaterial = missingMaterial;
 				for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
 				{
-					if ((*mat).name == objectMaterial)
+					if (strcmp((*mat).name,  objectMaterial) == 0)
 					{
 						localMaterial = (*mat);
 					}
@@ -186,13 +185,13 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	newObject->CreateFromData(vertexData);
 	//Initialize vertex and index buffers.
 	newObject->InitializeBuffers(device);
-	//Get the matrial name
+	//Get the material name
 	string textureName = "";
-	ObjMaterial localMaterial;
+	//Initialize the material as "missing material"
+	ObjMaterial localMaterial = missingMaterial;
 	for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
 	{
-		char *name = (*mat).name;
-		if (*name == *objectMaterial)
+		if (strcmp((*mat).name, objectMaterial) == 0)
 		{
 			localMaterial = (*mat);
 		}
@@ -219,6 +218,8 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 	string special = "", line = "";
 	istringstream inputString;
 
+	bool first = true;
+
 	const unsigned int NAMELENGTH = 30;
 	const unsigned int SPECIALCHARSIZE = 10;
 	char specialChar[SPECIALCHARSIZE];
@@ -228,7 +229,6 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 	ObjMaterial mat;
 	//Set the default texture for materials without texturing
 	memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
-
 	fileIn.open(filename, ios::in);
 	if (fileIn.is_open())
 	{
@@ -240,6 +240,13 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 			inputString.str(line);
 			if (line.substr(0, 6) == "newmtl")
 			{
+				if (!first)
+				{
+					ObjMaterial newMat = mat;
+					materialData.push_back(newMat);
+					memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+				}else
+					first = false;
 				// newmtl
 				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.name, mat.MATERIAL_NAME_LENGTH);
 			}
@@ -258,10 +265,10 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				// Ka
 				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ka.x, &mat.Ka.y, &mat.Ka.z);
 			}
-			else if (line.substr(0, 2) == "Tf")
+			else if (line.substr(0, 2) == "Ks")
 			{
 				// Tf
-				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Tf.x, &mat.Tf.y, &mat.Tf.z);
+				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ks.x, &mat.Ks.y, &mat.Ks.z);
 			}
 			else if (line.substr(0, 6) == "map_Kd")
 			{
@@ -285,15 +292,17 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 					mat.textureFormat = TextureFormat::TARGA;
 				}
 			}
-			else if (line.substr(0, 2) == "Ni")
-			{
-				// Ni
-				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.Ni);
-				materialData.push_back(mat);
-			}
+			//else if (line.substr(0, 2) == "Ni")
+			//{
+			//	// Ni
+			//	sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.Ni);
+			//	materialData.push_back(mat);
+			//}
 		}
 	}
 	fileIn.close();
+	ObjMaterial newMat = mat;
+	materialData.push_back(newMat);
 
 	return materialData;
 }
