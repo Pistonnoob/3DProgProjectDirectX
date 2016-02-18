@@ -93,7 +93,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		inputString.str(line2);
 		if (line2.substr(0, 2) == "v ")
 		{
-			if (specialChar == "f ")
+			if (strcmp(specialChar, "f") == 0)
 			{
 				//Create a new 3DObject using the vectors
 				D3Object* newObject = new D3Object();
