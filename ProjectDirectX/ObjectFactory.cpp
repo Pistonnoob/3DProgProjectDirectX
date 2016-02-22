@@ -209,9 +209,9 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 
 	char temp[512];
 
-	ObjMaterial mat;
+	ObjMaterial mat = DEFAULT_MATERIAL;
 	//Set the default texture for materials without texturing
-	memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+	//memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 	fileIn.open(filename, ios::in);
 	if (fileIn.is_open())
 	{
@@ -227,7 +227,9 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				{
 					ObjMaterial newMat = mat;
 					materialData.push_back(newMat);
-					memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+					mat = DEFAULT_MATERIAL;
+					//Right now we push old settings to new materials, other alternative is setting new materials to default
+					//memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 				}else
 					first = false;
 				// newmtl
