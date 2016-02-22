@@ -23,6 +23,7 @@ private:
 	ID3D11InputLayout* m_layout;
 	ID3D11Buffer* m_matrixBuffer;
 	ID3D11Buffer* m_lightBuffer;
+	ID3D11Buffer* m_materialBuffer;
 	ID3D11SamplerState* m_samplerState;
 public:
 	TextureHandler();
@@ -39,7 +40,7 @@ private:
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView* resourceView);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView* resourceView, PixelMaterial material);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 
