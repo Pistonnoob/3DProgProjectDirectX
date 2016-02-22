@@ -54,3 +54,11 @@ SamplerState p_sampler
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
+
+struct Material
+{
+	int illum;		//Illumination models
+	float3 Kd;		//Diffuse Color
+	float3 Ka;		//Ambient Color
+	float3 Tf;
+};
