@@ -8,8 +8,11 @@ D3Object::D3Object()
 	m_indexBuffer = NULL;
 	m_vertexCount = 0;
 	m_indexCount = 0;
-	m_model = NULL;
 	m_texture = NULL;
+	m_model = NULL;
+	
+
+
 	// Initialize the world matrix to the identity matrix.
 	m_worldMatrix = DirectX::XMMatrixIdentity();
 }
@@ -71,7 +74,6 @@ void D3Object::Shutdown()
 	this->ShutdownBuffers();
 	//Release the model data.
 	this->ReleaseModel();
-
 	return;
 }
 
@@ -88,6 +90,11 @@ int D3Object::GetIndexCount()const
 	return this->m_indexCount;
 }
 
+ObjMaterial D3Object::GetMaterial() const
+{
+	return this->m_material;
+}
+
 ID3D11ShaderResourceView * D3Object::GetTexture()
 {
 	return this->m_texture->GetTextureView();
@@ -96,6 +103,12 @@ ID3D11ShaderResourceView * D3Object::GetTexture()
 void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 {
 	worldMatrix = this->m_worldMatrix;
+}
+
+bool D3Object::SetMaterial(ObjMaterial material)
+{
+	this->m_material = material;
+	return true;
 }
 
 void D3Object::SetWorldMatrix(const Matrix worldMatrix)
