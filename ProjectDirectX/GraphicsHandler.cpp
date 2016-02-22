@@ -287,8 +287,11 @@ bool GraphicsHandler::Render()
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
 
+		ObjMaterial objMaterial = (*model)->GetMaterial();
+		PixelMaterial pMaterial = {objMaterial.illum, objMaterial.Kd, objMaterial.Ka, objMaterial.Tf};
+
 		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture());
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture(), pMaterial);
 		if (!result)
 		{
 			return false;

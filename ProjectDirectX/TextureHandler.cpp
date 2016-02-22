@@ -8,7 +8,7 @@ TextureHandler::TextureHandler()
 	this->m_layout = NULL;
 	this->m_matrixBuffer = NULL;
 	this->m_lightBuffer = NULL;
-	this->m_samplerState = NULL;
+	this->m_materialBuffer = NULL;
 
 	this->m_samplerState = NULL;
 }
@@ -241,6 +241,21 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 		return false;
 	}
 
+	//Create the material buffer
+	memset(&materialBufferDesc, 0, sizeof(materialBufferDesc));
+	materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	materialBufferDesc.MiscFlags = 0;
+	materialBufferDesc.StructureByteStride = 0;
+	materialBufferDesc.ByteWidth = sizeof(PixelMaterial);
+
+	hResult = device->CreateBuffer(&materialBufferDesc, NULL, &m_materialBuffer);
+	if (FAILED(hResult))
+	{
+		return false;
+	}
+
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -363,6 +378,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	WVPBufferStruct* dataPtr = NULL;
 	LightStruct* lightPtr = NULL;
+	PixelMaterial* materialPtr = NULL;
 	unsigned int bufferNumber = 0;
 
 	//Transpose the matrices to prepare them for the shader
@@ -405,7 +421,22 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	lightPtr->lightDir = light.lightDir;
 
 	//Unlock/unmap the constant buffer
-	deviceContext->Unmap(this->m_matrixBuffer, 0);
+	deviceContext->Unmap(this->m_lightBuffer, 0);
+
+
+	// Lock/map the m_material
+	result = deviceContext->Map(this->m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get a pointer to the data
+	materialPtr = (PixelMaterial*)mappedResource.pData;
+	memcpy(&materialPtr, &material, sizeof(material));
+
+	//Unlock/unmap the constant buffer
+	deviceContext->Unmap(this->m_materialBuffer, 0);
 
 
 	//Set the constant buffer in the vertex shader with the updated values
