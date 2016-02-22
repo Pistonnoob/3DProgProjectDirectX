@@ -256,7 +256,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	int modelNr = 0;
 	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
 	{
-		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*modelNr));
+		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
 		modelNr++;
 	}
 	return true;

@@ -90,7 +90,7 @@ struct ObjMaterial
 	int illum;		//Illumination models
 	Vector3 Kd;		//Diffuse Color
 	Vector3 Ka;		//Ambient Color
-	Vector3 Ks;		//Specular Color
+	Vector3 Tf;		
 	char texture[MATERIAL_NAME_LENGTH];	//The texture file
 	TextureFormat textureFormat;		//The texture file type
 };

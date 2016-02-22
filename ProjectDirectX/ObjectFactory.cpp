@@ -64,7 +64,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	missingMaterial.illum = 1;
 	missingMaterial.Kd = Vector3(1.0f, 1.0f, 1.0f);
 	missingMaterial.Ka = Vector3(1.0f, 1.0f, 1.0f);
-	missingMaterial.Ks = Vector3(0.0f, 0.0f, 0.0f);
+	missingMaterial.Tf = Vector3(0.0f, 0.0f, 0.0f);
 	memcpy(&missingMaterial.texture, DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 #pragma region
 	string missingTextureNameTemp = missingMaterial.texture;
@@ -264,10 +264,10 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				// Ka
 				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ka.x, &mat.Ka.y, &mat.Ka.z);
 			}
-			else if (line.substr(0, 2) == "Ks")
+			else if (line.substr(0, 2) == "Tf")
 			{
 				// Tf
-				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ks.x, &mat.Ks.y, &mat.Ks.z);
+				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Tf.x, &mat.Tf.y, &mat.Tf.z);
 			}
 			else if (line.substr(0, 6) == "map_Kd")
 			{
