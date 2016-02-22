@@ -43,7 +43,7 @@ void TextureHandler::Shutdown()
 	return;
 }
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct light, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial material)
 {
 	bool result = false;
 
@@ -61,10 +61,10 @@ bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount,
 }
 
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct light, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial material)
 {
 
-	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, light, resourceView);
+	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, light, resourceView, material);
 }
 
 bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * gsFilename, WCHAR * psFilename)
