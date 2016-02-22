@@ -55,28 +55,12 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
 	vector<ObjMaterial> materials;
-	ObjMaterial missingMaterial;
+	/*This should not be needed but may be used to make small test changes
+	to the default material without causing a ripple effect on the system*/
+	ObjMaterial missingMaterial = DEFAULT_MATERIAL;
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
-	
-	char missingMaterialName[] = "missing";
-	memcpy(&missingMaterial.name, &missingMaterialName, sizeof(missingMaterialName));
-	missingMaterial.illum = 1;
-	missingMaterial.Kd = Vector3(1.0f, 1.0f, 1.0f);
-	missingMaterial.Ka = Vector3(1.0f, 1.0f, 1.0f);
-	missingMaterial.Tf = Vector3(0.0f, 0.0f, 0.0f);
-	memcpy(&missingMaterial.texture, DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
-#pragma region
-	string missingTextureNameTemp = missingMaterial.texture;
-	TextureFormat missingTextureFormat = TextureFormat::JPEG;
-	missingTextureNameTemp = missingTextureNameTemp.substr(missingTextureNameTemp.find('.', 0), 20);
-	if (missingTextureNameTemp.size() > 1)
-		missingTextureNameTemp = missingTextureNameTemp.substr(1, sizeof(missingMaterialName));
-	if (missingTextureNameTemp == "jpg"){			missingTextureFormat = TextureFormat::JPEG;
-	}else if (missingTextureNameTemp == "png"){		missingTextureFormat = TextureFormat::PNG;
-	}else if (missingTextureNameTemp == "tga") {	missingTextureFormat = TextureFormat::TARGA; }
-	missingMaterial.textureFormat = missingTextureFormat;
-#pragma endregion fixing texture format
+
 	char temp[512];
 
 	fileIn.open(fileName, ios::in);
