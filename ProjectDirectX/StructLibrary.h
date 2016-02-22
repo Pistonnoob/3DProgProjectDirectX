@@ -83,6 +83,7 @@ struct JPEGHeader
 
 };
 
+//Structure for materials
 struct ObjMaterial
 {
 	static const int MATERIAL_NAME_LENGTH = 30;

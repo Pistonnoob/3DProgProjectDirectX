@@ -219,6 +219,8 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 }
 
 
+
+
 void D3Object::RenderBuffers(ID3D11DeviceContext *deviceContext)
 {
 	unsigned int stride = 0;
