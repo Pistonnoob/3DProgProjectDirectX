@@ -88,7 +88,7 @@ struct ObjMaterial
 {
 	static const int MATERIAL_NAME_LENGTH = 30;
 	char name[MATERIAL_NAME_LENGTH];	//The mtl name
-	int illum;		//Illumination models
+	int illum;		//Illumination model
 	Vector3 Kd;		//Diffuse Color
 	Vector3 Ka;		//Ambient Color
 	Vector3 Tf;		
@@ -96,6 +96,13 @@ struct ObjMaterial
 	TextureFormat textureFormat;		//The texture file type
 };
 
+struct PixelMaterial
+{
+	int illum;		//Illumination model
+	Vector3 Kd;		//Diffuse Color
+	Vector3 Ka;		//Ambient Color
+	Vector3 Tf;
+};
 
 
 // input layout (verified using vertex shader)

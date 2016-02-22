@@ -9,6 +9,10 @@ cbuffer LightBuffer : register(b0) {
 	float4 lightDir;
 };
 
+cbuffer MaterialBuffer : register(b1) {
+	Material material;
+}
+
 //float4 main(PS_IN_TEST input) : SV_TARGET
 //{
 //	float4 m_color = (float4)0;
