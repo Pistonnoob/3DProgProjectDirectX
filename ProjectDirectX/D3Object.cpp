@@ -11,7 +11,7 @@ D3Object::D3Object()
 	m_texture = NULL;
 	m_model = NULL;
 	
-
+	m_material = DEFAULT_MATERIAL;
 
 	// Initialize the world matrix to the identity matrix.
 	m_worldMatrix = DirectX::XMMatrixIdentity();
