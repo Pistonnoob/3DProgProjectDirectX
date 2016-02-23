@@ -40,6 +40,7 @@ void main(
 		element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
 		element.Normal = mul(element.Normal, worldMatrix);
 		element.Pos = mul(element.Pos, worldMatrix);
+		element.WorldPos = element.Pos;
 		element.Pos = mul(element.Pos, viewMatrix);
 		element.Pos = mul(element.Pos, projectionMatrix);
 

@@ -44,6 +44,7 @@ struct PS_IN_TEST
 struct PS_IN_UV
 {
 	float4 Pos : SV_POSITION;
+	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
 	float2 UV : TEXCOORD;
 };

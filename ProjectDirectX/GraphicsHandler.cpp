@@ -228,20 +228,20 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	//Create the lights.
-	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 0, -2, 1), Vector4(0, 0, 1, 0)};
+	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 5, -10, 1), Vector4(0, 0, 1, 0)};
 
 	// Create the model objects.
 	//Test factory creating model objects.
 	ObjectFactory factory;
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggman.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (m_Models.size() > 1)
 	{
 		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
 		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
 		m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
 		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
-	}
+	}*/
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -253,12 +253,12 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	int modelNr = 0;
+	/*int modelNr = 0;
 	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
 	{
 		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
 		modelNr++;
-	}
+	}*/
 	return true;
 }
 

@@ -26,15 +26,15 @@ cbuffer MaterialBuffer : register(b1) {
 float4 main(PS_IN_UV input) : SV_TARGET
 {
 	float4 m_color = (float4)0;
-
+	float3 lightDirection = normalize(lightPos - input.WorldPos);
+	float lightIntensity = saturate(dot(lightDirection, input.Normal));
 	//Sample the pixel color from the color texture
 	m_color = c_text.Sample(samplerType, input.UV);
-
+	float4 diffuseColor = saturate((lightColor / 255) * lightIntensity);
+	m_color = m_color * diffuseColor;
 
 
 	//m_color = float4(input.Normal.x, input.Normal.y, 0.0f, 1.0f);
-	//m_color = input.Normal;
-	//m_color = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	return m_color;
 }
 
