@@ -28,7 +28,7 @@ cbuffer MatrixBuffer : register(b0){
 
 [maxvertexcount(3)]
 void main(
-	triangle GS_IN_UV input[3] : SV_POSITION,
+	triangle GS_IN_3D input[3] : SV_POSITION,
 	inout TriangleStream< PS_IN_UV > outputStream
 )
 {

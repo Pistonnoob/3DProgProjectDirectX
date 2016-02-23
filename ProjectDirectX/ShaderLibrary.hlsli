@@ -31,7 +31,7 @@ struct GS_IN_UV
 
 struct GS_IN_3D
 {
-	float4 Pos : POSITION;
+	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
 	float3 Normal : NORMAL;
 };
