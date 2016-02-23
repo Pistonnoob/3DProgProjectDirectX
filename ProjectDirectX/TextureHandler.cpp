@@ -442,7 +442,8 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	//Set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
-	deviceContext->PSSetConstantBuffers(0, 2, &this->m_lightBuffer);
+	deviceContext->PSSetConstantBuffers(0, 1, &this->m_lightBuffer);
+	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
 	//Set the shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &resourceView);
 

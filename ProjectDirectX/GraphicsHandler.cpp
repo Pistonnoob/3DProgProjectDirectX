@@ -288,7 +288,7 @@ bool GraphicsHandler::Render()
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
 
 		ObjMaterial objMaterial = (*model)->GetMaterial();
-		PixelMaterial pMaterial = { (Vector4)(objMaterial.Kd, 0.0f), (Vector4)(objMaterial.Ka, 0.0f), (Vector4)(objMaterial.Tf, 0.0f), objMaterial.illum};
+		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Tf.x, objMaterial.Tf.y, objMaterial.Tf.z, 0.0f)/*, objMaterial.illum*/};
 
 		// Render the model using the texture shader.
 		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture(), pMaterial);
