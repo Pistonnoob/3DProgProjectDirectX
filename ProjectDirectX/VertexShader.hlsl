@@ -16,7 +16,7 @@ GS_IN_3D main(VS_IN_3D input)
 	output.Pos.z = input.Pos.z;
 	output.Pos.w = 1.0f;
 
-	output.Normal = input.Normal;
+	output.Normal = float4(input.Normal.x, input.Normal.y, input.Normal.z, 0);
 	output.UV = input.UV;
 	return output;
 }

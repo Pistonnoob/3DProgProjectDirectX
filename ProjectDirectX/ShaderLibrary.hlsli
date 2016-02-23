@@ -33,7 +33,7 @@ struct GS_IN_3D
 {
 	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
-	float3 Normal : NORMAL;
+	float4 Normal : NORMAL;
 };
 
 struct PS_IN
