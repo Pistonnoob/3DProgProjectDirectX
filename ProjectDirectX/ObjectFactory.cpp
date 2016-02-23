@@ -83,6 +83,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				D3Object* newObject = new D3Object();
 				//Load the model data
 				newObject->CreateFromData(vertexData);
+				vertexData.clear();
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
 				//Get the material name

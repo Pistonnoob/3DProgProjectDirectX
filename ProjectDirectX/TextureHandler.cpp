@@ -44,7 +44,7 @@ void TextureHandler::Shutdown()
 	return;
 }
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial material)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct & light, ID3D11ShaderResourceView * resourceView, PixelMaterial & material)
 {
 	bool result = false;
 
@@ -62,7 +62,7 @@ bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount,
 }
 
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial material)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct & light, ID3D11ShaderResourceView * resourceView, PixelMaterial & material)
 {
 
 	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, light, resourceView, material);
@@ -372,7 +372,7 @@ void TextureHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hw
 
 }
 
-bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial material)
+bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial & material)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -433,7 +433,10 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 
 	//Get a pointer to the data
 	materialPtr = (PixelMaterial*)mappedResource.pData;
-	memcpy(&materialPtr, &material, sizeof(material));
+	materialPtr->Ka = material.Ka;
+	materialPtr->Kd = material.Kd;
+	materialPtr->Tf = material.Tf;
+	//memcpy(&materialPtr, &material, sizeof(material));
 
 	//Unlock/unmap the constant buffer
 	deviceContext->Unmap(this->m_materialBuffer, 0);

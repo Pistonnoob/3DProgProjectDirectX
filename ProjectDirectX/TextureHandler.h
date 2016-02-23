@@ -32,15 +32,15 @@ public:
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct light, ID3D11ShaderResourceView* resourceView, PixelMaterial material);
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix &world, Matrix &view, Matrix &projection, LightStruct light, ID3D11ShaderResourceView* resourceView, PixelMaterial material);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct & light, ID3D11ShaderResourceView* resourceView, PixelMaterial & material);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix &world, Matrix &view, Matrix &projection, LightStruct & light, ID3D11ShaderResourceView* resourceView, PixelMaterial & material);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* gsFilename, WCHAR* psFilename);
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView* resourceView, PixelMaterial material);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView* resourceView, PixelMaterial & material);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 
