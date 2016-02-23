@@ -282,7 +282,7 @@ bool GraphicsHandler::Render()
 
 		//Get the world matrix from the model / object and rotate it for visibility
 		(*model)->GetWorldMatrix(worldMatrix);
-		//worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
+		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
