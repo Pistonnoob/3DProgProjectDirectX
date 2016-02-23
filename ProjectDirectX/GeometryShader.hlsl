@@ -38,7 +38,7 @@ void main(
 		element.Pos = input[i].Pos;
 		element.UV = input[i].UV;
 		//element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
-		element.Normal = input[i].Normal;
+		element.Normal = normalize(input[i].Normal);
 		element.Normal = mul(element.Normal, worldMatrix);
 		element.Pos = mul(element.Pos, worldMatrix);
 		element.WorldPos = element.Pos;
