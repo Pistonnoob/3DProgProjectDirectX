@@ -88,6 +88,11 @@ int D3Object::GetIndexCount()const
 	return this->m_indexCount;
 }
 
+int D3Object::GetVertexCount() const
+{
+	return this->m_vertexCount;
+}
+
 ID3D11ShaderResourceView * D3Object::GetTexture()
 {
 	return this->m_texture->GetTextureView();
@@ -98,10 +103,44 @@ void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 	worldMatrix = this->m_worldMatrix;
 }
 
+#pragma region
+void D3Object::SetIndexCount(int nr )
+{
+	this->m_indexCount = nr;
+	
+}
+
+void D3Object::SetVertexCount(int nr)
+{
+	this->m_vertexCount = nr;
+}
+
+void D3Object::SetTexture(TextureObject * tex)
+{
+	this->m_texture = tex;
+	
+}
+
+void D3Object::SetVertexBuffer(ID3D11Buffer * buff)
+{
+	this->m_vertexBuffer = buff;
+}
+
+void D3Object::SetIndexBuffer(ID3D11Buffer * buff)
+{
+	this->m_indexBuffer = buff;
+}
+
+void D3Object::SetVertexModel(VertexModel * model)
+{
+	this->m_model = model;
+}
 void D3Object::SetWorldMatrix(const Matrix worldMatrix)
 {
 	this->m_worldMatrix = worldMatrix;
 }
+#pragma endregion Setters
+
 
 void D3Object::ApplyMatrix(const Matrix applyToWorld)
 {

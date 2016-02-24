@@ -29,11 +29,19 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);	//Move model geometry to device context / Graphicscard
 #pragma region
 	int GetIndexCount()const;
+	int GetVertexCount()const;
 	ID3D11ShaderResourceView* GetTexture();
 	void GetWorldMatrix(Matrix& worldMatrix);
 #pragma endregion getters
-
+#pragma region
+	void SetIndexCount(int);
+	void SetVertexCount(int);
+	void SetTexture(TextureObject*);
+	void SetVertexBuffer(ID3D11Buffer*);
+	void SetIndexBuffer(ID3D11Buffer*);
+	void SetVertexModel(VertexModel*);
 	void SetWorldMatrix(const Matrix worldMatrix);
+#pragma endregion setters
 	void ApplyMatrix(const Matrix applyToWorld);
 
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object

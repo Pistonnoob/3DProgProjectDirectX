@@ -177,7 +177,6 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		}
 	}
 	fileIn.close();
-
 	//Create a new 3DObject using the vectors
 	D3Object* newObject = new D3Object();
 	//Load the model data
@@ -200,6 +199,11 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	storeIn.push_back(newObject);
 
 	return true;
+}
+
+bool ObjectFactory::CreateFromHeightMap(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName, vector<D3Object*>& storeIn, int invert)
+{
+	return false;
 }
 
 
