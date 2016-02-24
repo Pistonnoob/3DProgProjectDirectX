@@ -132,7 +132,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		{
 			//Vertex Normal Indices in format f v1/vt1/vn1
 			struct IndexStruct { int v; int vt; int vn; } faceIndices[3];
-			if(invert > 0)
+			if(true)
 				sscanf_s(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar, SPECIALCHARSIZE,
 					&faceIndices[0].v, &faceIndices[0].vt, &faceIndices[0].vn,
 					&faceIndices[1].v, &faceIndices[1].vt, &faceIndices[1].vn,
