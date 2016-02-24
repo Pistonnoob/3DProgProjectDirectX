@@ -84,6 +84,7 @@ void GraphicsHandler::ShutDown()
 		D3Object* temp = NULL;
 		temp = m_Models.back();
 		m_Models.pop_back();
+		temp->Shutdown();
 		delete temp;
 	}
 
