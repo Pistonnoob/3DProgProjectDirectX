@@ -43,6 +43,7 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	//Diffuse End
 	//Speculare
 	//Speculare End
+	additionColor = saturate(additionColor);
 	m_color = m_color * additionColor;
 	//To print normals, for debugging
 	//m_color = float4(input.Normal.x, input.Normal.y, input.Normal.z, 1.0f);
