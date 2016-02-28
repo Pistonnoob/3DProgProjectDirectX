@@ -240,11 +240,6 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				// newmtl
 				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.name, mat.MATERIAL_NAME_LENGTH);
 			}
-			else if (line.substr(0, 5) == "illum")
-			{
-				// illum
-				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.illum);
-			}
 			else if (line.substr(0, 2) == "Kd")
 			{
 				// Kd
@@ -255,10 +250,25 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				// Ka
 				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ka.x, &mat.Ka.y, &mat.Ka.z);
 			}
+			else if (line.substr(0, 2) == "Ks")
+			{
+				// Ks
+				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ks.x, &mat.Ks.y, &mat.Ks.z);
+			}
+			else if (line.substr(0, 2) == "d ")
+			{
+				// d
+				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.d);
+			}
+			else if (line.substr(0, 5) == "illum")
+			{
+				// illum
+				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.illum);
+			}
 			else if (line.substr(0, 2) == "Tf")
 			{
 				// Tf
-				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Tf.x, &mat.Tf.y, &mat.Tf.z);
+				//sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Tf.x, &mat.Tf.y, &mat.Tf.z);
 			}
 			else if (line.substr(0, 6) == "map_Kd")
 			{
