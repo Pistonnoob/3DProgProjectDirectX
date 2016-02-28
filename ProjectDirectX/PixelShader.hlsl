@@ -46,14 +46,15 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	additionColor = saturate(additionColor);
 	//SPECULAR
 	float4 specularResult = (float4)0;
-	if (lightIntensity > 0.0f)
+	if (true/*lightIntensity > 0.0f*/)
 	{
 		float3 lightReflect = 0.0f;
-		float3 toCamera = (float3)normalize(specularPos - input.WorldPos);
+		float3 viewerDirection = (float3)normalize(specularPos - input.WorldPos);
 		// r = l + 2u = l + 2(n' - l) = 2(dot(n, l))*n - l = r
-		lightReflect = normalize(2 * (dot(input.Normal, lightDirection) * (float3)input.Normal) - dot(input.Normal, lightDirection));
+		float3 l = dot(input.Normal, lightDirection);
+		lightReflect = normalize(2 * (lightIntensity * (float3)input.Normal) - lightIntensity);
 
-		specularResult = pow(dot(lightReflect, toCamera), material.Ns);
+		specularResult = pow(dot(lightReflect, viewerDirection), material.Ns);
 		specularResult = specularResult * float4(material.Ks, 1.0f);
 		specularResult = saturate(specularResult);
 	}

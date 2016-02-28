@@ -234,7 +234,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	ObjectFactory factory;
 
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -246,10 +246,10 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
-	}
-	if (m_Models.size() > 1)
+	}*/
+	/*if (m_Models.size() > 1)
 	{
-		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
 		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
 		m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
 		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
@@ -261,12 +261,13 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	/*int modelNr = 0;
-	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
-	{
-		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
-		modelNr++;
-	}*/
+	//int modelNr = 0;
+	//for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
+	//{
+	//	(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
+	//	//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	modelNr++;
+	//}
 	return true;
 }
 
@@ -292,7 +293,7 @@ bool GraphicsHandler::Render()
 
 		//Get the world matrix from the model / object and rotate it for visibility
 		(*model)->GetWorldMatrix(worldMatrix);
-		//worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
+		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
