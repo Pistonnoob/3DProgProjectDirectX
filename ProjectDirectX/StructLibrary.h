@@ -3,7 +3,6 @@
 #include "SimpleMath.h"
 #include <string>
 using namespace DirectX::SimpleMath;
-
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
 enum FactoryObjectFormat

@@ -205,9 +205,13 @@ bool System::Frame()
 	{
 		return false;
 	}
+
+
+
+
 	if (m_Input->WasKeyPressed(DIK_L))
 	{
-		ShowCursor(m_lockCursor);
+		//ShowCursor(m_lockCursor);
 		if (m_lockCursor)
 		{
 			m_lockCursor = false;
@@ -226,8 +230,9 @@ bool System::Frame()
 		GetWindowRect(m_hwnd, &rcWind);
 		posX = rcWind.right - rcClient.right / 2;
 		posY = rcWind.top + rcClient.bottom / 2;
-
-		SetCursorPos(posX, posY);
+		const RECT b = {posX, posY, posX + 1, posY + 1};
+		ClipCursor(&b);
+		//SetCursorPos(posX, posY);
 	}
 
 	//Let the FPS and Timer objects to their frame processing.
@@ -333,6 +338,8 @@ void System::InitializeWindows(int & width, int & height)
 
 	//Hide the mouse cursor
 	//ShowCursor(true);
+
+	
 	return;
 }
 
