@@ -61,7 +61,7 @@ struct LightStruct
 {
 	Vector4 ambientColor;
 	Vector4 diffuseColor;
-	Vector4 speculareColor;
+	Vector4 specularColor;
 	Vector4 lightPos;
 	//Vector4 specularePos;
 };

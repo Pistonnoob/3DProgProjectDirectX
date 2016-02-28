@@ -6,7 +6,7 @@ SamplerState samplerType;
 cbuffer LightBuffer : register(b0) {
 	float4 ambientColor;
 	float4 diffuseColor;
-	float4 speculareColor;
+	float4 specularColor;
 	float4 diffusePos;
 };
 

@@ -418,7 +418,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	lightPtr = (LightStruct*)mappedResource.pData;
 	lightPtr->ambientColor = light.ambientColor;
 	lightPtr->diffuseColor = light.diffuseColor;
-	//lightPtr->speculareColor = light.speculareColor;
+	lightPtr->specularColor = light.specularColor;
 	lightPtr->lightPos = light.lightPos;
 	//lightPtr->specularePos = light.specularePos;
 
