@@ -32,31 +32,36 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	//Sample the pixel color from the color texture
 	m_color = c_text.Sample(samplerType, input.UV);
 	//AMBIENT
-	/*additionColor = ambientColor / 255;
-	additionColor *= float4(material.Ka, 1.0);*/
+	additionColor = ambientColor / 255;
+	additionColor *= float4(material.Ka, 1.0);
 	//DIFFUSE
 	float3 lightDirection = normalize(diffusePos - input.WorldPos);
 	float lightIntensity = saturate(dot(lightDirection, input.Normal));
 	float4 diffuseResult = saturate((diffuseColor / 255) * lightIntensity);
 
 	if (lightIntensity > 0.0f)
-		if(false)
-			additionColor += diffuseResult;
-	//SPECULAR
-	float3 lightReflect = 0.0f;
-	float3 toCamera = (float3)normalize(specularPos - input.WorldPos);
-	float4 specularResult = (float4)0;
-	// r = l + 2u = l + 2(n' - l) = 2(dot(n, l))*n - l = r
-	lightReflect = 2 * dot((float3)input.Normal, lightDirection) * (float3)input.Normal - lightDirection;
-	if (true /*dot(normalize(lightReflect), normalize(toCamera)) > 0.0f*/)
 	{
-		specularResult = diffuseColor * pow(dot(lightReflect, toCamera), material.Ns);
-		specularResult = specularResult * float4(material.Ks, 1.0f);
-		additionColor += specularResult;
+		additionColor += diffuseResult;
+	}
+	additionColor = saturate(additionColor);
+	//SPECULAR
+	float4 specularResult = (float4)0;
+	if (lightIntensity > 0.0f)
+	{
+		float3 lightReflect = 0.0f;
+		float3 toCamera = (float3)normalize(specularPos - input.WorldPos);
+		// r = l + 2u = l + 2(n' - l) = 2(dot(n, l))*n - l = r
+		lightReflect = normalize(2 * (lightIntensity * (float3)input.Normal) - lightDirection);
+
+		specularResult = pow(dot(lightReflect, toCamera), material.Ns);
+		specularResult = specularResult * float4(0.01f, 0.01f, 0.01f, 1.0f);
 	}
 	//calculating final color
 	additionColor = saturate(additionColor);
 	m_color = m_color * additionColor;
+
+	m_color = saturate(m_color + specularResult);
+	m_color = saturate(m_color);
 	//To print normals, for debugging
 	//m_color = float4(input.Normal.x, input.Normal.y, input.Normal.z, 1.0f);
 	return m_color;
