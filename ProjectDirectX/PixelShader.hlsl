@@ -8,6 +8,7 @@ cbuffer LightBuffer : register(b0) {
 	float4 diffuseColor;
 	float4 specularColor;
 	float4 diffusePos;
+	float4 specularPos;
 };
 
 cbuffer MaterialBuffer : register(b1) {

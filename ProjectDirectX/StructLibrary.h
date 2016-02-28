@@ -63,7 +63,7 @@ struct LightStruct
 	Vector4 diffuseColor;
 	Vector4 specularColor;
 	Vector4 lightPos;
-	//Vector4 specularePos;
+	Vector4 specularPos;
 };
 
 struct TargaHeader

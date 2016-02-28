@@ -420,7 +420,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	lightPtr->diffuseColor = light.diffuseColor;
 	lightPtr->specularColor = light.specularColor;
 	lightPtr->lightPos = light.lightPos;
-	//lightPtr->specularePos = light.specularePos;
+	lightPtr->specularPos = light.specularPos;
 
 	//Unlock/unmap the constant buffer
 	deviceContext->Unmap(this->m_lightBuffer, 0);
