@@ -437,7 +437,7 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 	materialPtr = (PixelMaterial*)mappedResource.pData;
 	materialPtr->Ka = material.Ka;
 	materialPtr->Kd = material.Kd;
-	materialPtr->Tf = material.Tf;
+	materialPtr->Ks = material.Ks;
 	//memcpy(&materialPtr, &material, sizeof(material));
 
 	//Unlock/unmap the constant buffer

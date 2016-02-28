@@ -255,10 +255,22 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				// Ks
 				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ks.x, &mat.Ks.y, &mat.Ks.z);
 			}
+			else if (line.substr(0, 2) == "Ns")
+			{
+				// Ns
+				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.Ns);
+			}
 			else if (line.substr(0, 2) == "d ")
 			{
 				// d
 				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.d);
+			}
+			else if (line.substr(0, 2) == "Tr")
+			{
+				// Tr which is the inverted version of 'd'
+				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.d);
+				// Invert the value for 'd'
+				mat.d = 1 - mat.d;
 			}
 			else if (line.substr(0, 5) == "illum")
 			{

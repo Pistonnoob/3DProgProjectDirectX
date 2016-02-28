@@ -68,5 +68,5 @@ struct Material
 	float3 Kd;		//Diffuse Color
 	float3 Ka;		//Ambient Color
 	float3 Tf;
-	int illum;		//Illumination models
+	float Ns;
 };
