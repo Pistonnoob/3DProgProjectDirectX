@@ -106,8 +106,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vtx.x, &vtx.y, &vtx.z);
 			//vtx.z *= invert;
 			//inputString >> special >> vtx.x >> vtx.y >> vtx.z;
-			if (invert < 0)
-				vtx.z = -vtx.z;
+			/*if (invert < 0)
+				vtx.z = -vtx.z;*/
 			vertices.push_back(vtx);
 		}
 		else if (line2.substr(0, 2) == "vt")
@@ -124,15 +124,15 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			// Vertex Normal
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vn.x, &vn.y, &vn.z);
 			//inputString >> special >> vn.x >> vn.y >> vn.z;
-			if (invert < 0)
-				vn.z = -vn.z;
+			/*if (invert < 0)
+				vn.z = -vn.z;*/
 			normals.push_back(vn);
 		}
 		else if (line2.substr(0, 2) == "f ")
 		{
 			//Vertex Normal Indices in format f v1/vt1/vn1
 			struct IndexStruct { int v; int vt; int vn; } faceIndices[3];
-			if(true /*invert > 0*/)
+			if(invert > 0)
 				sscanf_s(temp, "%s %i/%i/%i %i/%i/%i %i/%i/%i\n", specialChar, SPECIALCHARSIZE,
 					&faceIndices[0].v, &faceIndices[0].vt, &faceIndices[0].vn,
 					&faceIndices[1].v, &faceIndices[1].vt, &faceIndices[1].vn,
