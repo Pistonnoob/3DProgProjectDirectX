@@ -69,7 +69,7 @@ struct Material
 	float padding1;
 	float3 Ka;		//Ambient Color
 	float padding2;
-	float3 Tf;
+	float3 Ks;
 	float padding3;
 	float Ns;
 	float3 padding4;
