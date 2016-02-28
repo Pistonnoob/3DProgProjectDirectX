@@ -94,7 +94,7 @@ struct ObjMaterial
 	Vector3 Ka;		//Ambient Color
 	Vector3 Ks;		//Specular Color
 	float Ns;		//Speculare Exponent
-	float d;		//Dissovlent
+	float d;		//Dissolvent
 	int illum;		//Illumination model
 	char texture[MATERIAL_NAME_LENGTH];	//The texture file
 	TextureFormat textureFormat;		//The texture file type
@@ -107,7 +107,6 @@ struct PixelMaterial
 	Vector4 Ks;		//Specular Color
 	float Ns;		//Speculare Exponent
 	Vector3 padding1;
-
 };
 
 
@@ -131,7 +130,7 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
 };
 
 //Default Material
-static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), 10.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
+static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, 1.0f, "missing_texture", TextureFormat::JPEG};
 
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";
