@@ -90,10 +90,12 @@ struct ObjMaterial
 {
 	static const int MATERIAL_NAME_LENGTH = 30;
 	char name[MATERIAL_NAME_LENGTH];	//The mtl name
-	int illum;		//Illumination model
 	Vector3 Kd;		//Diffuse Color
 	Vector3 Ka;		//Ambient Color
-	Vector3 Tf;		
+	Vector3 Ks;		//Specular Color
+	float Ns;		//Speculare Exponent
+	float d;		//Dissovlent
+	int illum;		//Illumination model
 	char texture[MATERIAL_NAME_LENGTH];	//The texture file
 	TextureFormat textureFormat;		//The texture file type
 };
