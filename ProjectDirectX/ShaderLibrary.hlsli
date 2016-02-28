@@ -73,4 +73,6 @@ struct Material
 	float padding3;
 	float Ns;
 	float3 padding4;
+	int d;
+	float3 padding5;
 };
