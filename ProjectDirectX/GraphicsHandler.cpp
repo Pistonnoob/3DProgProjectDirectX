@@ -229,7 +229,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	//Create the lights.
-	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 5, -10, 1), Vector4(0, 0, 1, 0)};
+	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(255, 255, 255, 1.0f), Vector4(0, 5, -10, 1)/*, Vector4(0, 0, 1, 0)*/};
 
 	// Create the model objects.
 	//Test factory creating model objects.

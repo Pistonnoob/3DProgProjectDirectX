@@ -416,9 +416,11 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 
 	//Get a pointer to the data
 	lightPtr = (LightStruct*)mappedResource.pData;
-	lightPtr->lightColor = light.lightColor;
+	lightPtr->ambientColor = light.ambientColor;
+	lightPtr->diffuseColor = light.diffuseColor;
+	//lightPtr->speculareColor = light.speculareColor;
 	lightPtr->lightPos = light.lightPos;
-	lightPtr->lightDir = light.lightDir;
+	//lightPtr->specularePos = light.specularePos;
 
 	//Unlock/unmap the constant buffer
 	deviceContext->Unmap(this->m_lightBuffer, 0);

@@ -59,9 +59,11 @@ struct WVPBufferStruct
 
 struct LightStruct
 {
-	Vector4 lightColor;
+	Vector4 ambientColor;
+	Vector4 diffuseColor;
+	//Vector4 speculareColor;
 	Vector4 lightPos;
-	Vector4 lightDir;
+	//Vector4 specularePos;
 };
 
 struct TargaHeader
