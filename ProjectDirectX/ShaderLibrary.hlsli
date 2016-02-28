@@ -66,7 +66,11 @@ SamplerState p_sampler
 struct Material
 {
 	float3 Kd;		//Diffuse Color
+	float padding1;
 	float3 Ka;		//Ambient Color
+	float padding2;
 	float3 Tf;
+	float padding3;
 	float Ns;
+	float3 padding4;
 };
