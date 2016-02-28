@@ -232,7 +232,6 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Light = { Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f)};
 
 	// Create the model objects.
-	//Test factory creating model objects.
 	ObjectFactory factory;
 
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
