@@ -33,8 +33,7 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	m_color = c_text.Sample(samplerType, input.UV);
 	//Ambient
 	additionColor = ambientColor / 255;
-	additionColor *= float4(material.Ka, 0.0);
-	//Ambient End
+	additionColor *= float4(material.Ka, 1.0);
 	//Diffuse
 	float3 lightDirection = normalize(diffusePos - input.WorldPos);
 	float lightIntensity = saturate(dot(lightDirection, input.Normal));
@@ -42,9 +41,9 @@ float4 main(PS_IN_UV input) : SV_TARGET
 
 	if (lightIntensity > 0.0f)
 		additionColor += diffuseResult;
-	//Diffuse End
 	//Speculare
-	//Speculare End
+
+	//calculating final color
 	additionColor = saturate(additionColor);
 	m_color = m_color * additionColor;
 	//To print normals, for debugging
