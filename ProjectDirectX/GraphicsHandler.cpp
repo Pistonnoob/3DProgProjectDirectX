@@ -283,7 +283,9 @@ bool GraphicsHandler::Render()
 	// Get the view, and projection matrices from the camera and d3d objects.
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
+	//Update the cameraPosition for the pixelshaders speculare calculations
+	Vector3 cameraPos = m_Camera->GetPosition();
+	m_Light.specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
 	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
 		//Do the logic uniqueue to every model / object
