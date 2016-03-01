@@ -209,11 +209,11 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 #pragma region
 	Vector3 resultRotation = Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 };
 	Vector3 startRot = m_Camera->GetRotation();
-	if (startRot.y > -180 / 2 && resultRotation.y < 0)
+	if ((startRot.x < -75 && resultRotation.x < 0) || (startRot.x > 75 && resultRotation.x > 0))
 	{
-		resultRotation.y += startRot.y;
+		resultRotation.x = 0.0f;
 	}
-	resultRotation.x += startRot.x;
+	resultRotation += startRot;
 	m_Camera->SetRotation(resultRotation);
 #pragma endregion mouse
 	return true;
