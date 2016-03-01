@@ -207,9 +207,14 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	
 #pragma endregion keyboard
 #pragma region
-	Vector3 resultRotation = this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 };
-	this->m_Camera->SetRotation(resultRotation);
-
+	Vector3 resultRotation = Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 };
+	Vector3 startRot = m_Camera->GetRotation();
+	if (startRot.y > -180 / 2 && resultRotation.y < 0)
+	{
+		resultRotation.y += startRot.y;
+	}
+	resultRotation.x += startRot.x;
+	m_Camera->SetRotation(resultRotation);
 #pragma endregion mouse
 	return true;
 }
