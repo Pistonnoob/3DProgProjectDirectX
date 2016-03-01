@@ -84,6 +84,7 @@ void GraphicsHandler::ShutDown()
 		D3Object* temp = NULL;
 		temp = m_Models.back();
 		m_Models.pop_back();
+		temp->Shutdown();
 		delete temp;
 	}
 
@@ -206,9 +207,14 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	
 #pragma endregion keyboard
 #pragma region
-
-	this->m_Camera->SetRotation(this->m_Camera->GetRotation() + Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 });
-
+	Vector3 resultRotation = Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 };
+	Vector3 startRot = m_Camera->GetRotation();
+	if ((startRot.x < CAMERA_Y_LOWER_BOUND && resultRotation.x < 0) || (startRot.x > CAMERA_Y_UPPER_BOUND && resultRotation.x > 0))
+	{
+		resultRotation.x = 0.0f;
+	}
+	resultRotation += startRot;
+	m_Camera->SetRotation(resultRotation);
 #pragma endregion mouse
 	return true;
 }
@@ -228,29 +234,45 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	//Create the lights.
-	m_Light = {Vector4(255, 255, 255, 1.0f), Vector4(0, 0, -2, 1), Vector4(0, 0, 1, 0)};
+	m_Light = { Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
 
 	// Create the model objects.
-	//Test factory creating model objects.
 	ObjectFactory factory;
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+
+	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}*/
+	/*if (m_Models.size() > 1)
+	{
+		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
+		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
+		m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
+	}*/
+	
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	int modelNr = 0;
-	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
-	{
-		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*modelNr));
-		modelNr++;
-	}
+	//int modelNr = 0;
+	//for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
+	//{
+	//	(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
+	//	//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	modelNr++;
+	//}
 	return true;
 }
 
@@ -267,7 +289,9 @@ bool GraphicsHandler::Render()
 	// Get the view, and projection matrices from the camera and d3d objects.
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
+	//Update the cameraPosition for the pixelshaders speculare calculations
+	Vector3 cameraPos = m_Camera->GetPosition();
+	m_Light.specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
 	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
 		//Do the logic uniqueue to every model / object
@@ -279,8 +303,11 @@ bool GraphicsHandler::Render()
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		(*model)->Render(this->m_Direct3D->GetDeviceContext());
 
+		ObjMaterial objMaterial = (*model)->GetMaterial();
+		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d};
+
 		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture());
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture(), pMaterial);
 		if (!result)
 		{
 			return false;

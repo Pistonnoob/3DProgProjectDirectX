@@ -14,6 +14,9 @@ const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 500.0f;
 const float SCREEN_NEAR = 0.1f;
 
+const float CAMERA_Y_UPPER_BOUND = 75;
+const float CAMERA_Y_LOWER_BOUND = -75;
+
 const Vector3 ORIG = { 0, 0, -10 };
 const Vector3 D_FRONT = { 0, 0, 1 };
 const Vector3 D_W = D_FRONT;

@@ -19,6 +19,7 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureObject* m_texture;
 	VertexModel* m_model;
+	ObjMaterial m_material;
 	Matrix m_worldMatrix;
 public:
 	D3Object();
@@ -29,13 +30,16 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);	//Move model geometry to device context / Graphicscard
 #pragma region
 	int GetIndexCount()const;
+	ObjMaterial GetMaterial()const;
 	ID3D11ShaderResourceView* GetTexture();
 	void GetWorldMatrix(Matrix& worldMatrix);
 #pragma endregion getters
 
+	bool SetMaterial(ObjMaterial material);
 	void SetWorldMatrix(const Matrix worldMatrix);
 	void ApplyMatrix(const Matrix applyToWorld);
 
+	
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);
 	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName, TextureFormat fileFormat);

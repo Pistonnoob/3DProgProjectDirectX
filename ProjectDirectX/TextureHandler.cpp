@@ -8,6 +8,7 @@ TextureHandler::TextureHandler()
 	this->m_layout = NULL;
 	this->m_matrixBuffer = NULL;
 	this->m_lightBuffer = NULL;
+	this->m_materialBuffer = NULL;
 
 	this->m_samplerState = NULL;
 }
@@ -43,12 +44,12 @@ void TextureHandler::Shutdown()
 	return;
 }
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct light, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct &matrices, LightStruct & light, ID3D11ShaderResourceView * resourceView, PixelMaterial & material)
 {
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, light, resourceView);
+	result = SetShaderParameters(deviceContext, matrices, light, resourceView, material);
 	if (!result)
 	{
 		return false;
@@ -61,10 +62,10 @@ bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount,
 }
 
 
-bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct light, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, Matrix & world, Matrix & view, Matrix & projection, LightStruct & light, ID3D11ShaderResourceView * resourceView, PixelMaterial & material)
 {
 
-	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, light, resourceView);
+	return this->Render(deviceContext, indexCount, WVPBufferStruct{world, view, projection}, light, resourceView, material);
 }
 
 bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * gsFilename, WCHAR * psFilename)
@@ -74,8 +75,9 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 	ID3DBlob* pVS = nullptr;
 	ID3DBlob* pGS = nullptr;
 	ID3DBlob* pPS = nullptr;
-	D3D11_BUFFER_DESC  matrixBufferDesc;
+	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_BUFFER_DESC lightBufferDesc;
+	D3D11_BUFFER_DESC materialBufferDesc;
 
 	D3D11_SAMPLER_DESC samplerDesc;
 
@@ -239,6 +241,21 @@ bool TextureHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * 
 		return false;
 	}
 
+	//Create the material buffer
+	memset(&materialBufferDesc, 0, sizeof(materialBufferDesc));
+	materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	materialBufferDesc.MiscFlags = 0;
+	materialBufferDesc.StructureByteStride = 0;
+	materialBufferDesc.ByteWidth = sizeof(PixelMaterial);
+
+	hResult = device->CreateBuffer(&materialBufferDesc, NULL, &m_materialBuffer);
+	if (FAILED(hResult))
+	{
+		return false;
+	}
+
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -309,6 +326,11 @@ void TextureHandler::FreeMemory()
 		m_pixelShader->Release();
 		m_pixelShader = NULL;
 	}
+	if (m_materialBuffer != NULL)
+	{
+		m_materialBuffer->Release();
+		m_materialBuffer = NULL;
+	}
 
 	return;
 }
@@ -350,12 +372,13 @@ void TextureHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hw
 
 }
 
-bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView * resourceView)
+bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct & matrices, LightStruct light, ID3D11ShaderResourceView * resourceView, PixelMaterial & material)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	WVPBufferStruct* dataPtr = NULL;
 	LightStruct* lightPtr = NULL;
+	PixelMaterial* materialPtr = NULL;
 	unsigned int bufferNumber = 0;
 
 	//Transpose the matrices to prepare them for the shader
@@ -393,18 +416,41 @@ bool TextureHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WV
 
 	//Get a pointer to the data
 	lightPtr = (LightStruct*)mappedResource.pData;
-	lightPtr->lightColor = light.lightColor;
+	lightPtr->ambientColor = light.ambientColor;
+	lightPtr->diffuseColor = light.diffuseColor;
+	lightPtr->specularColor = light.specularColor;
 	lightPtr->lightPos = light.lightPos;
-	lightPtr->lightDir = light.lightDir;
+	lightPtr->specularPos = light.specularPos;
 
 	//Unlock/unmap the constant buffer
-	deviceContext->Unmap(this->m_matrixBuffer, 0);
+	deviceContext->Unmap(this->m_lightBuffer, 0);
+
+
+	// Lock/map the m_material
+	result = deviceContext->Map(this->m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get a pointer to the data
+	materialPtr = (PixelMaterial*)mappedResource.pData;
+	materialPtr->Ka = material.Ka;
+	materialPtr->Kd = material.Kd;
+	materialPtr->Ks = material.Ks;
+	materialPtr->Ns = material.Ns;
+	materialPtr->d = material.d;
+	//memcpy(&materialPtr, &material, sizeof(material));
+
+	//Unlock/unmap the constant buffer
+	deviceContext->Unmap(this->m_materialBuffer, 0);
 
 
 	//Set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	deviceContext->PSSetConstantBuffers(0, 1, &this->m_lightBuffer);
+	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
 	//Set the shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &resourceView);
 

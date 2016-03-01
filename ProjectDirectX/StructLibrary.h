@@ -3,7 +3,6 @@
 #include "SimpleMath.h"
 #include <string>
 using namespace DirectX::SimpleMath;
-
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
 enum FactoryObjectFormat
@@ -59,9 +58,11 @@ struct WVPBufferStruct
 
 struct LightStruct
 {
-	Vector4 lightColor;
+	Vector4 ambientColor;
+	Vector4 diffuseColor;
+	Vector4 specularColor;
 	Vector4 lightPos;
-	Vector4 lightDir;
+	Vector4 specularPos;
 };
 
 struct TargaHeader
@@ -83,18 +84,31 @@ struct JPEGHeader
 
 };
 
+//Structure for materials
 struct ObjMaterial
 {
 	static const int MATERIAL_NAME_LENGTH = 30;
 	char name[MATERIAL_NAME_LENGTH];	//The mtl name
-	int illum;		//Illumination models
 	Vector3 Kd;		//Diffuse Color
 	Vector3 Ka;		//Ambient Color
 	Vector3 Ks;		//Specular Color
+	float Ns;		//Speculare Exponent
+	float d;		//Dissolvent
+	int illum;		//Illumination model
 	char texture[MATERIAL_NAME_LENGTH];	//The texture file
 	TextureFormat textureFormat;		//The texture file type
 };
 
+struct PixelMaterial
+{
+	Vector4 Kd;		//Diffuse Color
+	Vector4 Ka;		//Ambient Color
+	Vector4 Ks;		//Specular Color
+	float Ns;		//Speculare Exponent
+	Vector3 padding1;
+	int d;
+	Vector3 padding2;
+};
 
 
 // input layout (verified using vertex shader)
@@ -103,11 +117,11 @@ struct ObjMaterial
 //	{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 //};
 
-//The one using a texture
+//Material description using Position and UV
 static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_UV[] = {
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-};
+};	//D3D11_APPEND_ALIGNED_ELEMENT is set so new elements are pushed right at the end of the last instead of a static variable
 
 //The one using both a UV and a Normal
 static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
@@ -115,6 +129,9 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
+
+//Default Material
+static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
 
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";

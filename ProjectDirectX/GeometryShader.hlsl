@@ -28,7 +28,7 @@ cbuffer MatrixBuffer : register(b0){
 
 [maxvertexcount(3)]
 void main(
-	triangle GS_IN_UV input[3] : SV_POSITION,
+	triangle GS_IN_3D input[3] : SV_POSITION,
 	inout TriangleStream< PS_IN_UV > outputStream
 )
 {
@@ -37,9 +37,12 @@ void main(
 		PS_IN_UV element = (PS_IN_UV)0;
 		element.Pos = input[i].Pos;
 		element.UV = input[i].UV;
-		element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
+		//element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
+		element.Normal = normalize(input[i].Normal);
 		element.Normal = mul(element.Normal, worldMatrix);
+		element.Normal = normalize(element.Normal);
 		element.Pos = mul(element.Pos, worldMatrix);
+		element.WorldPos = element.Pos;
 		element.Pos = mul(element.Pos, viewMatrix);
 		element.Pos = mul(element.Pos, projectionMatrix);
 
