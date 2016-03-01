@@ -252,13 +252,13 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	/*if (m_Models.size() > 1)
-	{
-		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
-		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
-		m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
-		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
-	}*/
+	//if (m_Models.size() > 0)
+	//{
+	//	m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
+	//	m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
+	//	//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+	//	//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
+	//}
 	
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
