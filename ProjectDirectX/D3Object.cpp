@@ -194,7 +194,11 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 		vertices[i].position = m_model[i].position;
 		vertices[i].UV = m_model[i].UV;
 		vertices[i].normal = m_model[i].normal;
-		indices[i] = i;
+	}
+
+	for (int i = 0; i < this->m_indexCount; i++)
+	{
+		indices[i] = m_indices[i];
 	}
 
 	// Set up the description of the static vertex buffer.
