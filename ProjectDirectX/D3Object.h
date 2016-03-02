@@ -38,8 +38,9 @@ public:
 	bool SetMaterial(ObjMaterial material);
 	void SetWorldMatrix(const Matrix worldMatrix);
 	void ApplyMatrix(const Matrix applyToWorld);
+	void SetIndices(vector<int> indices);
 
-	
+	bool CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData);
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);
 	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName, TextureFormat fileFormat);

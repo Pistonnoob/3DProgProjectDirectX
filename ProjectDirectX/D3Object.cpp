@@ -121,6 +121,15 @@ void D3Object::ApplyMatrix(const Matrix applyToWorld)
 	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
 }
 
+void D3Object::SetIndices(vector<int> indices)
+{
+}
+
+bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
+{
+	return false;
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();
