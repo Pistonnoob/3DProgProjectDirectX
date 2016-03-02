@@ -33,14 +33,15 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	m_color = c_text.Sample(samplerType, input.UV);
 	//AMBIENT
 	additionColor = ambientColor / 255;
-	additionColor *= float4(material.Ka, 0.0);
+	additionColor *= float4(material.Ka, 1.0f);
 	//DIFFUSE
-	float3 lightDirection = normalize(diffusePos - input.WorldPos);
-	float lightIntensity = saturate(dot(lightDirection, input.Normal));
+	float3 lightDirection = (float3)normalize(diffusePos - input.WorldPos);
+	float lightIntensity = saturate(dot(lightDirection, (float3)input.Normal));
 	float4 diffuseResult = saturate((diffuseColor / 255) * lightIntensity);
 
 	if (lightIntensity > 0.0f)
 	{
+		//diffuseResult *= float4(material.Kd, 1.0f);
 		additionColor += diffuseResult;
 	}
 	additionColor = saturate(additionColor);
@@ -51,7 +52,7 @@ float4 main(PS_IN_UV input) : SV_TARGET
 		float3 lightReflect = 0.0f;
 		float3 viewerDirection = (float3)normalize(specularPos - input.WorldPos);
 		// r = l + 2u = l + 2(n' - l) = 2(dot(n, l))*n - l = r
-		float3 l = dot(input.Normal, lightDirection);
+		float3 l = dot((float3)input.Normal, lightDirection);
 		lightReflect = normalize(2 * (lightIntensity * (float3)input.Normal) - lightIntensity);
 
 		specularResult = pow(dot(lightReflect, viewerDirection), material.Ns);
