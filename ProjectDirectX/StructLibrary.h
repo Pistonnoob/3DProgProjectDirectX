@@ -136,6 +136,9 @@ static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";
 
+//Default window name
+static const WCHAR WINDOW_NAME[] = L"Jesper & Kim";
+
 //Shader names
 static const char *VERTEXSHADER_NAME = "VertexShader.hlsl", *GEOMETRYSHADER_NAME = "GeometryShader.hlsl", *PIXELSHADER_NAME = "PixelShader.hlsl";
 static const WCHAR *VERTEXSHADER_NAME_WCHAR = L"VertexShader.hlsl", *GEOMETRYSHADER_NAME_WCHAR = L"GeometryShader.hlsl", *PIXELSHADER_NAME_WCHAR = L"PixelShader.hlsl";

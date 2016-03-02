@@ -46,7 +46,7 @@ float4 main(PS_IN_UV input) : SV_TARGET
 	}
 	additionColor = saturate(additionColor);
 	//SPECULAR
-	float4 specularResult = (float4)0;
+	float4 specularResult = (float4)0;	//The color the specular light will produce
 	if (true/*lightIntensity > 0.0f*/)
 	{
 		float3 lightReflect = 0.0f;
@@ -56,13 +56,14 @@ float4 main(PS_IN_UV input) : SV_TARGET
 		lightReflect = normalize(2 * (lightIntensity * (float3)input.Normal) - lightIntensity);
 
 		specularResult = pow(dot(lightReflect, viewerDirection), material.Ns);
-		specularResult = specularResult * float4(material.Ks, 1.0f);
+		specularResult = specularResult * float4(material.Ks, 0.0f);
 		specularResult = saturate(specularResult);
 	}
 	//calculating final color
 	additionColor = saturate(additionColor);
 	m_color = m_color * additionColor;
 
+	//We ADD the specular color because we want the light to approach white.
 	m_color = saturate(m_color + specularResult);
 	m_color = saturate(m_color);
 	//To print normals, for debugging
