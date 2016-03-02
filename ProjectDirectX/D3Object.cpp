@@ -153,6 +153,11 @@ bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 	{
 		this->m_model[j] = vertexData[m_vertexCount - j - 1];
 	}
+	m_indices = new int[m_indexCount];
+	for (int i = 0; i < m_indexCount; i++)
+	{
+		this->m_indices[i] = i;
+	}
 	return true;
 }
 
