@@ -8,6 +8,7 @@ D3Object::D3Object()
 	m_indexBuffer = NULL;
 	m_vertexCount = 0;
 	m_indexCount = 0;
+	m_indices = NULL;
 	m_texture = NULL;
 	m_model = NULL;
 	
@@ -462,6 +463,11 @@ void D3Object::ReleaseModel()
 	{
 		delete[] m_model;
 		m_model = NULL;
+	}
+	if (this->m_indices != NULL)
+	{
+		delete[] m_indices;
+		m_indices = NULL;
 	}
 }
 

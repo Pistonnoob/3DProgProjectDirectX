@@ -17,6 +17,7 @@ class D3Object
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
+	int* m_indices;
 	TextureObject* m_texture;
 	VertexModel* m_model;
 	ObjMaterial m_material;
