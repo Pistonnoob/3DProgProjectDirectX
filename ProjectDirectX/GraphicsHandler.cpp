@@ -242,7 +242,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	for (int index = 0; index < 2; index++)
+	for (int index = 0; index < 1; index++)
 	{
 		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 		if (!result)
