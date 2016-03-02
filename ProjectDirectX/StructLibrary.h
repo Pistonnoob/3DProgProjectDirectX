@@ -131,10 +131,13 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
 };
 
 //Default Material
-static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
+static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
 
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";
+
+//Default window name
+static const WCHAR WINDOW_NAME[] = L"Jesper & Kim";
 
 //Shader names
 static const char *VERTEXSHADER_NAME = "VertexShader.hlsl", *GEOMETRYSHADER_NAME = "GeometryShader.hlsl", *PIXELSHADER_NAME = "PixelShader.hlsl";

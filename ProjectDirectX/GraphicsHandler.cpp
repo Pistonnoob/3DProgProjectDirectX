@@ -109,7 +109,7 @@ bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 {
 	this->UpdateInput(inputObj, frameTime / 1000);
 	bool result = true;
-	this->rotation += 3.1415f * 0.01f;
+	this->rotation += 360 * 0.005f * (frameTime / 1000);
 	if (this->rotation > 720.0f)
 	{
 		this->rotation = -360.0f;
@@ -207,14 +207,17 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 	
 #pragma endregion keyboard
 #pragma region
-	Vector3 resultRotation = Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 };
-	Vector3 startRot = m_Camera->GetRotation();
-	if ((startRot.x < CAMERA_Y_LOWER_BOUND && resultRotation.x < 0) || (startRot.x > CAMERA_Y_UPPER_BOUND && resultRotation.x > 0))
+	if (!inputObj->IsKeyPressed(DIK_C))
 	{
-		resultRotation.x = 0.0f;
+		Vector3 resultRotation = Vector3{ inputObj->GetMouseDelta().y / 4, inputObj->GetMouseDelta().x / 4, 0 };
+		Vector3 startRot = m_Camera->GetRotation();
+		if ((startRot.x < CAMERA_Y_LOWER_BOUND && resultRotation.x < 0) || (startRot.x > CAMERA_Y_UPPER_BOUND && resultRotation.x > 0))
+		{
+			resultRotation.x = 0.0f;
+		}
+		resultRotation += startRot;
+		m_Camera->SetRotation(resultRotation);
 	}
-	resultRotation += startRot;
-	m_Camera->SetRotation(resultRotation);
 #pragma endregion mouse
 	return true;
 }
@@ -238,13 +241,25 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 	// Create the model objects.
 	ObjectFactory factory;
-
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	if (!result)
+	int modelSize = 0;
+	for (int index = 0; index < 1; index++)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
+		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+			return false;
+		}
+		if (index == 0)
+			modelSize = m_Models.size();
+		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+		{
+			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
+			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+		}
+
 	}
+	
 
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
@@ -252,13 +267,13 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	/*if (m_Models.size() > 1)
-	{
-		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
-		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
-		m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
-		m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
-	}*/
+	//if (m_Models.size() > 0)
+	//{
+	//	m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
+	//	m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
+	//	//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+	//	//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
+	//}
 	
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
