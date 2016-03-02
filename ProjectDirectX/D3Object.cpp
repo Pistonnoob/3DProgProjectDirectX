@@ -124,11 +124,24 @@ void D3Object::ApplyMatrix(const Matrix applyToWorld)
 
 void D3Object::SetIndices(vector<int> indices)
 {
+	this->m_indices = new int[indices.size()];
+	for (int i = 0; i < indices.size(); i++)
+	{
+		this->m_indices[i] = indices[i];
+	}
 }
 
 bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
 {
-	return false;
+	this->m_vertexCount = (int)vertexData.size();
+	this->m_indexCount = (int)indiceData.size();
+	this->m_model = new VertexModel[this->m_vertexCount];
+	for (int j = 0; j < m_vertexCount; j++)
+	{
+		this->m_model[j] = vertexData[m_vertexCount - j - 1];
+	}
+	this->SetIndices(indiceData);
+	return true;
 }
 
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
