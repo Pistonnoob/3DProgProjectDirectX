@@ -54,6 +54,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	char materialFile[NAMELENGTH];
 	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
+	vector<int> indexData;
 	vector<ObjMaterial> materials;
 	/*This should not be needed but may be used to make small test changes
 	to the default material without causing a ripple effect on the system*/
@@ -84,6 +85,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				//Load the model data
 				newObject->CreateFromData(vertexData);
 				vertexData.clear();
+				indexData.clear();
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
 				//Get the material name
