@@ -2,9 +2,14 @@
 #define _LIGHTSHADER_H_
 
 #include <d3d11.h>
-#include <DirectXMath.h>
+#include <d3dcompiler.h>
 #include <fstream>
+
+#include <DirectXMath.h>
+
 #include "StructLibrary.h"
+#pragma comment (lib, "d3d11.lib")
+#pragma comment (lib, "d3dcompiler.lib")
 
 using namespace std;
 
@@ -26,13 +31,13 @@ public:
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct* matrices, ID3D11ShaderResourceView** resources, LightStructTemp* lights, int lightCount);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct* matrices, ID3D11ShaderResourceView** resources, LightStructTemp* lights);
 private:	//functions
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename);
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView** resources, LightStructTemp* lights, int lightCount);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView** resources, LightStructTemp* lights);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 
