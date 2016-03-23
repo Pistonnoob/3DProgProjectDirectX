@@ -8,6 +8,7 @@ D3Object::D3Object()
 	m_indexBuffer = NULL;
 	m_vertexCount = 0;
 	m_indexCount = 0;
+	m_indices = NULL;
 	m_texture = NULL;
 	m_model = NULL;
 	
@@ -121,6 +122,28 @@ void D3Object::ApplyMatrix(const Matrix applyToWorld)
 	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
 }
 
+void D3Object::SetIndices(vector<int> indices)
+{
+	this->m_indices = new int[indices.size()];
+	for (int i = 0; i < indices.size(); i++)
+	{
+		this->m_indices[i] = indices[i];
+	}
+}
+
+bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
+{
+	this->m_vertexCount = (int)vertexData.size();
+	this->m_indexCount = (int)indiceData.size();
+	this->m_model = new VertexModel[this->m_vertexCount];
+	for (int j = 0; j < m_vertexCount; j++)
+	{
+		this->m_model[j] = vertexData[m_vertexCount - j - 1];
+	}
+	this->SetIndices(indiceData);
+	return true;
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();
@@ -129,6 +152,11 @@ bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 	for (int j = 0; j < m_vertexCount; j++)
 	{
 		this->m_model[j] = vertexData[m_vertexCount - j - 1];
+	}
+	m_indices = new int[m_indexCount];
+	for (int i = 0; i < m_indexCount; i++)
+	{
+		this->m_indices[i] = i;
 	}
 	return true;
 }
@@ -166,7 +194,11 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 		vertices[i].position = m_model[i].position;
 		vertices[i].UV = m_model[i].UV;
 		vertices[i].normal = m_model[i].normal;
-		indices[i] = i;
+	}
+
+	for (int i = 0; i < this->m_indexCount; i++)
+	{
+		indices[i] = m_indices[i];
 	}
 
 	// Set up the description of the static vertex buffer.
@@ -453,6 +485,11 @@ void D3Object::ReleaseModel()
 	{
 		delete[] m_model;
 		m_model = NULL;
+	}
+	if (this->m_indices != NULL)
+	{
+		delete[] m_indices;
+		m_indices = NULL;
 	}
 }
 
