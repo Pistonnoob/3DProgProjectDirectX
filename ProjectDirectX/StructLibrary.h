@@ -5,6 +5,8 @@
 using namespace DirectX::SimpleMath;
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
+static const int DEFERRED_BUFFER_COUNT = 3;
+
 enum FactoryObjectFormat
 {
 	OBJ,

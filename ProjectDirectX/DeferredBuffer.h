@@ -5,7 +5,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-static const int BUFFER_COUNT = 3;
 
 class DeferredBuffer
 {
@@ -14,9 +13,9 @@ private:
 	int m_textureHeight;
 
 	//Rendertargets
-	ID3D11Texture2D* m_renderTargetTextureArray[BUFFER_COUNT];
-	ID3D11RenderTargetView* m_renderTargetViewArray[BUFFER_COUNT];
-	ID3D11ShaderResourceView* m_shaderResourceViewArray[BUFFER_COUNT];
+	ID3D11Texture2D* m_renderTargetTextureArray[DEFERRED_BUFFER_COUNT];
+	ID3D11RenderTargetView* m_renderTargetViewArray[DEFERRED_BUFFER_COUNT];
+	ID3D11ShaderResourceView* m_shaderResourceViewArray[DEFERRED_BUFFER_COUNT];
 	ID3D11Texture2D* m_depthStencilBuffer;
 	ID3D11DepthStencilView* m_depthStencilView;
 	D3D11_VIEWPORT m_viewport;

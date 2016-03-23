@@ -34,5 +34,7 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 		additionColor += diffuseResult;
 	}
 
+	result = saturate(color * diffuseResult);
+
 	return result;
 }
