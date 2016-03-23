@@ -4,7 +4,7 @@
 
 DeferredBuffer::DeferredBuffer()
 {
-	for (int i = 0; i<BUFFER_COUNT; i++)
+	for (int i = 0; i<DEFERRED_BUFFER_COUNT; i++)
 	{
 		m_renderTargetTextureArray[i] = NULL;
 		m_renderTargetViewArray[i] = NULL;
@@ -53,7 +53,7 @@ bool DeferredBuffer::Initialize(ID3D11Device * device, int width, int height, fl
 	textureDesc.MiscFlags = 0;
 
 	// Create the render target textures.
-	for (int i = 0; i<BUFFER_COUNT; i++)
+	for (int i = 0; i<DEFERRED_BUFFER_COUNT; i++)
 	{
 		result = device->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTextureArray[i]);
 		if (FAILED(result))
@@ -68,7 +68,7 @@ bool DeferredBuffer::Initialize(ID3D11Device * device, int width, int height, fl
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the render target views.
-	for (int i = 0; i<BUFFER_COUNT; i++)
+	for (int i = 0; i<DEFERRED_BUFFER_COUNT; i++)
 	{
 		result = device->CreateRenderTargetView(m_renderTargetTextureArray[i], &renderTargetViewDesc, &m_renderTargetViewArray[i]);
 		if (FAILED(result))
@@ -84,7 +84,7 @@ bool DeferredBuffer::Initialize(ID3D11Device * device, int width, int height, fl
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
 	// Create the shader resource views.
-	for (int i = 0; i<BUFFER_COUNT; i++)
+	for (int i = 0; i<DEFERRED_BUFFER_COUNT; i++)
 	{
 		result = device->CreateShaderResourceView(m_renderTargetTextureArray[i], &shaderResourceViewDesc, &m_shaderResourceViewArray[i]);
 		if (FAILED(result))
@@ -159,7 +159,7 @@ void DeferredBuffer::Shutdown()
 		m_depthStencilBuffer = 0;
 	}
 
-	for (i = 0; i<BUFFER_COUNT; i++)
+	for (i = 0; i<DEFERRED_BUFFER_COUNT; i++)
 	{
 		if (m_shaderResourceViewArray[i] != NULL)
 		{
@@ -185,7 +185,7 @@ void DeferredBuffer::Shutdown()
 void DeferredBuffer::SetRenderTargets(ID3D11DeviceContext * context)
 {
 	// Bind the render target view array and depth stencil buffer to the output render pipeline.
-	context->OMSetRenderTargets(BUFFER_COUNT, m_renderTargetViewArray, m_depthStencilView);
+	context->OMSetRenderTargets(DEFERRED_BUFFER_COUNT, m_renderTargetViewArray, m_depthStencilView);
 
 	// Set the viewport.
 	context->RSSetViewports(1, &m_viewport);
@@ -207,7 +207,7 @@ void DeferredBuffer::ClearRenderTargets(ID3D11DeviceContext * context, float red
 	color[3] = alpha;
 
 	// Clear the render target buffers.
-	for (int i = 0; i<BUFFER_COUNT; i++)
+	for (int i = 0; i<DEFERRED_BUFFER_COUNT; i++)
 	{
 		context->ClearRenderTargetView(m_renderTargetViewArray[i], color);
 	}

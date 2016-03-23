@@ -150,6 +150,7 @@
     <ClCompile Include="FPSHandler.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="D2Object.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
+    <ClInclude Include="LightShader.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlatformHelpers.h" />
