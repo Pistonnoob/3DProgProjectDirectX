@@ -31,6 +31,9 @@
     <Filter Include="Shaders\Deferred\G-Buffers">
       <UniqueIdentifier>{8cc62dd2-76ac-4bc9-80ea-71f87b24e8c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model Types">
+      <UniqueIdentifier>{7e9c2336-b0a2-4e0f-980a-2249517b0b22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,6 +93,9 @@
     <ClCompile Include="LightShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QuadModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -116,13 +122,7 @@
     <ClInclude Include="TextureObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D3Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextureHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D2Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectFactory.h">
@@ -162,6 +162,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LightShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D2Object.h">
+      <Filter>Header Files\Model Types</Filter>
+    </ClInclude>
+    <ClInclude Include="D3Object.h">
+      <Filter>Header Files\Model Types</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
