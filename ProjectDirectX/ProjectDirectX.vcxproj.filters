@@ -25,6 +25,12 @@
     <Filter Include="Shaders\Deferred">
       <UniqueIdentifier>{54033ae8-0aaa-4d78-a666-676668b2144b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Deferred\Lighting">
+      <UniqueIdentifier>{5d6c5a2d-2343-44ae-9912-b900601eb4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Deferred\G-Buffers">
+      <UniqueIdentifier>{8cc62dd2-76ac-4bc9-80ea-71f87b24e8c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -164,13 +170,19 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="DefVertexShader.hlsl">
-      <Filter>Shaders\Deferred</Filter>
-    </FxCompile>
-    <FxCompile Include="DefPixelShader.hlsl">
-      <Filter>Shaders\Deferred</Filter>
+      <Filter>Shaders\Deferred\G-Buffers</Filter>
     </FxCompile>
     <FxCompile Include="DefGeometryShader.hlsl">
-      <Filter>Shaders\Deferred</Filter>
+      <Filter>Shaders\Deferred\G-Buffers</Filter>
+    </FxCompile>
+    <FxCompile Include="DefPixelShader.hlsl">
+      <Filter>Shaders\Deferred\G-Buffers</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>Shaders\Deferred\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Shaders\Deferred\Lighting</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
