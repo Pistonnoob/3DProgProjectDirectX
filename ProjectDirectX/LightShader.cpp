@@ -355,4 +355,16 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 
 void LightShader::RenderShader(ID3D11DeviceContext * deviceContext, int indexCount)
 {
+	//Set the vertex input layout
+	deviceContext->IASetInputLayout(this->m_layout);
+
+	//Set the shaders used to render the model
+	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+
+	//Set the sampler state in the pixel shader
+	deviceContext->PSSetSamplers(0, 1, &this->m_samplerState);
+
+	//Render the quad
+	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
