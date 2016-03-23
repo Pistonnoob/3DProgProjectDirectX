@@ -145,6 +145,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="D3Object.cpp" />
+    <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="FPSHandler.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="D3Object.h" />
     <ClInclude Include="dds.h" />
+    <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="FPSHandler.h" />
     <ClInclude Include="GraphicsHandler.h" />
@@ -172,6 +174,7 @@
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlatformHelpers.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenGrab.h" />
     <ClInclude Include="TextureHandler.h" />
     <ClInclude Include="SimpleMath.h" />
@@ -182,6 +185,14 @@
     <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DefPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DefVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="GeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
@@ -208,6 +219,9 @@
   <ItemGroup>
     <None Include="ShaderLibrary.hlsli" />
     <None Include="SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ProjectDirectX.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
