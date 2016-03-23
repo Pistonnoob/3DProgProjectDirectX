@@ -11,6 +11,7 @@ using namespace std;
 class LightShader
 {
 private:	//variables
+
 public:
 	LightShader();
 	virtual ~LightShader();

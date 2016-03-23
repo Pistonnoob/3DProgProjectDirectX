@@ -67,6 +67,14 @@ struct LightStruct
 	Vector4 specularPos;
 };
 
+struct LightStructTemp
+{
+	Vector3 lightPos;
+	float padding;
+	Vector3 lightColor;
+	float padding1;
+};
+
 struct TargaHeader
 {
 	unsigned char data1[12];
