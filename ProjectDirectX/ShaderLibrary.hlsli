@@ -17,6 +17,8 @@ struct VS_IN_3D
 	float3 Normal : NORMAL;
 };
 
+struct VS_IN_DEF = VS_IN_3D;
+
 struct GS_IN
 {
 	float4 Pos : SV_POSITION;
@@ -52,6 +54,12 @@ struct PS_IN_UV
 {
 	float4 Pos : SV_POSITION;
 	float4 WorldPos : POSITION;
+	float4 Normal : NORMAL;
+	float2 UV : TEXCOORD;
+};
+
+struct PS_IN_DEF {
+	float4 Pos : SV_POSITION;
 	float4 Normal : NORMAL;
 	float2 UV : TEXCOORD;
 };
