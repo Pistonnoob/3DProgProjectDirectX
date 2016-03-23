@@ -3,7 +3,11 @@
 
 #include "StructLibrary.h"
 #include <d3d11.h>
+#include <d3dcompiler.h>
 #include <DirectXMath.h>
+
+#pragma comment (lib, "d3d11.lib")
+#pragma comment (lib, "d3dcompiler.lib")
 
 using namespace DirectX::SimpleMath;
 
@@ -29,7 +33,7 @@ public:
 
 
 private:	//functions
-	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* gsFilename, WCHAR* psFilename);
+	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename);
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
