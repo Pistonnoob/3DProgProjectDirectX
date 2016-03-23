@@ -4,6 +4,7 @@
 TextureHandler::TextureHandler()
 {
 	this->m_vertexShader = NULL;
+	this->m_geometryShader = NULL;
 	this->m_pixelShader = NULL;
 	this->m_layout = NULL;
 	this->m_matrixBuffer = NULL;
