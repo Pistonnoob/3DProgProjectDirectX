@@ -20,14 +20,15 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 {
 	float4 result = (float4)0;
 	float4 additionColor = (float4)0;
+	float4 diffuseLightColor = (lightColor, 1.0f);
 	//Get the color from the G_Buffer
 	float4 color = colorTex.Sample(samplerType, input.UV);
 	float4 normal = normalTex.Sample(samplerType, input.UV);
-	float3 position = positionTex.Sample(samplerType, input.UV);
+	float4 position = positionTex.Sample(samplerType, input.UV);
 	/*float3 specular = specularTex.Sample(samplerType, input.UV);*/
-	float3 lightDirection = (float3)normalize(lightPos - position);
-	float lightIntensity = saturate(dot(lightDirection, (float3)input.Normal));
-	float4 diffuseResult = saturate((lightColor / 255) * lightIntensity);
+	float3 lightDirection = (float3)normalize(lightPos - (float3)position);
+	float lightIntensity = saturate(dot(lightDirection, (float3)normal));
+	float4 diffuseResult = saturate((diffuseLightColor / 255) * lightIntensity);
 	if (lightIntensity > 0.0f)
 	{
 		//diffuseResult *= float4(material.Kd, 1.0f);

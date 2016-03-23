@@ -193,7 +193,7 @@ void DeferredBuffer::SetRenderTargets(ID3D11DeviceContext * context)
 
 void DeferredBuffer::ClearRenderTargets(ID3D11DeviceContext * context, DirectX::SimpleMath::Color color)
 {
-	this->ClearRenderTargets(context, color.R, color.G, color.B, color.A);
+	this->ClearRenderTargets(context, color.R(), color.G(), color.B(), color.A());
 }
 
 void DeferredBuffer::ClearRenderTargets(ID3D11DeviceContext * context, float red, float green, float blue, float alpha)
