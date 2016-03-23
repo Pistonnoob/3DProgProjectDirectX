@@ -150,7 +150,7 @@ static const WCHAR WINDOW_NAME[] = L"Jesper & Kim";
 static const char *VERTEXSHADER_NAME = "VertexShader.hlsl", *GEOMETRYSHADER_NAME = "GeometryShader.hlsl", *PIXELSHADER_NAME = "PixelShader.hlsl";
 static const WCHAR *VERTEXSHADER_NAME_WCHAR = L"VertexShader.hlsl", *GEOMETRYSHADER_NAME_WCHAR = L"GeometryShader.hlsl", *PIXELSHADER_NAME_WCHAR = L"PixelShader.hlsl";
 
-static const char *VERTEXSHADER_DEFERRED_NAME = "DefVertexShader.hlsl", *PIXELSHADER_DEFERRED_NAME = "DefPixelShader.hlsl";
-static const WCHAR *VERTEXSHADER_DEFERRED_NAME_WCHAR = L"DefVertexShader.hlsl", *PIXELSHADER_DEFERRED_NAME_WCHAR = L"DefPixelShader.hlsl";
+static const char *VERTEXSHADER_DEFERRED_NAME = "DefVertexShader.hlsl", *GEOMETRYSHADER_DEFERRED_NAME = "DefGeometryShader.hlsl", *PIXELSHADER_DEFERRED_NAME = "DefPixelShader.hlsl";
+static const WCHAR *VERTEXSHADER_DEFERRED_NAME_WCHAR = L"DefVertexShader.hlsl", *GEOMETRYSHADER_DEFERRED_NAME_WCHAR = L"DefGeometryShader.hlsl", *PIXELSHADER_DEFERRED_NAME_WCHAR = L"DefPixelShader.hlsl";
 
 static const char* TEST_TEXTURE_NAME = "../Textures/stone01.tga";

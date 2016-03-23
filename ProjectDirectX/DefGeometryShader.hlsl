@@ -8,19 +8,18 @@ cbuffer MatrixBuffer : register(b0) {
 
 [maxvertexcount(3)]
 void main(
-	triangle GS_IN_3D input[3] : SV_POSITION,
-	inout TriangleStream< PS_IN_UV > outputStream
+	triangle GS_IN_DEF input[3] : SV_POSITION,
+	inout TriangleStream< PS_IN_DEF > outputStream
 	)
 {
 	bool facingCamera = false;
-	PS_IN_UV elements[3];
+	PS_IN_DEF elements[3];
 	for (uint i = 0; i < 3; i++)
 	{
-		PS_IN_UV element = (PS_IN_UV)0;
+		PS_IN_DEF element = (PS_IN_DEF)0;
 		element.Pos = input[i].Pos;
 		element.UV = input[i].UV;
 		element.Pos = mul(element.Pos, worldMatrix);
-		element.WorldPos = element.Pos;
 		element.Pos = mul(element.Pos, viewMatrix);
 		element.Pos = mul(element.Pos, projectionMatrix);
 

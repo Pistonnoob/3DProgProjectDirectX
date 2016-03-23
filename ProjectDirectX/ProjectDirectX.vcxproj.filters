@@ -78,6 +78,9 @@
     <ClCompile Include="DeferredBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -146,6 +149,9 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -161,6 +167,9 @@
       <Filter>Shaders\Deferred</Filter>
     </FxCompile>
     <FxCompile Include="DefPixelShader.hlsl">
+      <Filter>Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DefGeometryShader.hlsl">
       <Filter>Shaders\Deferred</Filter>
     </FxCompile>
   </ItemGroup>

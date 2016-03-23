@@ -146,6 +146,7 @@
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="D3Object.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
+    <ClCompile Include="DeferredHandler.cpp" />
     <ClCompile Include="FPSHandler.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="D3Object.h" />
     <ClInclude Include="dds.h" />
     <ClInclude Include="DeferredBuffer.h" />
+    <ClInclude Include="DeferredHandler.h" />
     <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="FPSHandler.h" />
     <ClInclude Include="GraphicsHandler.h" />
@@ -185,6 +187,12 @@
     <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DefGeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="DefPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
