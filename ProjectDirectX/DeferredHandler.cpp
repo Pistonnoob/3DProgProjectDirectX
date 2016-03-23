@@ -7,9 +7,9 @@ DeferredHandler::DeferredHandler()
 	this->m_vertexShader = NULL;
 	this->m_pixelShader = NULL;
 	this->m_layout = NULL;
-	this->m_matrixBuffer = NULL;
-
 	this->m_samplerState = NULL;
+
+	this->m_matrixBuffer = NULL;
 }
 
 DeferredHandler::DeferredHandler(const DeferredHandler & original)
@@ -23,7 +23,9 @@ DeferredHandler::~DeferredHandler()
 
 bool DeferredHandler::Initialize(ID3D11Device * device, HWND hwnd)
 {
-	return false;
+	bool result = false;
+	//Initialize the deferred shaders
+	return true;
 }
 
 void DeferredHandler::Shutdown()

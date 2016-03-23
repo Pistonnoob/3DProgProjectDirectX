@@ -130,6 +130,13 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
 	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
+//The one for the deferred renderer
+static const D3D11_INPUT_ELEMENT_DESC INPUT_DEFERRED[] = {
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+};
+
 //Default Material
 static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
 
@@ -142,5 +149,8 @@ static const WCHAR WINDOW_NAME[] = L"Jesper & Kim";
 //Shader names
 static const char *VERTEXSHADER_NAME = "VertexShader.hlsl", *GEOMETRYSHADER_NAME = "GeometryShader.hlsl", *PIXELSHADER_NAME = "PixelShader.hlsl";
 static const WCHAR *VERTEXSHADER_NAME_WCHAR = L"VertexShader.hlsl", *GEOMETRYSHADER_NAME_WCHAR = L"GeometryShader.hlsl", *PIXELSHADER_NAME_WCHAR = L"PixelShader.hlsl";
+
+static const char *VERTEXSHADER_DEFERRED_NAME = "DefVertexShader.hlsl", *PIXELSHADER_DEFERRED_NAME = "DefPixelShader.hlsl";
+static const WCHAR *VERTEXSHADER_DEFERRED_NAME_WCHAR = L"DefVertexShader.hlsl", *PIXELSHADER_DEFERRED_NAME_WCHAR = L"DefPixelShader.hlsl";
 
 static const char* TEST_TEXTURE_NAME = "../Textures/stone01.tga";
