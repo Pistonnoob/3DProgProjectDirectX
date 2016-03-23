@@ -11,6 +11,7 @@
 #include "DeferredBuffer.h"
 #include "DeferredHandler.h"
 #include "LightShader.h"
+#include "QuadModel.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
