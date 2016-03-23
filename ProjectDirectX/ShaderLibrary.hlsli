@@ -93,7 +93,7 @@ struct PS_IN_LIGHT
 struct PS_OUT_DEF {
 	float4 Color : SV_Target0;
 	float4 Normal : SV_Target1;
-	float4 Position : POSITION;
+	float4 Position : SV_Target2;
 };
 
 SamplerState p_sampler
