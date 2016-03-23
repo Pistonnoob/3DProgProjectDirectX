@@ -20,6 +20,7 @@ void main(
 		element.Pos = input[i].Pos;
 		element.UV = input[i].UV;
 		element.Pos = mul(element.Pos, worldMatrix);
+		element.WorldPos = element.Pos;
 		element.Pos = mul(element.Pos, viewMatrix);
 		element.Pos = mul(element.Pos, projectionMatrix);
 

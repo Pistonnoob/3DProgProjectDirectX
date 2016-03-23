@@ -79,6 +79,7 @@ struct PS_IN_UV
 struct PS_IN_DEF
 {
 	float4 Pos : SV_POSITION;
+	float4 WorldPos : POSITION;
 	float2 UV : TEXCOORD;
 	float4 Normal : NORMAL;
 };
@@ -92,6 +93,7 @@ struct PS_IN_LIGHT
 struct PS_OUT_DEF {
 	float4 Color : SV_Target0;
 	float4 Normal : SV_Target1;
+	float4 Position : POSITION;
 };
 
 SamplerState p_sampler

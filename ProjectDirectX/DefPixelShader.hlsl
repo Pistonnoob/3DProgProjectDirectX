@@ -9,8 +9,9 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	
 	//Store the sampled color
 	output.Color = c_text.Sample(samplerType, input.UV);
-
+	//Store the normal
 	output.Normal = input.Normal;
-
+	//Store the position
+	output.Position = input.WorldPos;
 	return output;
 }
