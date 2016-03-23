@@ -1,14 +1,17 @@
 #ifndef _DEFERREDHANDLER_H_
 #define _DEFERREDHANDLER_H_
 
-#include "StructLibrary.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <fstream>
+
 #include <DirectXMath.h>
 
+#include "StructLibrary.h"
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
+using namespace std;
 using namespace DirectX::SimpleMath;
 
 class DeferredHandler
@@ -38,7 +41,7 @@ private:	//functions
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, LightStruct * light, ID3D11ShaderResourceView* resourceView, PixelMaterial * material);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView* resourceView);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 #endif

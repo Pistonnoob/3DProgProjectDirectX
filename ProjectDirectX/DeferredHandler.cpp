@@ -43,7 +43,7 @@ bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, light, resourceView, material);
+	result = SetShaderParameters(deviceContext, matrices, resourceView);
 	if (!result)
 	{
 		return false;
@@ -278,12 +278,76 @@ void DeferredHandler::FreeMemory()
 
 void DeferredHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hwnd, WCHAR * shaderFilename)
 {
+	char* compileErrors;
+	unsigned long bufferSize, i;
+	ofstream fout;
+
+
+	// Get a pointer to the error message text buffer.
+	compileErrors = (char*)(errorMessage->GetBufferPointer());
+
+	// Get the length of the message.
+	bufferSize = (unsigned long)errorMessage->GetBufferSize();
+
+	// Open a file to write the error message to.
+	fout.open("shader-error.txt");
+
+	// Write out the error message.
+	for (i = 0; i<bufferSize; i++)
+	{
+		fout << compileErrors[i];
+	}
+
+	// Close the file.
+	fout.close();
+
+	// Release the error message.
+	errorMessage->Release();
+	errorMessage = 0;
+
+	// Show a message on the screen to notify the user to check the text file for compile errors.
+	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
+
+	return;
 
 }
 
-bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, LightStruct* light, ID3D11ShaderResourceView * resourceView, PixelMaterial* material)
+bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, ID3D11ShaderResourceView * resourceView)
 {
-	return false;
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	WVPBufferStruct* dataPtr = NULL;
+	unsigned int bufferNumber = 0;
+	//Transpose the matrices to prepare them for the shader
+
+	//Lock the m_matrix
+	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get a pointer to the data
+	dataPtr = (WVPBufferStruct*)mappedResource.pData;
+
+	//Now we copy the matrices into the mapped data
+	dataPtr->world = matrices->world.Transpose();
+	dataPtr->view = matrices->view.Transpose();
+	dataPtr->projection = matrices->projection.Transpose();
+
+	//Unlock/unmap the constant buffer
+	deviceContext->Unmap(this->m_matrixBuffer, 0);
+
+	//set the position of the constant buffer in the vertex shader
+	bufferNumber = 0;
+
+	//Set the constant buffer in the vertex shader with the updated values
+	//deviceContext->VSSetConstantBuffers(0, 1, NULL);
+	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
+	//Set the shader texture resource in the pixel shader.
+	deviceContext->PSSetShaderResources(0, 1, &resourceView);
+
+	return true;
 }
 
 void DeferredHandler::RenderShader(ID3D11DeviceContext * deviceContext, int indexCount)
