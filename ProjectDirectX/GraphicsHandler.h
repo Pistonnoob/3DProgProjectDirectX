@@ -8,6 +8,9 @@
 #include "ObjectFactory.h"
 #include "TextureHandler.h"
 #include "InputHandler.h"
+#include "DeferredBuffer.h"
+#include "DeferredHandler.h"
+#include "LightShader.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -37,7 +40,7 @@ private:
 	D3DClass* m_Direct3D;
 	Camera* m_Camera;
 	std::vector<D3Object*> m_Models;
-	LightStruct m_Light;
+	std::vector<LightStruct*> m_Lights;
 	TextureHandler* m_TextureShader;
 	float rotation;
 	//ShaderHandler* m_shaderHandler;

@@ -6,9 +6,9 @@ GraphicsHandler::GraphicsHandler()
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
 	m_TextureShader = nullptr;
-	m_Light = { Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0)};
 	rotation = 0.0f;
 	//m_shaderHandler = nullptr;
+
 }
 
 GraphicsHandler::GraphicsHandler(const GraphicsHandler &other)
@@ -85,6 +85,14 @@ void GraphicsHandler::ShutDown()
 		temp = m_Models.back();
 		m_Models.pop_back();
 		temp->Shutdown();
+		delete temp;
+	}
+
+	while (!m_Lights.empty())
+	{
+		LightStruct* temp = NULL;
+		temp = m_Lights.back();
+		m_Lights.pop_back();
 		delete temp;
 	}
 
@@ -237,8 +245,8 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	//Create the lights.
-	m_Light = { Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
-
+	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
@@ -306,7 +314,8 @@ bool GraphicsHandler::Render()
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	//Update the cameraPosition for the pixelshaders speculare calculations
 	Vector3 cameraPos = m_Camera->GetPosition();
-	m_Light.specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
+	LightStruct* lightTest = m_Lights.front();
+	lightTest->specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
 	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
 		//Do the logic uniqueue to every model / object
@@ -322,7 +331,7 @@ bool GraphicsHandler::Render()
 		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d};
 
 		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture(), pMaterial);
+		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, *lightTest, (*model)->GetTexture(), pMaterial);
 		if (!result)
 		{
 			return false;
