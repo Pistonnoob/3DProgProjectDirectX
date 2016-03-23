@@ -352,4 +352,17 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 
 void DeferredHandler::RenderShader(ID3D11DeviceContext * deviceContext, int indexCount)
 {
+	// Set the vertex input layout
+	deviceContext->IASetInputLayout(this->m_layout);
+
+	//Set the shaders used to render the model
+	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
+	deviceContext->GSSetShader(this->m_geometryShader, NULL, 0);
+	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
+
+	deviceContext->PSSetSamplers(0, 1, &this->m_samplerState);
+
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
 }
