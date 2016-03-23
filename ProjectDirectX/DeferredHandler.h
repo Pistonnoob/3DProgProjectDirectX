@@ -15,6 +15,7 @@ class DeferredHandler
 {
 private:	//Variables
 	ID3D11VertexShader* m_vertexShader;
+	ID3D11GeometryShader* m_geometryShader;
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;
 	ID3D11SamplerState* m_samplerState;

@@ -5,6 +5,7 @@
 DeferredHandler::DeferredHandler()
 {
 	this->m_vertexShader = NULL;
+	this->m_geometryShader = NULL;
 	this->m_pixelShader = NULL;
 	this->m_layout = NULL;
 	this->m_samplerState = NULL;
@@ -24,12 +25,16 @@ DeferredHandler::~DeferredHandler()
 bool DeferredHandler::Initialize(ID3D11Device * device, HWND hwnd)
 {
 	bool result = false;
+	WCHAR* vsName = (WCHAR*)VERTEXSHADER_DEFERRED_NAME_WCHAR;
+	WCHAR* psName = (WCHAR*)PIXELSHADER_DEFERRED_NAME_WCHAR;
 	//Initialize the deferred shaders
+	result = this->InitializeShader(device, hwnd, vsName, psName);
 	return true;
 }
 
 void DeferredHandler::Shutdown()
 {
+
 }
 
 bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, LightStruct * light, ID3D11ShaderResourceView * resourceView, PixelMaterial * material)
