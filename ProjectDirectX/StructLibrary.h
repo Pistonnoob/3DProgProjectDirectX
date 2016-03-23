@@ -147,6 +147,12 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_DEFERRED[] = {
 	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
+//The one for the deferred renderers second pass, the light shader
+static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_DEFERRED[] = {
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+};
+
 //Default Material
 static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
 
@@ -162,5 +168,8 @@ static const WCHAR *VERTEXSHADER_NAME_WCHAR = L"VertexShader.hlsl", *GEOMETRYSHA
 
 static const char *VERTEXSHADER_DEFERRED_NAME = "DefVertexShader.hlsl", *GEOMETRYSHADER_DEFERRED_NAME = "DefGeometryShader.hlsl", *PIXELSHADER_DEFERRED_NAME = "DefPixelShader.hlsl";
 static const WCHAR *VERTEXSHADER_DEFERRED_NAME_WCHAR = L"DefVertexShader.hlsl", *GEOMETRYSHADER_DEFERRED_NAME_WCHAR = L"DefGeometryShader.hlsl", *PIXELSHADER_DEFERRED_NAME_WCHAR = L"DefPixelShader.hlsl";
+
+static const char *VERTEXSHADER_LIGHT_NAME = "LightVertexShader.hlsl", *PIXELSHADER_LIGHT_NAME = "LightPixelShader.hlsl";
+static const WCHAR *VERTEXSHADER_LIGHT_NAME_WCHAR = L"LightVertexShader.hlsl", *PIXELSHADER_LIGHT_NAME_WCHAR = L"LightPixelShader.hlsl";
 
 static const char* TEST_TEXTURE_NAME = "../Textures/stone01.tga";
