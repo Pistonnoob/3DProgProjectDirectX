@@ -120,7 +120,7 @@ void GraphicsHandler::ShutDown()
 	//Release the Direct3D object
 	if (m_Direct3D)
 	{
-		m_Direct3D->ShutDown();
+		m_Direct3D->Shutdown();
 		delete m_Direct3D;
 		m_Direct3D = nullptr;
 	}
