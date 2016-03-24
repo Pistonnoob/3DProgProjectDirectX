@@ -381,24 +381,35 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 bool GraphicsHandler::Render()
 {
 
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-
-	this->RenderToDeferred();
-
-
-	// Clear the buffers to begin the scene.
-	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
 	Matrix viewMatrix, projectionMatrix, worldMatrix;
 	bool result = false;
 
+	// Generate the view matrix based on the camera's position.
+	m_Camera->Render();
+
+	result = this->RenderToDeferred();
+	if (!result)
+	{
+		return false;
+	}
+
+	// Clear the buffers to begin the scene.
+	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
+
 	//// Get the view, and projection matrices from the camera and d3d objects.
-	//this->m_Camera->GetViewMatrix(viewMatrix);
-	//this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-	////Update the cameraPosition for the pixelshaders speculare calculations
-	//Vector3 cameraPos = m_Camera->GetPosition();
-	//LightStruct* lightTest = m_Lights.front();
+	this->m_Camera->GetViewMatrix(viewMatrix);
+	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	//Update the cameraPosition for the pixelshaders speculare calculations
+	Vector3 cameraPos = m_Camera->GetPosition();
+	LightStruct* lightTest = m_Lights.front();
 	//lightTest->specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
+
+	for (std::vector<LightStruct*>::const_iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
+	{
+		//Do the light shading post processing on our quad
+
+	}
+
 	//for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	//{
 	//	//Do the logic uniqueue to every model / object
@@ -457,7 +468,8 @@ bool GraphicsHandler::RenderToDeferred()
 
 	//Reset the render target to the back buffer
 	m_Direct3D->SetBackBufferRenderTarget();
-
+	//Reset the viewport
+	m_Direct3D->ResetViewport();
 	return true;
 }
 
