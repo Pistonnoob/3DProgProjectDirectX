@@ -30,6 +30,10 @@ bool DeferredHandler::Initialize(ID3D11Device * device, HWND hwnd)
 	WCHAR* psName = (WCHAR*)PIXELSHADER_DEFERRED_NAME_WCHAR;
 	//Initialize the deferred shaders
 	result = this->InitializeShader(device, hwnd, vsName, gsName, psName);
+	if (!result)
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -182,8 +186,41 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 	}
 #pragma endregion Creating shader buffers
 
-	unsigned int numElements = ARRAYSIZE(INPUT_DESC_DEFERRED);
-	hResult = device->CreateInputLayout(INPUT_DESC_DEFERRED, numElements, pVS->GetBufferPointer(), pVS->GetBufferSize(), &m_layout);
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	unsigned int numElements;
+	// Create the vertex input layout description.
+	polygonLayout[0].SemanticName = "POSITION";
+	polygonLayout[0].SemanticIndex = 0;
+	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[0].InputSlot = 0;
+	polygonLayout[0].AlignedByteOffset = 0;
+	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[0].InstanceDataStepRate = 0;
+
+	polygonLayout[1].SemanticName = "TEXCOORD";
+	polygonLayout[1].SemanticIndex = 0;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[1].InputSlot = 0;
+	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[1].InstanceDataStepRate = 0;
+
+	polygonLayout[2].SemanticName = "NORMAL";
+	polygonLayout[2].SemanticIndex = 0;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[2].InputSlot = 0;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[2].InstanceDataStepRate = 0;
+
+	// Get a count of the elements in the layout.
+	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
+
+	// Create the vertex input layout.
+	hResult = device->CreateInputLayout(polygonLayout, numElements, pVS->GetBufferPointer(), pVS->GetBufferSize(),
+		&m_layout);
+	//unsigned int numElements = ARRAYSIZE(INPUT_DESC_DEFERRED);
+	//hResult = device->CreateInputLayout(INPUT_DESC_DEFERRED, numElements, pVS->GetBufferPointer(), pVS->GetBufferSize(), &m_layout);
 	if (FAILED(hResult))
 	{
 		return false;
