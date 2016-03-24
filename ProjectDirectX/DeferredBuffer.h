@@ -32,6 +32,7 @@ public:
 	void ClearRenderTargets(ID3D11DeviceContext * context, float red, float green, float blue, float alpha);
 
 	ID3D11ShaderResourceView* GetShaderResourceView(int view);
+	ID3D11ShaderResourceView** GetShaderResourceViews();
 private:
 };
 

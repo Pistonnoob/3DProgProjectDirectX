@@ -37,7 +37,7 @@ private:	//functions
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView** resources, LightStructTemp* lights);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView** resources, LightStructTemp* light);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 

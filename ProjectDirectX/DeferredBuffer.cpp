@@ -221,4 +221,9 @@ ID3D11ShaderResourceView * DeferredBuffer::GetShaderResourceView(int view)
 	return this->m_shaderResourceViewArray[view];
 }
 
+ID3D11ShaderResourceView** DeferredBuffer::GetShaderResourceViews()
+{
+	return this->m_shaderResourceViewArray;
+}
+
 

@@ -38,12 +38,12 @@ void LightShader::Shutdown()
 	this->FreeMemory();
 }
 
-bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView ** resources, LightStructTemp* lights)
+bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView ** resources, LightStructTemp* light)
 {
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, resources, lights);
+	result = SetShaderParameters(deviceContext, matrices, resources, light);
 	if (!result)
 	{
 		return false;

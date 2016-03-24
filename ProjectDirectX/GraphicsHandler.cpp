@@ -411,9 +411,9 @@ bool GraphicsHandler::Render()
 	WVPBufferStruct matrices = { worldMatrix, viewMatrix, orthoMatrix };
 	for (std::vector<LightStruct*>::const_iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
-		LightStructTemp tempLight = {};
+		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z)};
 		//Do the light shading post processing on our quad
-		this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices)
+		this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
 	}
 
 	//Return the z buffer to "ON" so the next 3d rendering can take place correctly
@@ -443,7 +443,7 @@ bool GraphicsHandler::RenderToDeferred()
 		//Rotate the model
 		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 		//Bind the vertices and indices to the pipeline
-		(*model)->Render(m_Direct3D->GetDeviceContext);
+		(*model)->Render(m_Direct3D->GetDeviceContext());
 
 		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
 		ObjMaterial objMaterial = (*model)->GetMaterial();
