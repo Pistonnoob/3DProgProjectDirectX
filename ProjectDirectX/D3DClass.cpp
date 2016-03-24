@@ -484,6 +484,11 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 	return m_deviceContext;
 }
 
+ID3D10DepthStencilView * D3DClass::GetDepthStencilView()
+{
+	return nullptr;
+}
+
 
 void D3DClass::GetProjectionMatrix(Matrix& projectionMatrix)
 {
@@ -504,4 +509,8 @@ void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
 	return;
+}
+
+void D3DClass::SetBackBufferRenderTarget()
+{
 }

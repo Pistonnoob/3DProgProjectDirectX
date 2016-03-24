@@ -42,11 +42,14 @@ public:
 	
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
+	ID3D10DepthStencilView* GetDepthStencilView();
 
 	void GetProjectionMatrix(Matrix& projectionMatrix);
 	void GetOrthoMatrix(Matrix& orthoMatrix);
 
 	void GetVideoCardInfo(char* cardName, int& memory);
+
+	void SetBackBufferRenderTarget();
 };
 
 #endif
