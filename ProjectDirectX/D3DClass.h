@@ -26,6 +26,7 @@ private:
 	ID3D11DepthStencilState* m_depthStencilState;
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RasterizerState* m_rasterState;
+	D3D11_VIEWPORT m_viewport;
 
 	Matrix m_projectionMatrix;
 	Matrix m_orthoMatrix;
@@ -50,6 +51,7 @@ public:
 	void GetVideoCardInfo(char* cardName, int& memory);
 
 	void SetBackBufferRenderTarget();
+	void ResetViewport();
 };
 
 #endif

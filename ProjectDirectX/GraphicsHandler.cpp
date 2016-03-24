@@ -456,6 +456,7 @@ bool GraphicsHandler::RenderToDeferred()
 	}
 
 	//Reset the render target to the back buffer
+	m_Direct3D->SetBackBufferRenderTarget();
 
 	return true;
 }
