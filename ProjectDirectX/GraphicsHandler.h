@@ -1,17 +1,27 @@
 #ifndef _GRAPHICSHANDLER_H_
 #define _GRAPHICSHANDER_H_
 
+//The class that handles direct x, I have forgotten why the 3 is there, possible refering to 3D
 #include "d3dclass.h"
+//The class that keeps track of the camera related data
 #include "Camera.h"
+//Old 2d model
 #include "D2Object.h"
+//New model for the ease of 2D rendering and visual effects in a 3d world
+//Also usefull for post-processing
+#include "QuadModel.h"
+//New 3d model class and teh factory that creates it
 #include "D3Object.h"
 #include "ObjectFactory.h"
+//For normal rendering
 #include "TextureHandler.h"
+//To be able to properly handle the inputs
 #include "InputHandler.h"
+//For deferred rendering
 #include "DeferredBuffer.h"
 #include "DeferredHandler.h"
 #include "LightShader.h"
-#include "QuadModel.h"
+
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
