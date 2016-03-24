@@ -366,11 +366,14 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 
 	//Get a pointer to the data
 	dataPtr = (WVPBufferStruct*)mappedResource.pData;
-
+	WVPBufferStruct tempMatrices;
+	tempMatrices.world = matrices->world.Transpose();
+	tempMatrices.view = matrices->view.Transpose();
+	tempMatrices.projection = matrices->projection.Transpose();
 	//Now we copy the matrices into the mapped data
-	dataPtr->world = matrices->world.Transpose();
-	dataPtr->view = matrices->view.Transpose();
-	dataPtr->projection = matrices->projection.Transpose();
+	dataPtr->world = tempMatrices.world;
+	dataPtr->view = tempMatrices.view;
+	dataPtr->projection = tempMatrices.projection;
 
 	//Unlock/unmap the constant buffer
 	deviceContext->Unmap(this->m_matrixBuffer, 0);
