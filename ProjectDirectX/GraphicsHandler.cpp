@@ -329,38 +329,38 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	for (int index = 0; index < 1; index++)
-	{
-		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-			return false;
-		}
-		if (index == 0)
-			modelSize = m_Models.size();
-		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-		{
-			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
-			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-		}
+	//for (int index = 0; index < 1; index++)
+	//{
+	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//	if (!result)
+	//	{
+	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//		return false;
+	//	}
+	//	if (index == 0)
+	//		modelSize = m_Models.size();
+	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+	//	{
+	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
+	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	}
 
-	}
+	//}
 	
 
-	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
-	}*/
-	//if (m_Models.size() > 0)
-	//{
-	//	m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
-	//	m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
-	//	//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
-	//	//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
-	//}
+	}
+	if (m_Models.size() > 0)
+	{
+		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
+		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
+		//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+		//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
+	}
 	
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
@@ -368,13 +368,13 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	//int modelNr = 0;
-	//for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
-	//{
-	//	(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
-	//	//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-	//	modelNr++;
-	//}
+	int modelNr = 0;
+	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
+	{
+		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
+		//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+		modelNr++;
+	}
 	return true;
 }
 
@@ -394,7 +394,7 @@ bool GraphicsHandler::Render()
 	}
 
 	// Clear the buffers to begin the scene.
-	this->m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//// Get the view, and projection matrices from the camera and d3d objects.
 	this->m_Camera->GetViewMatrix(viewMatrix);
@@ -409,12 +409,16 @@ bool GraphicsHandler::Render()
 	//Now put the fullscreen Quads vertices and indices to be rendered
 	this->m_FullScreenObject->Render(this->m_Direct3D->GetDeviceContext());
 	WVPBufferStruct matrices = { worldMatrix, viewMatrix, orthoMatrix };
-	for (std::vector<LightStruct*>::const_iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
+	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
 		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z)};
 		//Do the light shading post processing on our quad
 		//this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
-		this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), &tempLight);
+		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), &tempLight);
+		if (!result)
+		{
+			return false;
+		}
 	}
 
 	//Return the z buffer to "ON" so the next 3d rendering can take place correctly
