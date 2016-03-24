@@ -55,6 +55,23 @@ bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WV
 	return true;
 }
 
+bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * normal, ID3D11ShaderResourceView * position, LightStructTemp * light)
+{
+	bool result = false;
+
+	//Set the shader parameters that we will use when rendering
+	result = SetShaderParameters(deviceContext, matrices, color, normal, position, light);
+	if (!result)
+	{
+		return false;
+	}
+
+	//Now render the prepared buffers with the shader
+	RenderShader(deviceContext, indexCount);
+
+	return true;
+}
+
 bool LightShader::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * psFilename)
 {
 	HRESULT hResult;
@@ -341,6 +358,70 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 	dataPtr2->lightPos = lights->lightPos;
 	dataPtr2->padding = 0.0f;
 	dataPtr2->lightColor = lights->lightColor;
+	// Unlock the constant buffer.
+	deviceContext->Unmap(m_lightBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 0;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+
+	return true;
+}
+
+bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * normal, ID3D11ShaderResourceView * position, LightStructTemp * light)
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	WVPBufferStruct* dataPtr = NULL;
+	LightStructTemp* dataPtr2 = NULL;
+	unsigned int bufferNumber = 0;
+
+	//Lock the m_matrix
+	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get a pointer to the data
+	dataPtr = (WVPBufferStruct*)mappedResource.pData;
+
+	//Now we copy the matrices into the mapped data transposed
+	dataPtr->world = matrices->world.Transpose();
+	dataPtr->view = matrices->view.Transpose();
+	dataPtr->projection = matrices->projection.Transpose();
+
+	//Unlock/unmap the constant buffer
+	deviceContext->Unmap(this->m_matrixBuffer, 0);
+
+	//set the position of the constant buffer in the vertex shader
+	bufferNumber = 0;
+
+	//Set the constant buffer in the vertex shader with the updated values
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	//Set the shader texture resource in the pixel shader.
+
+	deviceContext->PSSetShaderResources(0, 1, &color);
+	deviceContext->PSSetShaderResources(1, 1, &normal);
+	deviceContext->PSSetShaderResources(2, 1, &position);
+	
+
+	// Lock the light constant buffer so it can be written to.
+	result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr2 = (LightStructTemp*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	dataPtr2->lightPos = light->lightPos;
+	dataPtr2->padding = 0.0f;
+	dataPtr2->lightColor = light->lightColor;
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_lightBuffer, 0);
 
