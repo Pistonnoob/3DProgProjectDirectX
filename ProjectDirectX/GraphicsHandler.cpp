@@ -432,7 +432,7 @@ bool GraphicsHandler::RenderToDeferred()
 	//Set the deferred buffers as the render target
 	m_DeferredBuffers->SetRenderTargets(this->m_Direct3D->GetDeviceContext());
 	//Clear the render buffers.
-	m_DeferredBuffers->ClearRenderTargets(this->m_Direct3D->GetDeviceContext(), SimpleMath::Color(0.1f, 0.1f, 0.1f, 1.0f));
+	m_DeferredBuffers->ClearRenderTargets(this->m_Direct3D->GetDeviceContext(), SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
 
 	// Get the view, and projection matrices from the camera and d3d objects.
 	this->m_Camera->GetViewMatrix(viewMatrix);
