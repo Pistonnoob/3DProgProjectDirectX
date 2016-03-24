@@ -38,7 +38,7 @@ bool DeferredBuffer::Initialize(ID3D11Device * device, int width, int height, fl
 	m_textureHeight = height;
 
 	// Initialize the render target texture description.
-	memset(&textureDesc, 0, sizeof(textureDesc));
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
 
 	// Setup the render target texture description.
 	textureDesc.Width = width;
