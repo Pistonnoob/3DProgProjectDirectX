@@ -25,7 +25,7 @@
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 500.0f;
+const float SCREEN_FAR = 500.0f;
 const float SCREEN_NEAR = 0.1f;
 
 const float CAMERA_Y_UPPER_BOUND = 75;
@@ -47,14 +47,31 @@ const Vector3 DIRECTION_V[INPUT_CAP] = { D_FRONT, D_LEFT, D_BACK, D_RIGHT };
 
 class GraphicsHandler
 {
-private:
+private:	//Variables
+	//Ignore this object and just leave it to Kim Arvola Bjelkesten. It is just a handler for some directX related things
 	D3DClass* m_Direct3D;
+	//The camera
 	Camera* m_Camera;
+	//The objects in the scene
 	std::vector<D3Object*> m_Models;
+	//Our scene lights, all point lights and structs.
+	//Extend to own class if other lights are needed.
 	std::vector<LightStruct*> m_Lights;
+	//Normal textured rendering
 	TextureHandler* m_TextureShader;
+	//Used for our deferred rendering and the post processing it is composed off
+	QuadModel* m_FullScreenObject;
+	//A object that will contain the data from the geometry call of deferred rendering
+	DeferredBuffer* m_DeferredBuffers;
+	//The deferred renderer
+	DeferredHandler* m_DefferedShader;
+	//The post processing done with the data from DefferedBuffers
+	LightShader* m_LightShader;
+
+
+
+	//A rotation value used for debugging
 	float rotation;
-	//ShaderHandler* m_shaderHandler;
 public:
 	GraphicsHandler();
 	GraphicsHandler(const GraphicsHandler& other);
@@ -64,8 +81,9 @@ public:
 	void ShutDown();
 	bool Frame(int fps, float frameTime, InputHandler* inputObj);
 	bool Render();
+	bool RenderToDeferred();
 
-private:
+private:	//Functions
 	bool UpdateInput(InputHandler* inputObj, float dT);
 	bool LoadScene(HWND hwnd);
 };

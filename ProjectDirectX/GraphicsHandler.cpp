@@ -6,9 +6,12 @@ GraphicsHandler::GraphicsHandler()
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
 	m_TextureShader = nullptr;
-	rotation = 0.0f;
-	//m_shaderHandler = nullptr;
+	m_FullScreenObject = nullptr;
+	m_DeferredBuffers = nullptr;
+	m_DefferedShader = nullptr;
+	m_LightShader = nullptr;
 
+	rotation = 0.0f;
 }
 
 GraphicsHandler::GraphicsHandler(const GraphicsHandler &other)
@@ -33,7 +36,7 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the Direct3D object.
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_FAR, SCREEN_NEAR);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
@@ -341,4 +344,9 @@ bool GraphicsHandler::Render()
 	//Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
 	return true;
+}
+
+bool GraphicsHandler::RenderToDeferred()
+{
+	return false;
 }
