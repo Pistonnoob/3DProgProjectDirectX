@@ -380,15 +380,17 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 bool GraphicsHandler::Render()
 {
-	// Clear the buffers to begin the scene.
-	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
-	Matrix viewMatrix, projectionMatrix, worldMatrix;
-	bool result = false;
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
 	this->RenderToDeferred();
+
+
+	// Clear the buffers to begin the scene.
+	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
+	Matrix viewMatrix, projectionMatrix, worldMatrix;
+	bool result = false;
 
 	//// Get the view, and projection matrices from the camera and d3d objects.
 	//this->m_Camera->GetViewMatrix(viewMatrix);
@@ -447,9 +449,13 @@ bool GraphicsHandler::RenderToDeferred()
 		(*model)->Render(m_Direct3D->GetDeviceContext);
 
 		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
+		ObjMaterial objMaterial = (*model)->GetMaterial();
+		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d };
 		//Render the model using our brand new deferred renderer!
-		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices)
+		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
 	}
+
+	//Reset the render target to the back buffer
 
 	return true;
 }
