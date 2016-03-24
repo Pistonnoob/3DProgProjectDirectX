@@ -27,7 +27,7 @@ struct VS_IN_DEF
 struct VS_IN_LIGHT
 {
 	float4 Pos : POSITION;
-	float2 UV : TEXCOORD;
+	float2 UV : TEXCOORD0;
 };
 
 struct GS_IN
@@ -87,7 +87,7 @@ struct PS_IN_DEF
 struct PS_IN_LIGHT
 {
 	float4 Pos : SV_POSITION;
-	float2 UV : TEXCOORD;
+	float2 UV : TEXCOORD0;
 };
 
 struct PS_OUT_DEF {
