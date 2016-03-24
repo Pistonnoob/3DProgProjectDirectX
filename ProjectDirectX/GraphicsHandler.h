@@ -1,7 +1,7 @@
 #ifndef _GRAPHICSHANDLER_H_
 #define _GRAPHICSHANDER_H_
 
-//The class that handles direct x, I have forgotten why the 3 is there, possible refering to 3D
+//The class that handles direct3D
 #include "d3dclass.h"
 //The class that keeps track of the camera related data
 #include "Camera.h"
@@ -48,14 +48,13 @@ const Vector3 DIRECTION_V[INPUT_CAP] = { D_FRONT, D_LEFT, D_BACK, D_RIGHT };
 class GraphicsHandler
 {
 private:	//Variables
-	//Ignore this object and just leave it to Kim Arvola Bjelkesten. It is just a handler for some directX related things
+	//Ignore this object and just leave it to Kim Arvola Bjelkesten. It is just a handler for some direct3D related things
 	D3DClass* m_Direct3D;
 	//The camera
 	Camera* m_Camera;
 	//The objects in the scene
 	std::vector<D3Object*> m_Models;
-	//Our scene lights, all point lights and structs.
-	//Extend to own class if other lights are needed.
+	//Our scene lights, all point lights and structs. Extend to own class if other lights are needed.
 	std::vector<LightStruct*> m_Lights;
 	//Normal textured rendering
 	TextureHandler* m_TextureShader;
