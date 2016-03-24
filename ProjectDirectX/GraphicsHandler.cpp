@@ -381,7 +381,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 bool GraphicsHandler::Render()
 {
 
-	Matrix viewMatrix, projectionMatrix, worldMatrix;
+	Matrix viewMatrix, orthoMatrix, worldMatrix;
 	bool result = false;
 
 	// Generate the view matrix based on the camera's position.
@@ -398,41 +398,27 @@ bool GraphicsHandler::Render()
 
 	//// Get the view, and projection matrices from the camera and d3d objects.
 	this->m_Camera->GetViewMatrix(viewMatrix);
-	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-	//Update the cameraPosition for the pixelshaders speculare calculations
-	Vector3 cameraPos = m_Camera->GetPosition();
-	LightStruct* lightTest = m_Lights.front();
-	//lightTest->specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
+	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
+	//Update the cameraPosition for the pixelshaders specular calculations
+	Vector3 cameraPos = m_Camera->GetPosition();
+
+	//Turn off the z buffering
+	this->m_Direct3D->TurnZBufferOff();
+
+	//Now put the fullscreen Quads vertices and indices to be rendered
+	this->m_FullScreenObject->Render(this->m_Direct3D->GetDeviceContext());
+	WVPBufferStruct matrices = { worldMatrix, viewMatrix, orthoMatrix };
 	for (std::vector<LightStruct*>::const_iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
+		LightStructTemp tempLight = {};
 		//Do the light shading post processing on our quad
-
+		this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices)
 	}
 
-	//for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
-	//{
-	//	//Do the logic uniqueue to every model / object
+	//Return the z buffer to "ON" so the next 3d rendering can take place correctly
+	m_Direct3D->TurnZBufferOn();
 
-	//	//Get the world matrix from the model / object and rotate it for visibility
-	//	(*model)->GetWorldMatrix(worldMatrix);
-	//	worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
-
-	//	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	//	(*model)->Render(this->m_Direct3D->GetDeviceContext());
-
-	//	ObjMaterial objMaterial = (*model)->GetMaterial();
-	//	PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d};
-
-	//	// Render the model using the texture shader.
-	//	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, *lightTest, (*model)->GetTexture(), pMaterial);
-	//	if (!result)
-	//	{
-	//		return false;
-	//	}
-	//}
-
-	//Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
 	return true;
 }
