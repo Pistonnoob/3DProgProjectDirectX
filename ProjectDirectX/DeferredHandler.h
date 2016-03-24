@@ -32,7 +32,7 @@ public:
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct* matrices, LightStruct* light, ID3D11ShaderResourceView* resourceView, PixelMaterial* material);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct* matrices, ID3D11ShaderResourceView* resourceView, PixelMaterial* material);
 	//bool Render(ID3D11DeviceContext* deviceContext, int indexCount, Matrix* world, Matrix* view, Matrix* projection, LightStruct* light, ID3D11ShaderResourceView* resourceView, PixelMaterial* material);
 
 

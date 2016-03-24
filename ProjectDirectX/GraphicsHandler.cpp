@@ -388,34 +388,36 @@ bool GraphicsHandler::Render()
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
-	// Get the view, and projection matrices from the camera and d3d objects.
-	this->m_Camera->GetViewMatrix(viewMatrix);
-	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-	//Update the cameraPosition for the pixelshaders speculare calculations
-	Vector3 cameraPos = m_Camera->GetPosition();
-	LightStruct* lightTest = m_Lights.front();
-	lightTest->specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
-	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
-	{
-		//Do the logic uniqueue to every model / object
+	this->RenderToDeferred();
 
-		//Get the world matrix from the model / object and rotate it for visibility
-		(*model)->GetWorldMatrix(worldMatrix);
-		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
+	//// Get the view, and projection matrices from the camera and d3d objects.
+	//this->m_Camera->GetViewMatrix(viewMatrix);
+	//this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	////Update the cameraPosition for the pixelshaders speculare calculations
+	//Vector3 cameraPos = m_Camera->GetPosition();
+	//LightStruct* lightTest = m_Lights.front();
+	//lightTest->specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
+	//for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
+	//{
+	//	//Do the logic uniqueue to every model / object
 
-		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-		(*model)->Render(this->m_Direct3D->GetDeviceContext());
+	//	//Get the world matrix from the model / object and rotate it for visibility
+	//	(*model)->GetWorldMatrix(worldMatrix);
+	//	worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 
-		ObjMaterial objMaterial = (*model)->GetMaterial();
-		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d};
+	//	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	//	(*model)->Render(this->m_Direct3D->GetDeviceContext());
 
-		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, *lightTest, (*model)->GetTexture(), pMaterial);
-		if (!result)
-		{
-			return false;
-		}
-	}
+	//	ObjMaterial objMaterial = (*model)->GetMaterial();
+	//	PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d};
+
+	//	// Render the model using the texture shader.
+	//	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, *lightTest, (*model)->GetTexture(), pMaterial);
+	//	if (!result)
+	//	{
+	//		return false;
+	//	}
+	//}
 
 	//Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
@@ -424,5 +426,43 @@ bool GraphicsHandler::Render()
 
 bool GraphicsHandler::RenderToDeferred()
 {
-	return false;
+	Matrix viewMatrix, projectionMatrix, worldMatrix;
+	bool result = false;
+
+	//Set the deferred buffers as the render target
+	m_DeferredBuffers->SetRenderTargets(this->m_Direct3D->GetDeviceContext());
+	//Clear the render buffers.
+	m_DeferredBuffers->ClearRenderTargets(this->m_Direct3D->GetDeviceContext(), SimpleMath::Color(0.1f, 0.1f, 0.1f, 1.0f));
+
+	// Get the view, and projection matrices from the camera and d3d objects.
+	this->m_Camera->GetViewMatrix(viewMatrix);
+	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
+	{
+		(*model)->GetWorldMatrix(worldMatrix);
+		//Rotate the model
+		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
+		//Bind the vertices and indices to the pipeline
+		(*model)->Render(m_Direct3D->GetDeviceContext);
+
+		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
+		//Render the model using our brand new deferred renderer!
+		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices)
+	}
+
+	return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

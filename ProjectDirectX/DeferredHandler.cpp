@@ -38,7 +38,7 @@ void DeferredHandler::Shutdown()
 	this->FreeMemory();
 }
 
-bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, LightStruct * light, ID3D11ShaderResourceView * resourceView, PixelMaterial * material)
+bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * resourceView, PixelMaterial * material)
 {
 	bool result = false;
 
