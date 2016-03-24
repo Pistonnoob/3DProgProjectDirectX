@@ -484,9 +484,9 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 	return m_deviceContext;
 }
 
-ID3D10DepthStencilView * D3DClass::GetDepthStencilView()
+ID3D11DepthStencilView * D3DClass::GetDepthStencilView()
 {
-	return nullptr;
+	return m_depthStencilView;
 }
 
 
@@ -513,4 +513,6 @@ void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
 
 void D3DClass::SetBackBufferRenderTarget()
 {
+	//Bind the rendertarget and depth stencil buffer to the render pipeline
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 }
