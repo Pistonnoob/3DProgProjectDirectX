@@ -8,7 +8,7 @@ GraphicsHandler::GraphicsHandler()
 	m_TextureShader = nullptr;
 	m_FullScreenObject = nullptr;
 	m_DeferredBuffers = nullptr;
-	m_DefferedShader = nullptr;
+	m_DeferredShader = nullptr;
 	m_LightShader = nullptr;
 
 	rotation = 0.0f;
@@ -65,38 +65,12 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsHandler::ShutDown()
 {
-	// Release the color shader object.
-	if (this->m_TextureShader)
+	//Release the Direct3D object
+	if (m_Direct3D)
 	{
-		this->m_TextureShader->Shutdown();
-		delete this->m_TextureShader;
-		this->m_TextureShader = nullptr;
-	}
-
-	// Release the model object.
-	/*if (m_Model)
-	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
-	}*/
-
-	// Release the models within the model list.
-	while(!m_Models.empty())
-	{
-		D3Object* temp = NULL;
-		temp = m_Models.back();
-		m_Models.pop_back();
-		temp->Shutdown();
-		delete temp;
-	}
-
-	while (!m_Lights.empty())
-	{
-		LightStruct* temp = NULL;
-		temp = m_Lights.back();
-		m_Lights.pop_back();
-		delete temp;
+		m_Direct3D->ShutDown();
+		delete m_Direct3D;
+		m_Direct3D = nullptr;
 	}
 
 	// Release the camera object.
@@ -106,13 +80,63 @@ void GraphicsHandler::ShutDown()
 		m_Camera = 0;
 	}
 
-	//Release the Direct3D object
-	if (m_Direct3D)
+	// Release the models within the model list.
+	while (!m_Models.empty())
 	{
-		m_Direct3D->ShutDown();
-		delete m_Direct3D;
-		m_Direct3D = nullptr;
+		D3Object* temp = NULL;
+		temp = m_Models.back();
+		m_Models.pop_back();
+		temp->Shutdown();
+		delete temp;
 	}
+
+	// Release the lights within the light list.
+	while (!m_Lights.empty())
+	{
+		LightStruct* temp = NULL;
+		temp = m_Lights.back();
+		m_Lights.pop_back();
+		delete temp;
+	}
+
+	// Release the color shader object.
+	if (this->m_TextureShader != NULL)
+	{
+		this->m_TextureShader->Shutdown();
+		delete this->m_TextureShader;
+		this->m_TextureShader = nullptr;
+	}
+
+	// Release our precious post processing quad
+	if (m_FullScreenObject != NULL)
+	{
+		this->m_FullScreenObject->Shutdown();
+		delete this->m_FullScreenObject;
+		this->m_FullScreenObject = NULL;
+	}
+	
+	// Release our deferred data container
+	if (m_DeferredBuffers != NULL)
+	{
+		this->m_DeferredBuffers->Shutdown();
+		delete this->m_DeferredBuffers;
+		this->m_DeferredBuffers = NULL;
+	}
+
+	if (this->m_DeferredShader != NULL)
+	{
+		this->m_DeferredShader->Shutdown();
+		delete this->m_DeferredShader;
+		this->m_DeferredShader = NULL;
+	}
+
+	if (this->m_LightShader != NULL)
+	{
+		this->m_LightShader->Shutdown();
+		delete this->m_LightShader;
+		this->m_LightShader = NULL;
+	}
+
 	return;
 }
 

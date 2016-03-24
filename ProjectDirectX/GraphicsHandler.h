@@ -64,7 +64,7 @@ private:	//Variables
 	//A object that will contain the data from the geometry call of deferred rendering
 	DeferredBuffer* m_DeferredBuffers;
 	//The deferred renderer
-	DeferredHandler* m_DefferedShader;
+	DeferredHandler* m_DeferredShader;
 	//The post processing done with the data from DefferedBuffers
 	LightShader* m_LightShader;
 
