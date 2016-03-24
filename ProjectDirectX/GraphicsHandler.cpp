@@ -60,6 +60,58 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_FullScreenObject = new QuadModel();
+	if (!m_FullScreenObject)
+	{
+		return false;
+	}
+
+	result = m_FullScreenObject->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the QuadModel object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_DeferredBuffers = new DeferredBuffer();
+	if (!m_DeferredBuffers)
+	{
+		return false;
+	}
+
+	result = m_DeferredBuffers->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_NEAR, SCREEN_FAR);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Deferred Buffer object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_DeferredShader = new DeferredHandler();
+	if (!m_DeferredShader)
+	{
+		return false;
+	}
+
+	result = m_DeferredShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Deferred Handler object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_LightShader = new LightShader();
+	if (!m_LightShader)
+	{
+		return false;
+	}
+
+	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Light Shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	return true;
 }
 
