@@ -399,7 +399,7 @@ bool GraphicsHandler::Render()
 	//// Get the view, and projection matrices from the camera and d3d objects.
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
-
+	worldMatrix = DirectX::XMMatrixIdentity();
 	//Update the cameraPosition for the pixelshaders specular calculations
 	Vector3 cameraPos = m_Camera->GetPosition();
 

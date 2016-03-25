@@ -64,10 +64,10 @@ bool QuadModel::InitializeBuffers(ID3D11Device * device, int width, int height)
 	left = (float)((width / 2) * -1);
 
 	// Calculate the screen coordinates of the right side of the window.
-	right = left + (float)height;
+	right = left + (float)width;
 
 	// Calculate the screen coordinates of the top of the window.
-	top = (float)(width / 2);
+	top = (float)(height / 2);
 
 	// Calculate the screen coordinates of the bottom of the window.
 	bottom = top - (float)height;

@@ -36,6 +36,6 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 	}
 
 	result = saturate(color * diffuseResult);
-	result = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	result = float4(255.0f, 0.0f, 0.0f, 1.0f);
 	return result;
 }
