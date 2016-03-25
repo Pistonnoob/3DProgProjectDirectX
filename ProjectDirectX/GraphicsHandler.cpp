@@ -6,9 +6,12 @@ GraphicsHandler::GraphicsHandler()
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
 	m_TextureShader = nullptr;
-	m_Light = { Vector4(0.0f, 0.0f, 0.0f, 0.0f), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0)};
+	m_FullScreenObject = nullptr;
+	m_DeferredBuffers = nullptr;
+	m_DeferredShader = nullptr;
+	m_LightShader = nullptr;
+
 	rotation = 0.0f;
-	//m_shaderHandler = nullptr;
 }
 
 GraphicsHandler::GraphicsHandler(const GraphicsHandler &other)
@@ -33,7 +36,7 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the Direct3D object.
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_FAR, SCREEN_NEAR);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
@@ -57,35 +60,69 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_FullScreenObject = new QuadModel();
+	if (!m_FullScreenObject)
+	{
+		return false;
+	}
+
+	result = m_FullScreenObject->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the QuadModel object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_DeferredBuffers = new DeferredBuffer();
+	if (!m_DeferredBuffers)
+	{
+		return false;
+	}
+
+	result = m_DeferredBuffers->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_NEAR, SCREEN_FAR);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Deferred Buffer object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_DeferredShader = new DeferredHandler();
+	if (!m_DeferredShader)
+	{
+		return false;
+	}
+
+	result = m_DeferredShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Deferred Handler object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_LightShader = new LightShader();
+	if (!m_LightShader)
+	{
+		return false;
+	}
+
+	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Light Shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	return true;
 }
 
 void GraphicsHandler::ShutDown()
 {
-	// Release the color shader object.
-	if (this->m_TextureShader)
+	//Release the Direct3D object
+	if (m_Direct3D)
 	{
-		this->m_TextureShader->Shutdown();
-		delete this->m_TextureShader;
-		this->m_TextureShader = nullptr;
-	}
-
-	// Release the model object.
-	/*if (m_Model)
-	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
-	}*/
-
-	// Release the models within the model list.
-	while(!m_Models.empty())
-	{
-		D3Object* temp = NULL;
-		temp = m_Models.back();
-		m_Models.pop_back();
-		temp->Shutdown();
-		delete temp;
+		m_Direct3D->Shutdown();
+		delete m_Direct3D;
+		m_Direct3D = nullptr;
 	}
 
 	// Release the camera object.
@@ -95,13 +132,63 @@ void GraphicsHandler::ShutDown()
 		m_Camera = 0;
 	}
 
-	//Release the Direct3D object
-	if (m_Direct3D)
+	// Release the models within the model list.
+	while (!m_Models.empty())
 	{
-		m_Direct3D->ShutDown();
-		delete m_Direct3D;
-		m_Direct3D = nullptr;
+		D3Object* temp = NULL;
+		temp = m_Models.back();
+		m_Models.pop_back();
+		temp->Shutdown();
+		delete temp;
 	}
+
+	// Release the lights within the light list.
+	while (!m_Lights.empty())
+	{
+		LightStruct* temp = NULL;
+		temp = m_Lights.back();
+		m_Lights.pop_back();
+		delete temp;
+	}
+
+	// Release the color shader object.
+	if (this->m_TextureShader != NULL)
+	{
+		this->m_TextureShader->Shutdown();
+		delete this->m_TextureShader;
+		this->m_TextureShader = nullptr;
+	}
+
+	// Release our precious post processing quad
+	if (m_FullScreenObject != NULL)
+	{
+		this->m_FullScreenObject->Shutdown();
+		delete this->m_FullScreenObject;
+		this->m_FullScreenObject = NULL;
+	}
+	
+	// Release our deferred data container
+	if (m_DeferredBuffers != NULL)
+	{
+		this->m_DeferredBuffers->Shutdown();
+		delete this->m_DeferredBuffers;
+		this->m_DeferredBuffers = NULL;
+	}
+
+	if (this->m_DeferredShader != NULL)
+	{
+		this->m_DeferredShader->Shutdown();
+		delete this->m_DeferredShader;
+		this->m_DeferredShader = NULL;
+	}
+
+	if (this->m_LightShader != NULL)
+	{
+		this->m_LightShader->Shutdown();
+		delete this->m_LightShader;
+		this->m_LightShader = NULL;
+	}
+
 	return;
 }
 
@@ -234,46 +321,46 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	//Create the lights.
-	m_Light = { Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
-
+	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	for (int index = 0; index < 1; index++)
-	{
-		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-			return false;
-		}
-		if (index == 0)
-			modelSize = m_Models.size();
-		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-		{
-			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
-			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-		}
+	//for (int index = 0; index < 1; index++)
+	//{
+	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//	if (!result)
+	//	{
+	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//		return false;
+	//	}
+	//	if (index == 0)
+	//		modelSize = m_Models.size();
+	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+	//	{
+	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
+	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	}
 
-	}
+	//}
 	
 
-	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
-	}*/
-	//if (m_Models.size() > 0)
-	//{
-	//	m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
-	//	m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
-	//	//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
-	//	//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
-	//}
+	}
+	if (m_Models.size() > 0)
+	{
+		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
+		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
+		//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+		//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
+	}
 	
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
@@ -281,55 +368,111 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}*/
-	//int modelNr = 0;
-	//for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
-	//{
-	//	(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
-	//	//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-	//	modelNr++;
-	//}
+	int modelNr = 0;
+	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
+	{
+		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
+		//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+		modelNr++;
+	}
 	return true;
 }
 
 bool GraphicsHandler::Render()
 {
-	// Clear the buffers to begin the scene.
-	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
-	Matrix viewMatrix, projectionMatrix, worldMatrix;
+
+	Matrix viewMatrix, orthoMatrix, worldMatrix;
 	bool result = false;
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
-	// Get the view, and projection matrices from the camera and d3d objects.
-	this->m_Camera->GetViewMatrix(viewMatrix);
-	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
-	//Update the cameraPosition for the pixelshaders speculare calculations
-	Vector3 cameraPos = m_Camera->GetPosition();
-	m_Light.specularPos = Vector4(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
-	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
+	result = this->RenderToDeferred();
+	if (!result)
 	{
-		//Do the logic uniqueue to every model / object
+		return false;
+	}
 
-		//Get the world matrix from the model / object and rotate it for visibility
-		(*model)->GetWorldMatrix(worldMatrix);
-		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
+	// Clear the buffers to begin the scene.
+	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
 
-		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-		(*model)->Render(this->m_Direct3D->GetDeviceContext());
+	//// Get the view, and projection matrices from the camera and d3d objects.
+	this->m_Camera->GetViewMatrix(viewMatrix);
+	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
+	worldMatrix = DirectX::XMMatrixIdentity();
+	//Update the cameraPosition for the pixelshaders specular calculations
+	Vector3 cameraPos = m_Camera->GetPosition();
 
-		ObjMaterial objMaterial = (*model)->GetMaterial();
-		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d};
+	//Turn off the z buffering
+	this->m_Direct3D->TurnZBufferOff();
 
-		// Render the model using the texture shader.
-		result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Light, (*model)->GetTexture(), pMaterial);
+	//Now put the fullscreen Quads vertices and indices to be rendered
+	this->m_FullScreenObject->Render(this->m_Direct3D->GetDeviceContext());
+	WVPBufferStruct matrices = { worldMatrix, viewMatrix, orthoMatrix };
+	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
+	{
+		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z)};
+		//Do the light shading post processing on our quad
+		//this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
+		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), &tempLight);
 		if (!result)
 		{
 			return false;
 		}
 	}
 
-	//Present the rendered scene to the screen.
+	//Return the z buffer to "ON" so the next 3d rendering can take place correctly
+	m_Direct3D->TurnZBufferOn();
+
 	m_Direct3D->EndScene();
 	return true;
 }
+
+bool GraphicsHandler::RenderToDeferred()
+{
+	Matrix viewMatrix, projectionMatrix, worldMatrix;
+	bool result = false;
+
+	//Set the deferred buffers as the render target
+	m_DeferredBuffers->SetRenderTargets(this->m_Direct3D->GetDeviceContext());
+	//Clear the render buffers.
+	m_DeferredBuffers->ClearRenderTargets(this->m_Direct3D->GetDeviceContext(), SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+
+	// Get the view, and projection matrices from the camera and d3d objects.
+	this->m_Camera->GetViewMatrix(viewMatrix);
+	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
+	{
+		(*model)->GetWorldMatrix(worldMatrix);
+		//Rotate the model
+		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
+		//Bind the vertices and indices to the pipeline
+		(*model)->Render(m_Direct3D->GetDeviceContext());
+
+		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
+		ObjMaterial objMaterial = (*model)->GetMaterial();
+		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d };
+		//Render the model using our brand new deferred renderer!
+		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
+	}
+
+	//Reset the render target to the back buffer
+	m_Direct3D->SetBackBufferRenderTarget();
+	//Reset the viewport
+	m_Direct3D->ResetViewport();
+	return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

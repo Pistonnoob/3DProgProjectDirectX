@@ -17,6 +17,19 @@ struct VS_IN_3D
 	float3 Normal : NORMAL;
 };
 
+struct VS_IN_DEF
+{
+	float4 Pos : POSITION;
+	float2 UV : TEXCOORD;
+	float3 Normal : NORMAL;
+};
+
+struct VS_IN_LIGHT
+{
+	float4 Pos : POSITION;
+	float2 UV : TEXCOORD0;
+};
+
 struct GS_IN
 {
 	float4 Pos : SV_POSITION;
@@ -30,6 +43,13 @@ struct GS_IN_UV
 };
 
 struct GS_IN_3D
+{
+	float4 Pos : SV_POSITION;
+	float2 UV : TEXCOORD;
+	float4 Normal : NORMAL;
+};
+
+struct GS_IN_DEF
 {
 	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
@@ -54,6 +74,26 @@ struct PS_IN_UV
 	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
 	float2 UV : TEXCOORD;
+};
+
+struct PS_IN_DEF
+{
+	float4 Pos : SV_POSITION;
+	float4 WorldPos : POSITION;
+	float2 UV : TEXCOORD;
+	float4 Normal : NORMAL;
+};
+
+struct PS_IN_LIGHT
+{
+	float4 Pos : SV_POSITION;
+	float2 UV : TEXCOORD0;
+};
+
+struct PS_OUT_DEF {
+	float4 Color : SV_Target0;
+	float4 Normal : SV_Target1;
+	float4 Position : SV_Target2;
 };
 
 SamplerState p_sampler
