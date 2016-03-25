@@ -423,9 +423,9 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 
 	// Copy the lighting variables into the constant buffer.
 	dataPtr2->lightPos = light->lightPos;
-	dataPtr2->padding = 0.0f;
-	dataPtr2->lightColor = light->lightColor;
-	dataPtr2->padding1 = 0.0f;
+	dataPtr2->padding = 1.0f;
+	dataPtr2->lightColor = light->lightColor / 255;
+	dataPtr2->padding1 = 1.0f;
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_lightBuffer, 0);
 
