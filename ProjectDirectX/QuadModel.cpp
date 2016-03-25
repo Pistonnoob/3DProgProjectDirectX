@@ -60,16 +60,27 @@ bool QuadModel::InitializeBuffers(ID3D11Device * device, int width, int height)
 	HRESULT result;
 	//Remember that the middle of the screen is (0, 0) for our 2D rendering.
 
-	// Calculate the screen coordinates of the left side of the window.
+	//// Calculate the screen coordinates of the left side of the window.
+	//left = (float)((width / 2) * -1);
+
+	//// Calculate the screen coordinates of the right side of the window.
+	//right = left + (float)width;
+
+	//// Calculate the screen coordinates of the top of the window.
+	//top = (float)(height / 2);
+
+	//// Calculate the screen coordinates of the bottom of the window.
+	//bottom = top - (float)height;
+	//Calculate the screen coordinates of the left side of the window
 	left = (float)((width / 2) * -1);
 
-	// Calculate the screen coordinates of the right side of the window.
+	//Calculate the screen coordinates of the right side of the window
 	right = left + (float)width;
 
-	// Calculate the screen coordinates of the top of the window.
+	//Calculate the screen coordinates of the top of the window
 	top = (float)(height / 2);
 
-	// Calculate the screen coordinates of the bottom of the window.
+	//Calculate the screen coordinates of the bottom of the window
 	bottom = top - (float)height;
 
 	// Set the number of vertices in the vertex array.

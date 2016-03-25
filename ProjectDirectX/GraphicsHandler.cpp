@@ -196,11 +196,11 @@ bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 {
 	this->UpdateInput(inputObj, frameTime / 1000);
 	bool result = true;
-	this->rotation += 360 * 0.005f * (frameTime / 1000);
+	/*this->rotation += 360 * 0.005f * (frameTime / 1000);
 	if (this->rotation > 720.0f)
 	{
 		this->rotation = -360.0f;
-	}
+	}*/
 
 	return result;
 }
@@ -322,6 +322,8 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->Render();
+	m_Camera->GenerateBaseViewMatrix();
 
 	//Create the lights.
 	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
@@ -329,59 +331,59 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	//for (int index = 0; index < 1; index++)
+	for (int index = 0; index < 1; index++)
+	{
+		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+			return false;
+		}
+		if (index == 0)
+			modelSize = m_Models.size();
+		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+		{
+			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
+			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+		}
+
+	}
+	
+
+	//result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//if (!result)
 	//{
-	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	//	if (!result)
-	//	{
-	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//		return false;
-	//	}
-	//	if (index == 0)
-	//		modelSize = m_Models.size();
-	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-	//	{
-	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
-	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-	//	}
-
+	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//	return false;
 	//}
-	
-
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-	if (m_Models.size() > 0)
-	{
-		m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
-		m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
-		//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
-		//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
-	}
-	
-	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}*/
-	int modelNr = 0;
-	for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
-	{
-		(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
-		//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-		modelNr++;
-	}
+	//if (m_Models.size() > 0)
+	//{
+	//	m_Models[0]->ApplyMatrix(XMMatrixScaling(0.2f, 0.2f, 0.2f));
+	//	m_Models[0]->ApplyMatrix(XMMatrixTranslation(2.2f, -5.0f, 4.0f));
+	//	//m_Models[1]->ApplyMatrix(XMMatrixScaling(0.1f, 0.1f, 0.1f));
+	//	//m_Models[1]->ApplyMatrix(XMMatrixTranslation(0.0f, -5.0f, 4.0f));
+	//}
+	//
+	///*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "quadBrick_Y_up.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//	return false;
+	//}*/
+	//int modelNr = 0;
+	//for (std::vector<D3Object*>::iterator modelPtr = m_Models.begin(); modelPtr != m_Models.end(); modelPtr++)
+	//{
+	//	(*modelPtr)->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(3.0f, 0.0f, 0.0f)*(float)modelNr));
+	//	//(*modelPtr)->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	modelNr++;
+	//}
 	return true;
 }
 
 bool GraphicsHandler::Render()
 {
 
-	Matrix viewMatrix, orthoMatrix, worldMatrix;
+	Matrix baseViewMatrix, orthoMatrix, worldMatrix;
 	bool result = false;
 
 	// Generate the view matrix based on the camera's position.
@@ -397,7 +399,7 @@ bool GraphicsHandler::Render()
 	this->m_Direct3D->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
 
 	//// Get the view, and projection matrices from the camera and d3d objects.
-	this->m_Camera->GetViewMatrix(viewMatrix);
+	this->m_Camera->GetBaseViewMatrix(baseViewMatrix);
 	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
 	worldMatrix = DirectX::XMMatrixIdentity();
 	//Update the cameraPosition for the pixelshaders specular calculations
@@ -408,7 +410,7 @@ bool GraphicsHandler::Render()
 
 	//Now put the fullscreen Quads vertices and indices to be rendered
 	this->m_FullScreenObject->Render(this->m_Direct3D->GetDeviceContext());
-	WVPBufferStruct matrices = { worldMatrix, viewMatrix, orthoMatrix };
+	WVPBufferStruct matrices = { worldMatrix, baseViewMatrix, orthoMatrix };
 	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
 		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z)};

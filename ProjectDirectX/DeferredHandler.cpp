@@ -76,7 +76,7 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 	flags |= D3DCOMPILE_DEBUG;
 #endif
 	// Prefer higher CS shader profile when possible as CS 5.0 provides better performance on 11 - class hardware.
-	LPCSTR profile = (device->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "vs_5_0" : "cs_4_0";
+	LPCSTR profile = (device->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "vs_5_0" : "vs_4_0";
 	const D3D_SHADER_MACRO defines[] =
 	{
 		"EXAMPLE_DEFINE", "1",
@@ -138,6 +138,7 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 
 		return false;
 	}
+	errorMessage = NULL;
 	profile = (device->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "ps_5_0" : "ps_4_0";
 	hResult = D3DCompileFromFile(
 		psFilename,		// filename PIXELSHADER_NAME_WCHAR
@@ -382,8 +383,8 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 	bufferNumber = 0;
 
 	//Set the constant buffer in the vertex shader with the updated values
-	//deviceContext->VSSetConstantBuffers(0, 1, NULL);
-	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
+	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
+	//deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	//Set the shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &resourceView);
 

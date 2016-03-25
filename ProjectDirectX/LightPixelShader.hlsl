@@ -18,13 +18,38 @@ cbuffer LightBuffer
 
 float4 main(PS_IN_LIGHT input) : SV_TARGET
 {
+//	float4 colors;
+//	float4 normals;
+//	float3 lightDir;
+//	float lightIntensity;
+//float4 outputColor;
+//
+//
+//// Sample the colors from the color render texture using the point sampler at this texture coordinate location.
+//colors = colorTex.Sample(samplerType, input.UV);
+//
+//// Sample the normals from the normal render texture using the point sampler at this texture coordinate location.
+//normals = normalTex.Sample(samplerType, input.UV);
+//float4 position = positionTex.Sample(samplerType, input.UV);
+//// Invert the light direction for calculations.
+//lightDir = lightPos - position;
+//
+//// Calculate the amount of light on this pixel.
+//lightIntensity = saturate(dot(normals.xyz, lightDir));
+//
+//// Determine the final amount of diffuse color based on the color of the pixel combined with the light intensity.
+//outputColor = saturate(colors * lightIntensity);
+//
+//return outputColor;
+
 	float4 result = (float4)0;
-	float4 additionColor = (float4)0;
+	float4 additionColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
 	float4 diffuseLightColor = (lightColor, 1.0f);
 	//Get the color from the G_Buffer
 	float4 color = colorTex.Sample(samplerType, input.UV);
 	float4 normal = normalTex.Sample(samplerType, input.UV);
 	float4 position = positionTex.Sample(samplerType, input.UV);
+	position.w = 1.0f;
 	/*float3 specular = specularTex.Sample(samplerType, input.UV);*/
 	float3 lightDirection = (float3)normalize(lightPos - (float3)position);
 	float lightIntensity = saturate(dot(lightDirection, (float3)normal));
@@ -34,8 +59,9 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 		//diffuseResult *= float4(material.Kd, 1.0f);
 		additionColor += diffuseResult;
 	}
-
-	result = saturate(color * diffuseResult);
-	result = float4(255.0f, 0.0f, 0.0f, 1.0f);
+	additionColor = saturate(additionColor);
+	result = saturate(color * additionColor);
+	//result = float4(position.y, 0.0f, 0.0f, 1.0f);
+	//result = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	return result;
 }
