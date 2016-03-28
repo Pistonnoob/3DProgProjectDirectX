@@ -91,12 +91,13 @@ struct PS_IN_LIGHT
 	float2 UV : TEXCOORD0;
 };
 
+//Specular.a is the specular exponent Ns.
 struct PS_OUT_DEF {
 	float4 Color : SV_Target0;
 	float4 Normal : SV_Target1;
 	float4 Position : SV_Target2;
 	float4 Diffuse : SV_Target3;
-	float4 Specular : SV_Target4; //Specular.a is the specular exponent Ns.
+	//float4 Specular : SV_Target4;
 };
 
 SamplerState p_sampler
