@@ -148,6 +148,7 @@
     <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="DeferredHandler.cpp" />
     <ClCompile Include="FPSHandler.cpp" />
+    <ClCompile Include="FrustrumCulling.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LightShader.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="DeferredHandler.h" />
     <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="FPSHandler.h" />
+    <ClInclude Include="FrustrumCulling.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
