@@ -1,16 +1,16 @@
-#ifndef _FRUSTRUMCULLING_H_
-#define _FRUSTRUMCULLING_H_
+#ifndef _FRUSTRUM_H_
+#define _FRUSTRUM_H_
 
 #include "StructLibrary.h"
 using namespace DirectX::SimpleMath;
-class FrustrumCulling
+class Frustrum
 {
 private:	//Variables
 	Plane m_planes[6];	//The planes extracted from the camera / projection matrix
 public:
-	FrustrumCulling();
-	FrustrumCulling(const FrustrumCulling& original);
-	virtual ~FrustrumCulling();
+	Frustrum();
+	Frustrum(const Frustrum& original);
+	virtual ~Frustrum();
 
 	void Initialize();
 

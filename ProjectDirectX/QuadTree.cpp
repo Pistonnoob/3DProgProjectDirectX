@@ -4,6 +4,12 @@
 
 QuadTree::QuadTree()
 {
+	this->min = Vector2(0.0f, 0.0f);
+	this->max = Vector2(0.0f, 0.0f);
+	this->topLeft = NULL;
+	this->topRight = NULL;
+	this->bottomLeft = NULL;
+	this->bottomRight = NULL;
 }
 
 QuadTree::QuadTree(const QuadTree & original)
@@ -19,30 +25,42 @@ void QuadTree::ShutDown()
 {
 }
 
-void QuadTree::Initialize(int width, int height, int depth)
+void QuadTree::Initialize(Vector2 min, Vector2 end, int depth)
 {
-	
-}
+	this->min = min;
+	this->max = max;
 
-void QuadTree::GenerateQuadTree(BoundingBoxNode active, int depth)
-{
 	if (depth > 0)
 	{
 		depth--;
-		Vector2 xMiddle = Vector2((active.min.x + active.max.x) / 2, active.min.y);
-		Vector2 yMiddle = Vector2(active.min.x, (active.min.y + active.max.y) / 2);
-		Vector2 xyMiddle = Vector2(xMiddle.x, yMiddle.y);
-		float xMid = (active.min.x + active.max.x) / 2;
-		float yMid = (active.min.y + active.max.y) / 2;
-		active.topLeft->min = active.min;
-		active.topLeft->max = Vector2(active.min + active.max) / 2;
 
-		active.topRight->min = Vector2((active.min.x + active.max.x) / 2, active.min.y);
-		active.topRight->max = Vector2(active.min + active.max);
+		int width = this->max.x - this->min.x;
+		int height = this->max.y - this->min.y;
 
-		GenerateQuadTree(*active.topLeft, depth);
-		GenerateQuadTree(*active.topRight, depth);
-		GenerateQuadTree(*active.botLeft, depth);
-		GenerateQuadTree(*active.botRight, depth);
+		this->topLeft = new QuadTree();
+		this->topLeft->Initialize(this->min, this->min + Vector2(width / 2, height / 2), depth);
+
+		this->topRight = new QuadTree();
+		this->topRight->Initialize(this->min + Vector2(width / 2, 0), this->min + Vector2(width, height / 2), depth);
+
+		this->bottomLeft = new QuadTree();
+		this->bottomLeft->Initialize(this->min + Vector2(0, height / 2), this->min + Vector2(width / 2, height), depth);
+
+		this->bottomRight = new QuadTree();
+		this->bottomRight->Initialize(this->min + Vector2(width / 2, height / 2), this->max, depth);
 	}
+}
+
+bool QuadTree::AddModel(vector<D3Object*> models)
+{
+	return false;
+}
+
+vector<D3Object*> QuadTree::GetObjectsInFrustrum(Frustrum * frustrum, Vector2 cameraPos)
+{
+	return vector<D3Object*>();
+}
+
+void QuadTree::StoreObjects(vector<D3Object*> storeIn, Frustrum * frustrum, Vector2 cameraPos)
+{
 }

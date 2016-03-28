@@ -4,33 +4,34 @@
 #include "StructLibrary.h"
 #include "D3Object.h"
 #include <vector>
+#include "Frustrum.h"
 
-
-struct BoundingBoxNode
-{
-	Vector2 min;
-	Vector2 max;
-	BoundingBoxNode* topLeft;
-	BoundingBoxNode* topRight;
-	BoundingBoxNode* botLeft;
-	BoundingBoxNode* botRight;
-	std::vector<D3Object*> models;
-};
+static const int max = 10;
 
 class QuadTree
 {
 private:	//Variables
-	BoundingBoxNode root;
+	Vector2 min;
+	Vector2 max;
+	QuadTree* topLeft;
+	QuadTree* topRight;
+	QuadTree* bottomLeft;
+	QuadTree* bottomRight;
+
+	vector<D3Object*> models;
 public:
 	QuadTree();
 	QuadTree(const QuadTree& original);
 	virtual ~QuadTree();
 
 	void ShutDown();
-	void Initialize(int width, int height, int depth);
+	void Initialize(Vector2 min, Vector2 end, int depth);
+	bool AddModel(vector<D3Object*> models);
+
+	vector<D3Object*> GetObjectsInFrustrum(Frustrum* frustrum, Vector2 cameraPos);
 	
 private:	//Functions
-	void GenerateQuadTree(BoundingBoxNode active, int depth);
+	void StoreObjects(vector<D3Object*> storeIn, Frustrum* frustrum, Vector2 cameraPos);
 };
 
 #endif
