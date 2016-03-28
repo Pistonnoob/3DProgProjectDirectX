@@ -454,7 +454,7 @@ bool GraphicsHandler::RenderToDeferred()
 
 		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
 		ObjMaterial objMaterial = (*model)->GetMaterial();
-		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3()};
+		PixelMaterial pMaterial = { Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3()};
 		//Render the model using our brand new deferred renderer!
 		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
 	}

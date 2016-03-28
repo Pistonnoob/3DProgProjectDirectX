@@ -58,7 +58,7 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 	/*float3 specular = specularTex.Sample(samplerType, input.UV);*/
 	float3 lightDirection = (float3)normalize(lightPos - (float3)position);
 	float lightIntensity = saturate(dot(lightDirection, (float3)normal));
-	float4 diffuseResult = saturate((diffuseLightColor / 255) * lightIntensity);
+	float4 diffuseResult = saturate((diffuseLightColor) * lightIntensity);
 	if (lightIntensity > 0.0f)
 	{
 		//diffuseResult *= float4(material.Kd, 1.0f);
@@ -81,7 +81,9 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 		specularResult = saturate(specularResult);
 	}
 	result = saturate(result + specularResult);
-	//result = 
+	result = float4(Ns, 0.0f, 0.0f, 1.0f);
+	result = diffuseResult;
+	//result = saturate(diffuse);
 	//result = float4(position.y, 0.0f, 0.0f, 1.0f);
 	//result = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	return result;

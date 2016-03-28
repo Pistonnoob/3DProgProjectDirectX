@@ -4,6 +4,7 @@ Texture2D c_text : register(t0);
 SamplerState samplerType : register(s0);
 
 cbuffer LightBuffer : register(b0) {
+	float4 ambientColor;
 	float4 diffuseColor;	//Kd
 	float4 specularColor;	//Ks
 	float Ns;				//Specular Exponent
