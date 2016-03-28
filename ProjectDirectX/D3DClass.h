@@ -26,27 +26,43 @@ private:
 	ID3D11DepthStencilState* m_depthStencilState;
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RasterizerState* m_rasterState;
-
+	ID3D11RasterizerState* m_rasterStateNoCulling;
 	Matrix m_projectionMatrix;
+	Matrix m_worldMatrix;
 	Matrix m_orthoMatrix;
+	ID3D11DepthStencilState* m_depthDisabledStencilState;
+	ID3D11BlendState* m_alphaEnableBlendingState;
+	ID3D11BlendState* m_alphaDisableBlendingState;
+	D3D11_VIEWPORT m_viewport;
 public:
 	D3DClass();
 	D3DClass(const D3DClass& other);
 	virtual ~D3DClass();
 
-	bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
-	void ShutDown();
+	bool Initialize(int, int, bool, HWND, bool, float, float);
+	void Shutdown();
 
-	void BeginScene(float red, float green, float blue, float alpha);
+	void BeginScene(float, float, float, float);
 	void EndScene();
-	
+
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 
-	void GetProjectionMatrix(Matrix& projectionMatrix);
-	void GetOrthoMatrix(Matrix& orthoMatrix);
+	void GetProjectionMatrix(Matrix&);
+	void GetWorldMatrix(Matrix&);
+	void GetOrthoMatrix(Matrix&);
 
-	void GetVideoCardInfo(char* cardName, int& memory);
+	void GetVideoCardInfo(char*, int&);
+
+	void TurnZBufferOn();
+	void TurnZBufferOff();
+	void TurnOnAlphaBlending();
+	void TurnOffAlphaBlending();
+	void TurnOnCulling();
+	void TurnOffCulling();
+
+	void SetBackBufferRenderTarget();
+	void ResetViewport();
 };
 
 #endif

@@ -17,6 +17,19 @@ struct VS_IN_3D
 	float3 Normal : NORMAL;
 };
 
+struct VS_IN_DEF
+{
+	float4 Pos : POSITION;
+	float2 UV : TEXCOORD;
+	float3 Normal : NORMAL;
+};
+
+struct VS_IN_LIGHT
+{
+	float4 Pos : POSITION;
+	float2 UV : TEXCOORD0;
+};
+
 struct GS_IN
 {
 	float4 Pos : SV_POSITION;
@@ -34,6 +47,14 @@ struct GS_IN_3D
 	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
 	float4 Normal : NORMAL;
+};
+
+struct GS_IN_DEF
+{
+	float4 Pos : SV_POSITION;
+	float4 WorldPos : POSITION;
+	float4 Normal : NORMAL;
+	float2 UV : TEXCOORD;
 };
 
 struct PS_IN
@@ -54,6 +75,29 @@ struct PS_IN_UV
 	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
 	float2 UV : TEXCOORD;
+};
+
+struct PS_IN_DEF
+{
+	float4 Pos : SV_POSITION;
+	float4 WorldPos : POSITION;
+	float4 Normal : NORMAL;
+	float2 UV : TEXCOORD;
+};
+
+struct PS_IN_LIGHT
+{
+	float4 Pos : SV_POSITION;
+	float2 UV : TEXCOORD0;
+};
+
+//Specular.a is the specular exponent Ns.
+struct PS_OUT_DEF {
+	float4 Color : SV_Target0;
+	float4 Normal : SV_Target1;
+	float4 Position : SV_Target2;
+	float4 Diffuse : SV_Target3;
+	float4 Specular : SV_Target4;
 };
 
 SamplerState p_sampler
