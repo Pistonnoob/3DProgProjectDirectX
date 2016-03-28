@@ -418,6 +418,7 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 	materialPtr->Kd = material->Kd;
 	materialPtr->Ks = material->Ks;
 	materialPtr->Ns = material->Ns;
+	materialPtr->padding1 = material->padding1;
 	//memcpy(&materialPtr, &material, sizeof(material));
 
 	//Unlock/unmap the constant buffer
