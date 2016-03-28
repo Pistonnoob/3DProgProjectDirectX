@@ -117,8 +117,6 @@ struct PixelMaterial
 	Vector4 Ks;		//Specular Color
 	float Ns;		//Speculare Exponent
 	Vector3 padding1;
-	//int d;
-	//Vector3 padding2;
 };
 
 

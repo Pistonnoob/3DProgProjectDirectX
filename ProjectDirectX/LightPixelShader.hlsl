@@ -81,7 +81,7 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 		specularResult = saturate(specularResult);
 	}
 	result = saturate(result + specularResult);
-	result = diffuse;
+	//result = specular;
 	//result = saturate(diffuse);
 	//result = float4(position.y, 0.0f, 0.0f, 1.0f);
 	//result = float4(1.0f, 0.0f, 0.0f, 1.0f);
