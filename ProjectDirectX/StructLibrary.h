@@ -73,6 +73,7 @@ struct LightStructTemp
 	float padding;
 	Vector3 lightColor;
 	float padding1;
+	Vector4 cameraPos;
 };
 
 struct TargaHeader
