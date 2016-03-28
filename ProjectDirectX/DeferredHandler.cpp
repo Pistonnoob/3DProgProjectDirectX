@@ -412,7 +412,6 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 	{
 		return false;
 	}
-
 	//Get a pointer to the data
 	materialPtr = (PixelMaterial*)mappedResource.pData;
 	materialPtr->Ka = material->Ka;
