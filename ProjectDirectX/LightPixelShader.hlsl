@@ -4,7 +4,8 @@
 Texture2D colorTex : register(t0);
 Texture2D normalTex : register(t1);
 Texture2D positionTex : register(t2);
-//Texture2D specularTex : register(t3);
+Texture2D diffuseTex : register(t3);
+Texture2D specularTex : register(t4);
 
 SamplerState samplerType : register(s0);
 

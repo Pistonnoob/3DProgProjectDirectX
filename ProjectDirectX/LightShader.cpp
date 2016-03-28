@@ -58,12 +58,12 @@ bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WV
 	return true;
 }
 
-bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * normal, ID3D11ShaderResourceView * position, LightStructTemp * light)
+bool LightShader::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * normal, ID3D11ShaderResourceView * position, ID3D11ShaderResourceView* diffuse, ID3D11ShaderResourceView* specular, LightStructTemp * light)
 {
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, color, normal, position, light);
+	result = SetShaderParameters(deviceContext, matrices, color, normal, position, diffuse, specular, light);
 	if (!result)
 	{
 		return false;
@@ -373,7 +373,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 	return true;
 }
 
-bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * normal, ID3D11ShaderResourceView * position, LightStructTemp * light)
+bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * normal, ID3D11ShaderResourceView * position, ID3D11ShaderResourceView* diffuse, ID3D11ShaderResourceView* specular, LightStructTemp * light)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -409,6 +409,8 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 	deviceContext->PSSetShaderResources(0, 1, &color);
 	deviceContext->PSSetShaderResources(1, 1, &normal);
 	deviceContext->PSSetShaderResources(2, 1, &position);
+	deviceContext->PSSetShaderResources(3, 1, &diffuse);
+	deviceContext->PSSetShaderResources(4, 1, &specular);
 	
 
 	// Lock the light constant buffer so it can be written to.
