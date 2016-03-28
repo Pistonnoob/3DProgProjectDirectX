@@ -5,7 +5,7 @@
 using namespace DirectX::SimpleMath;
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
-static const int DEFERRED_BUFFER_COUNT = 3;
+static const int DEFERRED_BUFFER_COUNT = 5;
 
 enum FactoryObjectFormat
 {
@@ -116,8 +116,8 @@ struct PixelMaterial
 	Vector4 Ks;		//Specular Color
 	float Ns;		//Speculare Exponent
 	Vector3 padding1;
-	int d;
-	Vector3 padding2;
+	//int d;
+	//Vector3 padding2;
 };
 
 

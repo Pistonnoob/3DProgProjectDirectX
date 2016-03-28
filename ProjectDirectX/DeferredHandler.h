@@ -24,6 +24,7 @@ private:	//Variables
 	ID3D11SamplerState* m_samplerState;
 
 	ID3D11Buffer* m_matrixBuffer;
+	ID3D11Buffer* m_materialBuffer;
 public:
 	DeferredHandler();
 	DeferredHandler(const DeferredHandler& original);
@@ -41,7 +42,7 @@ private:	//functions
 	void FreeMemory();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, ID3D11ShaderResourceView* resourceView);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, WVPBufferStruct * matrices, PixelMaterial* material, ID3D11ShaderResourceView* resourceView);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 #endif

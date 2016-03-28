@@ -95,6 +95,8 @@ struct PS_OUT_DEF {
 	float4 Color : SV_Target0;
 	float4 Normal : SV_Target1;
 	float4 Position : SV_Target2;
+	float4 Diffuse : SV_Target3;
+	float4 Specular : SV_Target4; //Specular.a is the specular exponent Ns.
 };
 
 SamplerState p_sampler

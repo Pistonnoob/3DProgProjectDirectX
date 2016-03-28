@@ -47,7 +47,7 @@ bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, resourceView);
+	result = SetShaderParameters(deviceContext, matrices, material, resourceView);
 	if (!result)
 	{
 		return false;
@@ -68,6 +68,7 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 	ID3DBlob* pPS = nullptr;
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC matrixBufferDesc;
+	D3D11_BUFFER_DESC materialBufferDesc;
 
 #pragma region
 
@@ -250,6 +251,21 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 		return false;
 	}
 
+	//Create the material buffer
+	memset(&materialBufferDesc, 0, sizeof(materialBufferDesc));
+	materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	materialBufferDesc.MiscFlags = 0;
+	materialBufferDesc.StructureByteStride = 0;
+	materialBufferDesc.ByteWidth = sizeof(PixelMaterial);
+
+	hResult = device->CreateBuffer(&materialBufferDesc, NULL, &m_materialBuffer);
+	if (FAILED(hResult))
+	{
+		return false;
+	}
+
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -288,6 +304,13 @@ void DeferredHandler::FreeMemory()
 	{
 		m_matrixBuffer->Release();
 		m_matrixBuffer = NULL;
+	}
+
+	//Release the material buffer
+	if (m_materialBuffer != NULL)
+	{
+		m_materialBuffer->Release();
+		m_materialBuffer = NULL;
 	}
 
 	//Release the layout
@@ -350,11 +373,12 @@ void DeferredHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND h
 
 }
 
-bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, ID3D11ShaderResourceView * resourceView)
+bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, PixelMaterial* material, ID3D11ShaderResourceView * resourceView)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	WVPBufferStruct* dataPtr = NULL;
+	PixelMaterial* materialPtr = NULL;
 	unsigned int bufferNumber = 0;
 	//Transpose the matrices to prepare them for the shader
 
@@ -382,9 +406,30 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 	//set the position of the constant buffer in the vertex shader
 	bufferNumber = 0;
 
+	// Lock/map the m_material
+	result = deviceContext->Map(this->m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Get a pointer to the data
+	materialPtr = (PixelMaterial*)mappedResource.pData;
+	materialPtr->Ka = material->Ka;
+	materialPtr->Kd = material->Kd;
+	materialPtr->Ks = material->Ks;
+	materialPtr->Ns = material->Ns;
+	//memcpy(&materialPtr, &material, sizeof(material));
+
+	//Unlock/unmap the constant buffer
+	deviceContext->Unmap(this->m_materialBuffer, 0);
+
+
 	//Set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
 	//deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
+	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
+
 	//Set the shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &resourceView);
 
