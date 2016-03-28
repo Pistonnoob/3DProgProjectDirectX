@@ -68,7 +68,27 @@ void QuadTree::StoreObjects(vector<D3Object*> storeIn, Frustrum * frustrum, Vect
 
 BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
 {
-	Vector3 min = Vector3(0.0f, 0.0f, 0.0f);
-	Vector3 max = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
+	Vector3 max = Vector3(-1.0f, -1.0f, -1.0f);
+	bool first = true;
+
+	vector<VertexModel> points = model->getVertexData();
+	for (std::vector<VertexModel>::const_iterator index = points.begin(); index != points.end(); index++)
+	{
+		if (first)
+		{
+			min = max = (*index).position;
+		}
+		else
+		{
+			if ((*index).position.x < min.x)
+				min.x = (*index).position.x;
+			if ((*index).position.y < min.y)
+				min.y = (*index).position.y;
+			if ((*index).position.z < min.z)
+				min.z = (*index).position.z;
+		}
+		
+	}
 
 }

@@ -131,12 +131,12 @@ void D3Object::SetIndices(vector<int> indices)
 	}
 }
 
-std::vector<VertexModel*> D3Object::getVertexData()
+std::vector<VertexModel> D3Object::getVertexData()
 {
-	std::vector<VertexModel*> points;
+	std::vector<VertexModel> points;
 	for (int i = 0; i < m_vertexCount; i++)
 	{
-		points.push_back(&this->m_model[i]);
+		points.push_back(this->m_model[i]);
 	}
 }
 
