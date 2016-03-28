@@ -88,7 +88,7 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 		defines,		// optional macros
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,		// optional include files
 		"main",		// entry point
-		"vs_4_0",		// shader model (target)
+		"vs_5_0",		// shader model (target)
 		flags,			// shader compile options
 		0,				// effect compile options
 		&pVS,			// double pointer to ID3DBlob		
@@ -117,7 +117,7 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 		defines,		// optional macros
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,		// optional include files
 		"main",		// entry point
-		"gs_4_0",		// shader model (target)
+		"gs_5_0",		// shader model (target)
 		flags,			// shader compile options
 		0,				// effect compile options
 		&pGS,			// double pointer to ID3DBlob		
@@ -146,7 +146,7 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 		defines,		// optional macros
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,		// optional include files
 		"main",		// entry point
-		"ps_4_0",		// shader model (target)
+		"ps_5_0",		// shader model (target)
 		flags,			// shader compile options
 		0,				// effect compile options
 		&pPS,			// double pointer to ID3DBlob		

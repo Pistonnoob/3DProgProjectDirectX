@@ -97,7 +97,7 @@ struct PS_OUT_DEF {
 	float4 Normal : SV_Target1;
 	float4 Position : SV_Target2;
 	float4 Diffuse : SV_Target3;
-	//float4 Specular : SV_Target4;
+	float4 Specular : SV_Target4;
 };
 
 SamplerState p_sampler
