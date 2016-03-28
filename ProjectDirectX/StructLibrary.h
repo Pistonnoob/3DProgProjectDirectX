@@ -95,6 +95,7 @@ struct JPEGHeader
 
 };
 
+
 //Structure for materials
 struct ObjMaterial
 {
