@@ -6,32 +6,39 @@
 #include <vector>
 #include "Frustrum.h"
 
-static const int max = 10;
+static const int m_max = 10;
+
+struct BoundingVolume
+{
+	Vector3 middle;
+	Vector3 sideDelta;
+};
 
 class QuadTree
 {
 private:	//Variables
-	Vector2 min;
-	Vector2 max;
+	Vector2 m_min;
+	Vector2 m_max;
 	QuadTree* topLeft;
 	QuadTree* topRight;
 	QuadTree* bottomLeft;
 	QuadTree* bottomRight;
 
-	vector<D3Object*> models;
+	vector<std::pair<D3Object*, BoundingVolume>> models;
 public:
 	QuadTree();
 	QuadTree(const QuadTree& original);
 	virtual ~QuadTree();
 
 	void ShutDown();
-	void Initialize(Vector2 min, Vector2 end, int depth);
-	bool AddModel(vector<D3Object*> models);
+	void Initialize(Vector2 m_min, Vector2 end, int depth);
+	bool DefineQuadTree(vector<D3Object*> models);
 
 	vector<D3Object*> GetObjectsInFrustrum(Frustrum* frustrum, Vector2 cameraPos);
 	
 private:	//Functions
 	void StoreObjects(vector<D3Object*> storeIn, Frustrum* frustrum, Vector2 cameraPos);
+	BoundingVolume GenerateBoundingVolume(D3Object* model);
 };
 
 #endif
