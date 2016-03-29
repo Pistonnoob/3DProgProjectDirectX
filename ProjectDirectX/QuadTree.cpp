@@ -94,7 +94,7 @@ bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 		completeObject->isRendered = false;
 		this->models.push_back(completeObject);
 	}
-
+	this->DivideToChildren();
 	return false;
 }
 
@@ -208,7 +208,7 @@ BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
 		
 	}
 	//We now have all sides. Proceed to create a bounding volume
-	result.sideDelta = max - min;
-	result.middle = min + (max - min);
+	result.sideDelta = (max - min) / 2;
+	result.middle = min + result.sideDelta;
 	return result;
 }
