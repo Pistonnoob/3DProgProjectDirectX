@@ -60,9 +60,10 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	Vector2 min = Vector2(0.0f, 0.0f);
-	Vector2 max = Vector2(1000.0f, 10000.0f);
+	Vector2 min = Vector2(-500.0f, -500.0f);
+	Vector2 max = Vector2(500.0f, 500.0f);
 	this->m_quadTree->Initialize(min, max, 5);
+	m_quadTree->DefineQuadTree(this->m_Models);
 
 	// Create the TextureShader object.
 	m_TextureShader = new TextureHandler();
@@ -153,14 +154,14 @@ void GraphicsHandler::ShutDown()
 	}
 
 	// Release the models within the model list.
-	while (!m_Models.empty())
+	/*while (!m_Models.empty())
 	{
 		D3Object* temp = NULL;
 		temp = m_Models.back();
 		m_Models.pop_back();
 		temp->Shutdown();
 		delete temp;
-	}
+	}*/
 
 	// Release the lights within the light list.
 	while (!m_Lights.empty())

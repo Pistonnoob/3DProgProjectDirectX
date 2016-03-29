@@ -48,6 +48,7 @@ void QuadTree::ShutDown()
 	{
 		if ((*i)->object != NULL)
 		{
+			(*i)->object->Shutdown();
 			delete (*i)->object;
 			(*i)->object = NULL;
 		}
@@ -56,7 +57,7 @@ void QuadTree::ShutDown()
 	models.clear();
 }
 
-void QuadTree::Initialize(Vector2 m_min, Vector2 end, int depth)
+void QuadTree::Initialize(Vector2 m_min, Vector2 m_max, int depth)
 {
 	this->m_min = m_min;
 	this->m_max = m_max;
@@ -88,7 +89,7 @@ bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 	for (std::vector<D3Object*>::iterator object = models.begin(); object != models.end(); object++)
 	{
 		//generate BoundingVolumes for every model
-		Container *completeObject;
+		Container *completeObject = new Container;
 		completeObject->object = *object;
 		completeObject->boundingVolume = this->GenerateBoundingVolume(*object);
 		completeObject->isRendered = false;
@@ -146,6 +147,7 @@ void QuadTree::DivideToChildren()//Divides its own models to its children
 		if (!contained)
 		{
 			//ERROR SOMETHING IS VERY WRONG. Somehow our four composite quads don't contain what we do
+			int adwawda = 0;
 		}
 	}
 	if (contained)
@@ -255,6 +257,7 @@ BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
 		if (first)
 		{
 			min = max = (*index).position;
+			first = false;
 		}
 		else
 		{

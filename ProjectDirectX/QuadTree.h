@@ -38,7 +38,7 @@ public:
 	virtual ~QuadTree();
 
 	void ShutDown();
-	void Initialize(Vector2 m_min, Vector2 end, int depth);
+	void Initialize(Vector2 m_min, Vector2 m_max, int depth);
 	bool DefineQuadTree(vector<D3Object*> models);
 
 	vector<D3Object*> GetObjectsInFrustrum(Frustrum* frustrum, Vector2 cameraPos);
