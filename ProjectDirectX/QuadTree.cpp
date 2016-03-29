@@ -81,7 +81,11 @@ void QuadTree::Initialize(Vector2 m_min, Vector2 end, int depth)
 
 bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 {
-	return false;
+	//Loop through all inserted objects
+	for (std::vector<D3Object*>::iterator object = models.begin(); object != models.end(); object++)
+	{
+		//generate BoundingVolumes for every model
+	}
 }
 
 
