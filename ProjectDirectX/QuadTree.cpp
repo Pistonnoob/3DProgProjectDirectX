@@ -113,7 +113,14 @@ void QuadTree::GetObjectsInFrustrum(vector<D3Object*> * storeIn, Frustrum * frus
 	}
 	for (int i = 0; i < shouldRender.size(); i++)
 	{
-		storeIn->push_back(shouldRender.at(i)->object);
+		if (!shouldRender.at(i)->isRendered)
+		{
+			storeIn->push_back(shouldRender.at(i)->object);
+			shouldRender.at(i)->isRendered = true;
+		}
+	}
+	for (int i = 0; i < shouldRender.size(); i++)
+	{
 		shouldRender.at(i)->isRendered = false;
 	}
 	shouldRender.clear();
