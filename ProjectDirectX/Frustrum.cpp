@@ -25,7 +25,7 @@ void Frustrum::Initialize()
 
 bool Frustrum::GenerateFrustrum(Matrix view, Matrix proj, float screenDepth)
 {
-	float zMin = 0.0f, float r = 0.0f;
+	float zMin = 0.0f, r = 0.0f;
 	Matrix m;
 	//Calc the min z distance in the frustrum
 	zMin = -proj._43 / proj._33;

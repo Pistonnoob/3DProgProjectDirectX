@@ -138,6 +138,7 @@ std::vector<VertexModel> D3Object::getVertexData()
 	{
 		points.push_back(this->m_model[i]);
 	}
+	return points;
 }
 
 bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
