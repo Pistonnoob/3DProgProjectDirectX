@@ -107,9 +107,9 @@ vector<D3Object*> QuadTree::GetObjectsInFrustrum(Frustrum * frustrum, Vector2 ca
 void QuadTree::DivideToChildren()//Divides its own models to its children
 {
 	//Loop through all internal models
+	bool contained = false;
 	for (std::vector<Container*>::iterator i = this->models.begin(); i != this->models.end(); i++)
 	{
-		bool contained = false;
 		BoundingVolume volume = (*i)->boundingVolume;
 		Vector3 minPos = volume.middle - volume.sideDelta, maxPos = volume.middle + volume.sideDelta;
 		if (this->topLeft != NULL && this->topLeft->contains(&volume))
@@ -136,6 +136,11 @@ void QuadTree::DivideToChildren()//Divides its own models to its children
 		{
 			//ERROR SOMETHING IS VERY WRONG. Somehow our four composite quads don't contain what we do
 		}
+	}
+	if (contained)
+	{
+		//Clear our models, our children contain them now.
+		this->models.clear();
 	}
 	//And proceed to tell the children to divide their own models
 	if (topRight != NULL)
@@ -167,7 +172,7 @@ bool QuadTree::contains(BoundingVolume * volume)
 	return result;
 }
 
-void QuadTree::StoreObjects(vector<D3Object*> storeIn, Frustrum * frustrum, Vector2 cameraPos)
+void QuadTree::StoreObjects(vector<Container*> storeIn, Frustrum * frustrum, Vector2 cameraPos)
 {
 }
 
