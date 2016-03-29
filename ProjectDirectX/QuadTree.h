@@ -45,6 +45,7 @@ public:
 	
 private:	//Functions
 	void DivideToChildren();
+	bool contains(BoundingVolume* volume);
 	void StoreObjects(vector<D3Object*> storeIn, Frustrum* frustrum, Vector2 cameraPos);
 	BoundingVolume GenerateBoundingVolume(D3Object* model);
 };
