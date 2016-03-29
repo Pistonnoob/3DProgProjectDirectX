@@ -23,6 +23,34 @@ QuadTree::~QuadTree()
 
 void QuadTree::ShutDown()
 {
+	if (topLeft != NULL)
+	{
+		this->topLeft->ShutDown();
+		this->topLeft = NULL;
+	}
+	if (topRight != NULL)
+	{
+		this->topRight->ShutDown();
+		this->topRight = NULL;
+	}
+	if (bottomLeft != NULL)
+	{
+		this->bottomLeft->ShutDown();
+		this->bottomLeft = NULL;
+	}
+	if (bottomRight != NULL)
+	{
+		this->bottomRight->ShutDown();
+		this->bottomRight = NULL;
+	}
+
+	for (std::vector<std::pair<D3Object*, BoundingVolume>>::iterator i = models.begin(); i != models.end(); i++)
+	{
+		delete i->first;
+		i->first = NULL;
+	}
+
+	models.clear();
 }
 
 void QuadTree::Initialize(Vector2 m_min, Vector2 end, int depth)
