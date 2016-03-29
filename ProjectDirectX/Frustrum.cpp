@@ -129,39 +129,39 @@ bool Frustrum::TestAgainstCube(Vector3 * pos, float radius)
 	return true;
 }
 
-bool Frustrum::TestAgainstRectangle(Vector3 * pos, Vector3 * sideLengths)
+bool Frustrum::TestAgainstRectangle(Vector3 * pos, Vector3 * sideDelta)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		if (m_planes[i].DotCoordinate(*pos + *sideLengths) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + *sideDelta) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideLengths->x, sideLengths->y, sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideDelta->x, sideDelta->y, sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(sideLengths->x, -sideLengths->y, sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(sideDelta->x, -sideDelta->y, sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(sideLengths->x, sideLengths->y, -sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(sideDelta->x, sideDelta->y, -sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideLengths->x, -sideLengths->y, sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideDelta->x, -sideDelta->y, sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideLengths->x, sideLengths->y, -sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideDelta->x, sideDelta->y, -sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(sideLengths->x, -sideLengths->y, -sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(sideDelta->x, -sideDelta->y, -sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos - *sideLengths) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos - *sideDelta) >= 0.0f)
 		{
 			continue;
 		}

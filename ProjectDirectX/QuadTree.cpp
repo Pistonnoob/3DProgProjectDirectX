@@ -101,7 +101,9 @@ bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 
 vector<D3Object*> QuadTree::GetObjectsInFrustrum(Frustrum * frustrum, Vector2 cameraPos)
 {
-	return vector<D3Object*>();
+	vector<D3Object*> result;
+
+	return result;
 }
 
 void QuadTree::DivideToChildren()//Divides its own models to its children

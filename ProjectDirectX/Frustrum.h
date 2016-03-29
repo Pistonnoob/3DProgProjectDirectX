@@ -18,7 +18,7 @@ public:
 
 	bool TestAgainstPoint(Vector3* pos);
 	bool TestAgainstCube(Vector3* pos, float length);
-	bool TestAgainstRectangle(Vector3* pos, Vector3* sideLengths);
+	bool TestAgainstRectangle(Vector3* pos, Vector3* sideDelta);
 	bool TestAgainstSphere(Vector3* pos, float radius);
 
 private:	//Functions
