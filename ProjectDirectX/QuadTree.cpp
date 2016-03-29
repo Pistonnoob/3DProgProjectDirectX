@@ -143,10 +143,10 @@ void QuadTree::DivideToChildren()//Divides its own models to its children
 		this->models.clear();
 	}
 	//And proceed to tell the children to divide their own models
-	if (topRight != NULL)
-		topRight->DivideToChildren();
 	if (topLeft != NULL)
 		topLeft->DivideToChildren();
+	if (topRight != NULL)
+		topRight->DivideToChildren();
 	if (bottomLeft != NULL)
 		bottomLeft->DivideToChildren();
 	if (bottomRight != NULL)
