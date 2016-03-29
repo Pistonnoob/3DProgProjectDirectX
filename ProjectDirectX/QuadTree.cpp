@@ -111,6 +111,7 @@ void QuadTree::DivideToChildren()//Divides its own models to its children
 	{
 		BoundingVolume volume = (*i)->boundingVolume;
 		Vector3 minPos = volume.middle - volume.sideDelta, maxPos = volume.middle + volume.sideDelta;
+
 	}
 }
 
@@ -119,7 +120,7 @@ bool QuadTree::contains(BoundingVolume * volume)
 	bool result = false;
 	Vector3 min = volume->middle - volume->sideDelta, max = volume->middle + volume->sideDelta;
 	//Do overlapp check
-	if (min.x >= m_max.x || max.x <= m_min.x || min.y >= m_max.y || max.y <= m_min.y)
+	if (min.x >= m_max.x || max.x <= m_min.x || min.z >= m_max.y || max.z <= m_min.y)
 	{
 		//No overlapp
 		result = false;
