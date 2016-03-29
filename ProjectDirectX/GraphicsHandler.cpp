@@ -10,6 +10,8 @@ GraphicsHandler::GraphicsHandler()
 	m_DeferredBuffers = nullptr;
 	m_DeferredShader = nullptr;
 	m_LightShader = nullptr;
+	m_frustrum = nullptr;
+	m_quadTree = nullptr;
 
 	rotation = 0.0f;
 }
@@ -45,6 +47,23 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	this->LoadScene(hwnd);
 
+
+	m_frustrum = new Frustrum();
+	if (!m_frustrum)
+	{
+		return false;
+	}
+	m_frustrum->Initialize();
+
+	m_quadTree = new QuadTree();
+	if (!m_quadTree)
+	{
+		return false;
+	}
+	Vector2 min = Vector2(0.0f, 0.0f);
+	Vector2 max = Vector2(1000.0f, 10000.0f);
+	this->m_quadTree->Initialize(min, max, 5);
+
 	// Create the TextureShader object.
 	m_TextureShader = new TextureHandler();
 	if (!this->m_TextureShader)
@@ -65,6 +84,7 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+
 
 	result = m_FullScreenObject->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight);
 	if (!result)
@@ -187,6 +207,19 @@ void GraphicsHandler::ShutDown()
 		this->m_LightShader->Shutdown();
 		delete this->m_LightShader;
 		this->m_LightShader = NULL;
+	}
+
+	if (this->m_frustrum != NULL)
+	{
+		delete this->m_frustrum;
+		this->m_frustrum = NULL;
+	}
+
+	if (this->m_quadTree != NULL)
+	{
+		this->m_quadTree->ShutDown();
+		delete this->m_quadTree;
+		this->m_quadTree = NULL;
 	}
 
 	return;
