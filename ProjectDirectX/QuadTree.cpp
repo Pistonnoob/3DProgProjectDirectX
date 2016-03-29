@@ -44,10 +44,13 @@ void QuadTree::ShutDown()
 		this->bottomRight = NULL;
 	}
 
-	for (std::vector<std::pair<D3Object*, BoundingVolume>>::iterator i = models.begin(); i != models.end(); i++)
+	for (std::vector<Container*>::iterator i = models.begin(); i != models.end(); i++)
 	{
-		delete i->first;
-		i->first = NULL;
+		if ((*i)->object != NULL)
+		{
+			delete (*i)->object;
+			(*i)->object = NULL;
+		}
 	}
 
 	models.clear();
@@ -85,11 +88,13 @@ bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 	for (std::vector<D3Object*>::iterator object = models.begin(); object != models.end(); object++)
 	{
 		//generate BoundingVolumes for every model
-		std::pair<D3Object*, BoundingVolume> completeObject;
-		completeObject.first = *object;
-		completeObject.second = this->GenerateBoundingVolume(*object);
+		Container *completeObject;
+		completeObject->object = *object;
+		completeObject->boundingVolume = this->GenerateBoundingVolume(*object);
+		completeObject->isRendered = false;
 		this->models.push_back(completeObject);
 	}
+
 	return false;
 }
 

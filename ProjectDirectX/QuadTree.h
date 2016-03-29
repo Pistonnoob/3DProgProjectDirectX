@@ -14,6 +14,13 @@ struct BoundingVolume
 	Vector3 sideDelta;
 };
 
+struct Container
+{
+	D3Object* object;
+	BoundingVolume boundingVolume;
+	bool isRendered;
+};
+
 class QuadTree
 {
 private:	//Variables
@@ -23,8 +30,8 @@ private:	//Variables
 	QuadTree* topRight;
 	QuadTree* bottomLeft;
 	QuadTree* bottomRight;
-
-	vector<std::pair<D3Object*, BoundingVolume>> models;
+	vector<Container*> models;
+	//std::pair<D3Object*, std::pair<BoundingVolume, bool>>
 public:
 	QuadTree();
 	QuadTree(const QuadTree& original);
