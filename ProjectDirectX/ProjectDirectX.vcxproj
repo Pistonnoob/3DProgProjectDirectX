@@ -148,6 +148,7 @@
     <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="DeferredHandler.cpp" />
     <ClCompile Include="FPSHandler.cpp" />
+    <ClCompile Include="FrustrumCulling.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LightShader.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="DeferredHandler.h" />
     <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="FPSHandler.h" />
+    <ClInclude Include="FrustrumCulling.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
@@ -193,17 +195,21 @@
   <ItemGroup>
     <FxCompile Include="DefGeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="DefPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="DefVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="GeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>

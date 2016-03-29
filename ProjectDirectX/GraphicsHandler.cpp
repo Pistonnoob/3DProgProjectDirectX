@@ -403,8 +403,7 @@ bool GraphicsHandler::Render()
 	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
 	worldMatrix = DirectX::XMMatrixIdentity();
 	//Update the cameraPosition for the pixelshaders specular calculations
-	Vector3 cameraPos = m_Camera->GetPosition();
-
+	Vector4 cameraPos = Vector4(m_Camera->GetPosition());
 	//Turn off the z buffering
 	this->m_Direct3D->TurnZBufferOff();
 
@@ -413,10 +412,10 @@ bool GraphicsHandler::Render()
 	WVPBufferStruct matrices = { worldMatrix, baseViewMatrix, orthoMatrix };
 	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
-		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z)};
+		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z), 0.0f, cameraPos};
 		//Do the light shading post processing on our quad
 		//this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
-		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), &tempLight);
+		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), m_DeferredBuffers->GetShaderResourceView(3), m_DeferredBuffers->GetShaderResourceView(4), &tempLight);
 		if (!result)
 		{
 			return false;
@@ -454,7 +453,12 @@ bool GraphicsHandler::RenderToDeferred()
 
 		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
 		ObjMaterial objMaterial = (*model)->GetMaterial();
-		PixelMaterial pMaterial = { Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3(), objMaterial.d };
+		PixelMaterial pMaterial = { Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3()};
+		pMaterial.Ka = Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f);
+		pMaterial.Kd = Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f);
+		pMaterial.Ks = Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f);
+		pMaterial.Ns = objMaterial.Ns;
+		pMaterial.padding1 = Vector3(0.0f, 0.0f, 0.0f);
 		//Render the model using our brand new deferred renderer!
 		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
 	}

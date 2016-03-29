@@ -5,7 +5,7 @@
 using namespace DirectX::SimpleMath;
 static const float DEGREES_TO_RADIANS = 0.0174532925f;
 
-static const int DEFERRED_BUFFER_COUNT = 3;
+static const int DEFERRED_BUFFER_COUNT = 5;
 
 enum FactoryObjectFormat
 {
@@ -73,6 +73,7 @@ struct LightStructTemp
 	float padding;
 	Vector3 lightColor;
 	float padding1;
+	Vector4 cameraPos;
 };
 
 struct TargaHeader
@@ -94,6 +95,7 @@ struct JPEGHeader
 
 };
 
+
 //Structure for materials
 struct ObjMaterial
 {
@@ -111,13 +113,11 @@ struct ObjMaterial
 
 struct PixelMaterial
 {
-	Vector4 Kd;		//Diffuse Color
 	Vector4 Ka;		//Ambient Color
+	Vector4 Kd;		//Diffuse Color
 	Vector4 Ks;		//Specular Color
 	float Ns;		//Speculare Exponent
 	Vector3 padding1;
-	int d;
-	Vector3 padding2;
 };
 
 
