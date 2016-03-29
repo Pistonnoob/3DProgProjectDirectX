@@ -153,11 +153,12 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_LIGHT[] = {
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
-//Default Material
-static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture", TextureFormat::JPEG};
-
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";
+
+//Default Material
+static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture.png", TextureFormat::JPEG};
+
 
 //Default window name
 static const WCHAR WINDOW_NAME[] = L"Jesper & Kim";
