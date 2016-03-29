@@ -156,7 +156,7 @@ void QuadTree::DivideToChildren()//Divides its own models to its children
 		}
 		if (!contained)
 		{
-			//ERROR SOMETHING IS VERY WRONG. Somehow our four composite quads don't contain what we do
+			//You have no children.
 			int adwawda = 0;
 		}
 	}
