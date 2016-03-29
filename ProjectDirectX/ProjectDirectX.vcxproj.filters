@@ -96,10 +96,10 @@
     <ClCompile Include="QuadModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FrustrumCulling.cpp">
+    <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuadTree.cpp">
+    <ClCompile Include="Frustrum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,10 +179,10 @@
     <ClInclude Include="QuadModel.h">
       <Filter>Header Files\Model Types</Filter>
     </ClInclude>
-    <ClInclude Include="FrustrumCulling.h">
+    <ClInclude Include="QuadTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QuadTree.h">
+    <ClInclude Include="Frustrum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
