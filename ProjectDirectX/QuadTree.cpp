@@ -26,21 +26,25 @@ void QuadTree::ShutDown()
 	if (topLeft != NULL)
 	{
 		this->topLeft->ShutDown();
+		delete this->topLeft;
 		this->topLeft = NULL;
 	}
 	if (topRight != NULL)
 	{
 		this->topRight->ShutDown();
+		delete this->topRight;
 		this->topRight = NULL;
 	}
 	if (bottomLeft != NULL)
 	{
 		this->bottomLeft->ShutDown();
+		delete this->bottomLeft;
 		this->bottomLeft = NULL;
 	}
 	if (bottomRight != NULL)
 	{
 		this->bottomRight->ShutDown();
+		delete this->bottomRight;
 		this->bottomRight = NULL;
 	}
 
@@ -50,10 +54,10 @@ void QuadTree::ShutDown()
 		{
 			(*i)->object->Shutdown();
 			delete (*i)->object;
+			delete (*i);
 			(*i)->object = NULL;
 		}
 	}
-
 	models.clear();
 }
 
@@ -100,20 +104,19 @@ bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 }
 
 
-vector<D3Object*> QuadTree::GetObjectsInFrustrum(Frustrum * frustrum, Vector2 cameraPos)
+void QuadTree::GetObjectsInFrustrum(vector<D3Object*> * storeIn, Frustrum * frustrum)
 {
-	vector<D3Object*> result;
 	vector<Container*> shouldRender;
 	if (this->OverlappsFrustrum(frustrum))
 	{
-		this->StoreObjects(shouldRender, frustrum, cameraPos);
+		this->StoreObjects(shouldRender, frustrum);
 	}
-	for (std::vector<Container*>::iterator i = shouldRender.begin(); i <= shouldRender.end(); i++)
+	for (int i = 0; i < shouldRender.size(); i++)
 	{
-		result.push_back((*i)->object);
-		(*i)->isRendered = false;
+		storeIn->push_back(shouldRender.at(i)->object);
+		shouldRender.at(i)->isRendered = false;
 	}
-	return result;
+	shouldRender.clear();
 }
 
 void QuadTree::DivideToChildren()//Divides its own models to its children
@@ -204,32 +207,42 @@ bool QuadTree::OverlappsFrustrum(Frustrum * frustrum)
 	return result;
 }
 
-void QuadTree::StoreObjects(vector<Container*> &storeIn, Frustrum * frustrum, Vector2 cameraPos)
+void QuadTree::StoreObjects(vector<Container*> &storeIn, Frustrum * frustrum)
 {
 	bool overlapsChild = false;
 	if (topLeft != NULL && this->topLeft->OverlappsFrustrum(frustrum))
 	{
-		topLeft->StoreObjects(storeIn, frustrum, cameraPos);
+		topLeft->StoreObjects(storeIn, frustrum);
 		overlapsChild = true;
 	}
 	if (topRight != NULL && this->topRight->OverlappsFrustrum(frustrum))
 	{
-		topRight->StoreObjects(storeIn, frustrum, cameraPos);
+		topRight->StoreObjects(storeIn, frustrum);
 		overlapsChild = true;
 	}
 	if (bottomLeft != NULL && this->bottomLeft->OverlappsFrustrum(frustrum))
 	{
-		bottomLeft->StoreObjects(storeIn, frustrum, cameraPos);
+		bottomLeft->StoreObjects(storeIn, frustrum);
 		overlapsChild = true;
 	}
 	if (bottomRight != NULL && this->bottomRight->OverlappsFrustrum(frustrum))
 	{
-		bottomRight->StoreObjects(storeIn, frustrum, cameraPos);
+		bottomRight->StoreObjects(storeIn, frustrum);
 		overlapsChild = true;
 	}
 	if (!overlapsChild)
 	{
-		for (std::vector<Container*>::iterator i = this->models.begin(); i != this->models.end(); i++)
+		for (int i = 0; i < models.size(); i++)
+		{
+			if (!models.at(i)->isRendered)
+			{
+				if (frustrum->TestAgainstRectangle(&models.at(i)->boundingVolume.middle, &models.at(i)->boundingVolume.sideDelta))
+				{
+					storeIn.push_back(models.at(i));
+				}
+			}
+		}
+		/*for (std::vector<Container*>::iterator i = this->models.begin(); i != this->models.end(); i++)
 		{
 			if (!(*i)->isRendered)
 			{
@@ -238,7 +251,7 @@ void QuadTree::StoreObjects(vector<Container*> &storeIn, Frustrum * frustrum, Ve
 					storeIn.push_back((*i));
 				}
 			}
-		}
+		}*/
 	}
 	
 	
