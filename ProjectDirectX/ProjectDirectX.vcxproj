@@ -157,6 +157,7 @@
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="QuadModel.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="ScreenGrab.cpp" />
     <ClCompile Include="TextureHandler.cpp" />
     <ClCompile Include="System.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlatformHelpers.h" />
     <ClInclude Include="QuadModel.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenGrab.h" />
     <ClInclude Include="TextureHandler.h" />

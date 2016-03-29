@@ -53,7 +53,7 @@ void QuadTree::Initialize(Vector2 m_min, Vector2 end, int depth)
 
 bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 {
-
+	return false;
 }
 
 
@@ -68,6 +68,7 @@ void QuadTree::StoreObjects(vector<D3Object*> storeIn, Frustrum * frustrum, Vect
 
 BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
 {
+	BoundingVolume result;
 	Vector3 min = Vector3(-1.0f, -1.0f, -1.0f);
 	Vector3 max = Vector3(-1.0f, -1.0f, -1.0f);
 	bool first = true;
@@ -83,12 +84,21 @@ BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
 		{
 			if ((*index).position.x < min.x)
 				min.x = (*index).position.x;
+			else if ((*index).position.x > max.x)
+				max.x = (*index).position.x;
 			if ((*index).position.y < min.y)
 				min.y = (*index).position.y;
+			else if ((*index).position.y > max.y)
+				max.y = (*index).position.y;
 			if ((*index).position.z < min.z)
 				min.z = (*index).position.z;
+			else if ((*index).position.z > max.z)
+				max.z = (*index).position.z;
 		}
 		
 	}
-
+	//We now have all sides. Proceed to create a bounding volume
+	result.sideDelta = max - min;
+	result.middle = min + (max - min);
+	return result;
 }
