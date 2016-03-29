@@ -20,7 +20,6 @@ public:
 	bool TestAgainstCube(Vector3* pos, float length);
 	bool TestAgainstRectangle(Vector3* pos, Vector3* sideDelta);
 	bool TestAgainstSphere(Vector3* pos, float radius);
-	bool TestAgainstRectangle(Vector2* middle, Vector2* sideDelta);
 
 private:	//Functions
 

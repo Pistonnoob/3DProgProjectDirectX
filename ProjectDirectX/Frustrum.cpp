@@ -181,8 +181,3 @@ bool Frustrum::TestAgainstSphere(Vector3 * pos, float radius)
 	}
 	return true;
 }
-
-bool Frustrum::TestAgainstRectangle(Vector2 * middle, Vector2 * sideDelta)
-{
-	return false;
-}

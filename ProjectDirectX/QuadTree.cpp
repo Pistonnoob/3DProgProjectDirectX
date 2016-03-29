@@ -174,9 +174,62 @@ bool QuadTree::contains(BoundingVolume * volume)
 	return result;
 }
 
-void QuadTree::StoreObjects(vector<Container*> storeIn, Frustrum * frustrum, Vector2 cameraPos)
+bool QuadTree::OverlappsFrustrum(Frustrum * frustrum)
 {
+	bool result = false;
 	Vector2 d2SideDelta = (m_max - m_min) / 2, d2Middle = m_min + d2SideDelta;
+	Vector3 sideDelta = Vector3(0.0f, 0.0f, 0.0f), middle = Vector3(0.0f, 0.0f, 0.0f);
+	middle.x = d2Middle.x;
+	middle.z = d2Middle.y;
+	middle.y = 0.0f;
+	sideDelta.x = d2SideDelta.x;
+	sideDelta.z = d2SideDelta.y;
+	sideDelta.y = 99999999999.0f;
+	//Test against frustrum
+	if (frustrum->TestAgainstRectangle(&middle, &sideDelta))
+	{
+		result = true;
+	}
+	return result;
+}
+
+void QuadTree::StoreObjects(vector<Container*> &storeIn, Frustrum * frustrum, Vector2 cameraPos)
+{
+	bool overlapsChild = false;
+	if (topLeft != NULL && this->topLeft->OverlappsFrustrum(frustrum))
+	{
+		topLeft->StoreObjects(storeIn, frustrum, cameraPos);
+		overlapsChild = true;
+	}
+	if (topRight != NULL && this->topRight->OverlappsFrustrum(frustrum))
+	{
+		topRight->StoreObjects(storeIn, frustrum, cameraPos);
+		overlapsChild = true;
+	}
+	if (bottomLeft != NULL && this->bottomLeft->OverlappsFrustrum(frustrum))
+	{
+		bottomLeft->StoreObjects(storeIn, frustrum, cameraPos);
+		overlapsChild = true;
+	}
+	if (bottomRight != NULL && this->bottomRight->OverlappsFrustrum(frustrum))
+	{
+		bottomRight->StoreObjects(storeIn, frustrum, cameraPos);
+		overlapsChild = true;
+	}
+	if (!overlapsChild)
+	{
+		for (std::vector<Container*>::iterator i = this->models.begin(); i != this->models.end(); i++)
+		{
+			if (!(*i)->isRendered)
+			{
+				if (frustrum->TestAgainstRectangle(&(*i)->boundingVolume.middle, &(*i)->boundingVolume.sideDelta))
+				{
+					storeIn.push_back((*i));
+				}
+			}
+		}
+	}
+	
 	
 }
 
