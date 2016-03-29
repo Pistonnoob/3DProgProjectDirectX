@@ -102,7 +102,16 @@ bool QuadTree::DefineQuadTree(vector<D3Object*> models)
 vector<D3Object*> QuadTree::GetObjectsInFrustrum(Frustrum * frustrum, Vector2 cameraPos)
 {
 	vector<D3Object*> result;
-
+	vector<Container*> shouldRender;
+	if (this->OverlappsFrustrum(frustrum))
+	{
+		this->StoreObjects(shouldRender, frustrum, cameraPos);
+	}
+	for (std::vector<Container*>::iterator i = shouldRender.begin(); i <= shouldRender.end(); i++)
+	{
+		result.push_back((*i)->object);
+		(*i)->isRendered = false;
+	}
 	return result;
 }
 
