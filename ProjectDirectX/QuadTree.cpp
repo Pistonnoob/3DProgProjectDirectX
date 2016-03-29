@@ -109,10 +109,43 @@ void QuadTree::DivideToChildren()//Divides its own models to its children
 	//Loop through all internal models
 	for (std::vector<Container*>::iterator i = this->models.begin(); i != this->models.end(); i++)
 	{
+		bool contained = false;
 		BoundingVolume volume = (*i)->boundingVolume;
 		Vector3 minPos = volume.middle - volume.sideDelta, maxPos = volume.middle + volume.sideDelta;
-
+		if (this->topLeft != NULL && this->topLeft->contains(&volume))
+		{
+			this->topLeft->models.push_back((*i));
+			contained = true;
+		}
+		if (this->topRight != NULL && this->topRight->contains(&volume))
+		{
+			this->topRight->models.push_back((*i));
+			contained = true;
+		}
+		if (this->bottomLeft != NULL && this->bottomLeft->contains(&volume))
+		{
+			this->bottomLeft->models.push_back((*i));
+			contained = true;
+		}
+		if (this->bottomRight != NULL && this->bottomRight->contains(&volume))
+		{
+			this->bottomRight->models.push_back((*i));
+			contained = true;
+		}
+		if (!contained)
+		{
+			//ERROR SOMETHING IS VERY WRONG. Somehow our four composite quads don't contain what we do
+		}
 	}
+	//And proceed to tell the children to divide their own models
+	if (topRight != NULL)
+		topRight->DivideToChildren();
+	if (topLeft != NULL)
+		topLeft->DivideToChildren();
+	if (bottomLeft != NULL)
+		bottomLeft->DivideToChildren();
+	if (bottomRight != NULL)
+		bottomRight->DivideToChildren();
 }
 
 bool QuadTree::contains(BoundingVolume * volume)
