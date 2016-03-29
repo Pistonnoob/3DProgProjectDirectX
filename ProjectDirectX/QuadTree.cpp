@@ -176,6 +176,8 @@ bool QuadTree::contains(BoundingVolume * volume)
 
 void QuadTree::StoreObjects(vector<Container*> storeIn, Frustrum * frustrum, Vector2 cameraPos)
 {
+	Vector2 d2SideDelta = (m_max - m_min) / 2, d2Middle = m_min + d2SideDelta;
+	
 }
 
 BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
