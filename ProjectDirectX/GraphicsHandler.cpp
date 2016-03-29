@@ -477,8 +477,13 @@ bool GraphicsHandler::RenderToDeferred()
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
+	this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
+
+	std::vector<D3Object*> toRender = this->m_quadTree->GetObjectsInFrustrum(this->m_frustrum, Vector2(m_Camera->GetPosition()));
+
 	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
 	{
+
 		(*model)->GetWorldMatrix(worldMatrix);
 		//Rotate the model
 		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
