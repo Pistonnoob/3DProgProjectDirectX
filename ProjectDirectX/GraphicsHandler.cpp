@@ -480,9 +480,9 @@ bool GraphicsHandler::RenderToDeferred()
 	this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
 
 	std::vector<D3Object*> toRender;
-	this->m_quadTree->GetObjectsInFrustrum(this->m_frustrum, Vector2(m_Camera->GetPosition()));
+	this->m_quadTree->GetObjectsInFrustrum(&toRender, this->m_frustrum);
 
-	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
+	for (std::vector<D3Object*>::iterator model = toRender.begin(); model != toRender.end(); model++)
 	{
 
 		(*model)->GetWorldMatrix(worldMatrix);
@@ -502,7 +502,7 @@ bool GraphicsHandler::RenderToDeferred()
 		//Render the model using our brand new deferred renderer!
 		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
 	}
-
+	//toRender.clear();
 	//Reset the render target to the back buffer
 	m_Direct3D->SetBackBufferRenderTarget();
 	//Reset the viewport

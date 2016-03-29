@@ -41,13 +41,13 @@ public:
 	void Initialize(Vector2 m_min, Vector2 m_max, int depth);
 	bool DefineQuadTree(vector<D3Object*> models);
 
-	vector<D3Object*> GetObjectsInFrustrum(Frustrum* frustrum, Vector2 cameraPos);
+	void GetObjectsInFrustrum(vector<D3Object*> *storeIn, Frustrum* frustrum);
 	
 private:	//Functions
 	void DivideToChildren();
 	bool contains(BoundingVolume* volume);
 	bool OverlappsFrustrum(Frustrum* frustrum);
-	void StoreObjects(vector<Container*> &storeIn, Frustrum* frustrum, Vector2 cameraPos);
+	void StoreObjects(vector<Container*> &storeIn, Frustrum* frustrum);
 	BoundingVolume GenerateBoundingVolume(D3Object* model);
 };
 
