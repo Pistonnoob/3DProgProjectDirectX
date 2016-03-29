@@ -104,6 +104,15 @@ vector<D3Object*> QuadTree::GetObjectsInFrustrum(Frustrum * frustrum, Vector2 ca
 	return vector<D3Object*>();
 }
 
+void QuadTree::DivideToChildren()//Divides its own models to its children
+{
+	//Loop through all internal models
+	for (std::vector<Container*>::iterator i = this->models.begin(); i != this->models.end(); i++)
+	{
+
+	}
+}
+
 void QuadTree::StoreObjects(vector<D3Object*> storeIn, Frustrum * frustrum, Vector2 cameraPos)
 {
 }

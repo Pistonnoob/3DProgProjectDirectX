@@ -44,6 +44,7 @@ public:
 	vector<D3Object*> GetObjectsInFrustrum(Frustrum* frustrum, Vector2 cameraPos);
 	
 private:	//Functions
+	void DivideToChildren();
 	void StoreObjects(vector<D3Object*> storeIn, Frustrum* frustrum, Vector2 cameraPos);
 	BoundingVolume GenerateBoundingVolume(D3Object* model);
 };
