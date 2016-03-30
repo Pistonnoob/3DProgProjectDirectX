@@ -360,7 +360,8 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->GenerateBaseViewMatrix();
 
 	//Create the lights.
-	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -5.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f) / 255.0f, Vector4(255.0f, 255.0f, 255.0f, 1.0f) / 255.0f, Vector4(255.0f, 255.0f, 255.0f, 1.0f) / 255.0f, Vector4(0.0f, 5.0f, -5.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	Light2->ambientColor.w = Light2->diffuseColor.w = Light2->specularColor.w = 1.0f;
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
@@ -461,7 +462,7 @@ bool GraphicsHandler::Render()
 	WVPBufferStruct matrices = { worldMatrix, baseViewMatrix, orthoMatrix };
 	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
-		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z), 0.0f, cameraPos};
+		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 1.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z), 0.0f, cameraPos};
 		//Do the light shading post processing on our quad
 		//this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
 		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), m_DeferredBuffers->GetShaderResourceView(3), m_DeferredBuffers->GetShaderResourceView(4), &tempLight);
