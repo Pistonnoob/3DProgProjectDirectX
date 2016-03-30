@@ -14,7 +14,7 @@ cbuffer LightBuffer : register(b0) {
 PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 {
 	PS_OUT_DEF output = (PS_OUT_DEF)0;
-	float4 colorThat = ambientColor;
+	//float4 colorThat = ambientColor;
 	//Store the sampled color
 	output.Color = c_text.Sample(samplerType, input.UV);
 	//Store the normal
@@ -23,9 +23,9 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	output.Position = input.WorldPos;
 	//Store the diffuse material
 	output.Diffuse = diffuseColor;
-	//output.Diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	output.Diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	//Store the specular material
 	output.Specular = float4(specularColor.r, specularColor.g, specularColor.b, Ns);
-	//output.Specular = float4(0.5f, 0.5f, 0.5f, 60);
+	output.Specular = float4(0.5f, 0.5f, 0.5f, 60);
 	return output;
 }
