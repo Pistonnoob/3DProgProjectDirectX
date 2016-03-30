@@ -230,11 +230,11 @@ bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 {
 	this->UpdateInput(inputObj, frameTime / 1000);
 	bool result = true;
-	this->rotation += 360 * 0.005f * (frameTime / 1000);
+	/*this->rotation += 360 * 0.005f * (frameTime / 1000);
 	if (this->rotation > 720.0f)
 	{
 		this->rotation = -360.0f;
-	}
+	}*/
 
 	return result;
 }

@@ -113,16 +113,16 @@ void QuadTree::GetObjectsInFrustrum(vector<D3Object*> * storeIn, Frustrum * frus
 	}
 	for (int i = 0; i < shouldRender.size(); i++)
 	{
-		if (!shouldRender.at(i)->isRendered)
+		if (shouldRender.at(i)->isRendered)
 		{
 			storeIn->push_back(shouldRender.at(i)->object);
-			shouldRender.at(i)->isRendered = true;
+			shouldRender.at(i)->isRendered = false;
 		}
 	}
-	for (int i = 0; i < shouldRender.size(); i++)
+	/*for (int i = 0; i < shouldRender.size(); i++)
 	{
 		shouldRender.at(i)->isRendered = false;
-	}
+	}*/
 	shouldRender.clear();
 }
 
@@ -246,6 +246,7 @@ void QuadTree::StoreObjects(vector<Container*> &storeIn, Frustrum * frustrum)
 				if (frustrum->TestAgainstRectangle(&models.at(i)->boundingVolume.middle, &models.at(i)->boundingVolume.sideDelta))
 				{
 					storeIn.push_back(models.at(i));
+					models.at(i)->isRendered = true;
 				}
 			}
 		}
