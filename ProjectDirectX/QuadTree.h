@@ -42,6 +42,7 @@ public:
 	bool DefineQuadTree(vector<D3Object*> models);
 
 	void GetObjectsInFrustrum(vector<D3Object*> *storeIn, Frustrum* frustrum);
+	void GetObjectsInFrustrum(vector<Container*> *storeIn, Frustrum* frustrum);
 	
 private:	//Functions
 	void DivideToChildren();

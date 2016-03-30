@@ -126,6 +126,28 @@ void QuadTree::GetObjectsInFrustrum(vector<D3Object*> * storeIn, Frustrum * frus
 	shouldRender.clear();
 }
 
+void QuadTree::GetObjectsInFrustrum(vector<Container*> * storeIn, Frustrum * frustrum)
+{
+	vector<Container*> shouldRender;
+	if (this->OverlappsFrustrum(frustrum))
+	{
+		this->StoreObjects(shouldRender, frustrum);
+	}
+	for (int i = 0; i < shouldRender.size(); i++)
+	{
+		if (shouldRender.at(i)->isRendered)
+		{
+			storeIn->push_back(shouldRender.at(i));
+			shouldRender.at(i)->isRendered = false;
+		}
+	}
+	/*for (int i = 0; i < shouldRender.size(); i++)
+	{
+	shouldRender.at(i)->isRendered = false;
+	}*/
+	shouldRender.clear();
+}
+
 void QuadTree::DivideToChildren()//Divides its own models to its children
 {
 	//Loop through all internal models
