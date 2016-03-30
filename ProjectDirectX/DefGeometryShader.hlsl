@@ -46,6 +46,7 @@ void main(
 		element.Pos = mul(element.Pos, worldMatrix);
 		element.WorldPos = element.Pos;
 		element.Pos = mul(element.Pos, viewMatrix);
+		float4 toCamera = normalize(-element.Pos);
 		element.Pos = mul(element.Pos, projectionMatrix);
 
 		element.Normal = normalize(input[i].Normal);
@@ -53,8 +54,7 @@ void main(
 		element.Normal = mul(element.Normal, worldMatrix);
 		element.Normal = normalize(element.Normal);
 		float4 viewNormal = normalize(mul(element.Normal, viewMatrix));
-		float4 toCamera = normalize(-element.Pos);
-		if (dot(toCamera, viewNormal) > -0.0f)
+		if (dot(viewNormal, toCamera) > -0.0f)
 		{
 			facingCamera = true;
 		}

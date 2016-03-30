@@ -26,6 +26,6 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	//output.Diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	//Store the specular material
 	output.Specular = float4(specularColor.r, specularColor.g, specularColor.b, Ns);
-	output.Specular = float4(0.5f, 0.5f, 0.5f, 60.0f);
+	//output.Specular = float4(0.5f, 0.5f, 0.5f, 60.0f);
 	return output;
 }
