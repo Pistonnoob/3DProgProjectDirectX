@@ -637,7 +637,9 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 			if (intersectionModel)
 			{
 				bool success = true;
-
+				ObjMaterial material = object->GetMaterial();
+				material.Ns = 1.0f;
+				object->SetMaterial(material);
 			}
 		}
 	}
