@@ -272,27 +272,31 @@ BoundingVolume QuadTree::GenerateBoundingVolume(D3Object * model)
 	bool first = true;
 
 	vector<VertexModel> points = model->getVertexData();
+	Matrix world;
+	model->GetWorldMatrix(world);
 	for (std::vector<VertexModel>::const_iterator index = points.begin(); index != points.end(); index++)
 	{
+		VertexModel temp = *index;
+		temp.position = DirectX::XMVector3TransformCoord(temp.position, world);
 		if (first)
 		{
-			min = max = (*index).position;
+			min = max = temp.position;
 			first = false;
 		}
 		else
 		{
-			if ((*index).position.x < min.x)
-				min.x = (*index).position.x;
-			else if ((*index).position.x > max.x)
-				max.x = (*index).position.x;
-			if ((*index).position.y < min.y)
-				min.y = (*index).position.y;
-			else if ((*index).position.y > max.y)
-				max.y = (*index).position.y;
-			if ((*index).position.z < min.z)
-				min.z = (*index).position.z;
-			else if ((*index).position.z > max.z)
-				max.z = (*index).position.z;
+			if (temp.position.x < min.x)
+				min.x = temp.position.x;
+			else if (temp.position.x > max.x)
+				max.x = temp.position.x;
+			if (temp.position.y < min.y)
+				min.y = temp.position.y;
+			else if (temp.position.y > max.y)
+				max.y = temp.position.y;
+			if (temp.position.z < min.z)
+				min.z = temp.position.z;
+			else if (temp.position.z > max.z)
+				max.z = temp.position.z;
 		}
 		
 	}

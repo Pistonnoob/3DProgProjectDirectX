@@ -365,7 +365,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	for (int index = 0; index < 1; index++)
+	for (int index = 0; index < 20; index++)
 	{
 		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 		if (!result)
@@ -382,12 +382,12 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		}
 
 	}
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
-	}
+	}*/
 	
 
 	//result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
