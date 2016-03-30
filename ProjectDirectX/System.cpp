@@ -71,6 +71,15 @@ bool System::Initialize()
 	}
 
 
+	RECT rcClient, rcWind;
+	GetClientRect(m_hwnd, &rcClient);
+	GetWindowRect(m_hwnd, &rcWind);
+	int posX = 0, posY = 0;
+	posX = rcWind.left;
+	posY = rcWind.top;
+	
+	SetCursorPos(posX, posY);
+
 	return result;
 }
 
@@ -221,18 +230,24 @@ bool System::Frame()
 			m_lockCursor = true;
 		}
 	}
-	if (m_lockCursor && GetActiveWindow() != NULL)
+	if (GetActiveWindow() != NULL)
 	{
 		int posX = 0, posY = 0;
-
 		RECT rcClient, rcWind;
 		GetClientRect(m_hwnd, &rcClient);
 		GetWindowRect(m_hwnd, &rcWind);
-		posX = rcWind.right - rcClient.right / 2;
-		posY = rcWind.top + rcClient.bottom / 2;
-		const RECT b = {posX, posY, posX + 1, posY + 1};
-		ClipCursor(&b);
-		//SetCursorPos(posX, posY);
+		
+		if (m_lockCursor)
+		{
+			posX = rcWind.right - rcClient.right / 2;
+			posY = rcWind.top + rcClient.bottom / 2;
+			const RECT b = { posX, posY, posX + 1, posY + 1 };
+			ClipCursor(&b);
+		}
+		else
+		{
+			ClipCursor(&rcWind);
+		}
 	}
 
 	//Let the FPS and Timer objects to their frame processing.
@@ -253,7 +268,8 @@ bool System::Frame()
 		GetWindowRect(m_hwnd, &rcWind);
 		int x = 0, y = 0;
 		m_Input->GetMouse(x, y);
-		m_Graphics->Click(x, y, rcClient.right, rcClient.bottom);
+		//m_Graphics->Click(x, y, rcClient.right, rcClient.bottom);
+		m_Graphics->Click(x, y, rcWind.right - rcWind.left, rcWind.bottom - rcWind.top);
 		int z = 5;
 	}
 

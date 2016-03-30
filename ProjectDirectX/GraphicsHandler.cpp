@@ -529,11 +529,19 @@ bool GraphicsHandler::RenderToDeferred()
 
 void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 {
-	float viewspaceX = 0, viewspaceY = 0, viewspaceZ = 1;
-	/*viewspaceX = (2 * x) / float(screenWidth) - 1;
-	viewspaceY = (2 * y) / float(screenHeight) - 1;
-	viewspaceZ = 1;*/
-
+	Matrix P, V, W;
+	m_Direct3D->GetProjectionMatrix(P);
+	m_Camera->GetViewMatrix(V);
+	V = V.Invert();
+	float vx = 0, vy = 0, viewspaceZ = 1;
+	vx = ((2 * x) / float(screenWidth) - 1) / P(0, 0);
+	vy = (-(2 * y) / float(screenHeight) + 1) / P(1, 1);
+	viewspaceZ = 1;
+	Vector3 rayO(0.0f, 0.0f, 1.0f);
+	Vector3 rayD(vx, vy, 0.0f);
+	rayO = DirectX::XMVector3TransformCoord(rayO, V);
+	rayD = DirectX::XMVector3Transform(rayD, V);
+	//Now we have our ray origin and direction.
 
 
 }
