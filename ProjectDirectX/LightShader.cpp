@@ -426,7 +426,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 	// Copy the lighting variables into the constant buffer.
 	dataPtr2->lightPos = light->lightPos;
 	dataPtr2->padding = 0.0f;
-	dataPtr2->lightColor = light->lightColor / 255;
+	dataPtr2->lightColor = light->lightColor;
 	dataPtr2->padding1 = 0.0f;
 	dataPtr2->cameraPos = light->cameraPos;
 	// Unlock the constant buffer.
@@ -448,6 +448,7 @@ void LightShader::RenderShader(ID3D11DeviceContext * deviceContext, int indexCou
 
 	//Set the shaders used to render the model
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
+	deviceContext->GSSetShader(NULL, NULL, 0);
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
 
 	//Set the sampler state in the pixel shader

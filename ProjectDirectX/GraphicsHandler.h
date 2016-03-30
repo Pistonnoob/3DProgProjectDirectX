@@ -21,10 +21,12 @@
 #include "DeferredBuffer.h"
 #include "DeferredHandler.h"
 #include "LightShader.h"
+//For quad-tree culling
+#include "QuadTree.h"
 
 
 const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
+const bool VSYNC_ENABLED = false;
 const float SCREEN_FAR = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
@@ -54,6 +56,8 @@ private:	//Variables
 	Camera* m_Camera;
 	//The objects in the scene
 	std::vector<D3Object*> m_Models;
+	Frustrum* m_frustrum;
+	QuadTree* m_quadTree;
 	//Our scene lights, all point lights and structs. Extend to own class if other lights are needed.
 	std::vector<LightStruct*> m_Lights;
 	//Normal textured rendering

@@ -1,21 +1,21 @@
-#include "FrustrumCulling.h"
+#include "Frustrum.h"
 
 
 
-FrustrumCulling::FrustrumCulling()
+Frustrum::Frustrum()
 {
 }
 
-FrustrumCulling::FrustrumCulling(const FrustrumCulling & original)
+Frustrum::Frustrum(const Frustrum & original)
 {
 }
 
 
-FrustrumCulling::~FrustrumCulling()
+Frustrum::~Frustrum()
 {
 }
 
-void FrustrumCulling::Initialize()
+void Frustrum::Initialize()
 {
 	for (int i = 0; i < ARRAYSIZE(m_planes); i++)
 	{
@@ -23,9 +23,9 @@ void FrustrumCulling::Initialize()
 	}
 }
 
-bool FrustrumCulling::GenerateFrustrum(Matrix view, Matrix proj, float screenDepth)
+bool Frustrum::GenerateFrustrum(Matrix view, Matrix proj, float screenDepth)
 {
-	float zMin = 0.0f, float r = 0.0f;
+	float zMin = 0.0f, r = 0.0f;
 	Matrix m;
 	//Calc the min z distance in the frustrum
 	zMin = -proj._43 / proj._33;
@@ -74,7 +74,7 @@ bool FrustrumCulling::GenerateFrustrum(Matrix view, Matrix proj, float screenDep
 	return true;
 }
 
-bool FrustrumCulling::TestAgainstPoint(Vector3 * pos)
+bool Frustrum::TestAgainstPoint(Vector3 * pos)
 {
 	for (int i = 0; i < 6; i++)
 	{
@@ -86,7 +86,7 @@ bool FrustrumCulling::TestAgainstPoint(Vector3 * pos)
 	return true;
 }
 
-bool FrustrumCulling::TestAgainstCube(Vector3 * pos, float radius)
+bool Frustrum::TestAgainstCube(Vector3 * pos, float radius)
 {
 	return false;
 	for (int i = 0; i < 6; i++)
@@ -129,39 +129,39 @@ bool FrustrumCulling::TestAgainstCube(Vector3 * pos, float radius)
 	return true;
 }
 
-bool FrustrumCulling::TestAgainstRectangle(Vector3 * pos, Vector3 * sideLengths)
+bool Frustrum::TestAgainstRectangle(Vector3 * pos, Vector3 * sideDelta)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		if (m_planes[i].DotCoordinate(*pos + *sideLengths) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + *sideDelta) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideLengths->x, sideLengths->y, sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideDelta->x, sideDelta->y, sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(sideLengths->x, -sideLengths->y, sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(sideDelta->x, -sideDelta->y, sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(sideLengths->x, sideLengths->y, -sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(sideDelta->x, sideDelta->y, -sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideLengths->x, -sideLengths->y, sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideDelta->x, -sideDelta->y, sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideLengths->x, sideLengths->y, -sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(-sideDelta->x, sideDelta->y, -sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos + Vector3(sideLengths->x, -sideLengths->y, -sideLengths->z)) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos + Vector3(sideDelta->x, -sideDelta->y, -sideDelta->z)) >= 0.0f)
 		{
 			continue;
 		}
-		if (m_planes[i].DotCoordinate(*pos - *sideLengths) >= 0.0f)
+		if (m_planes[i].DotCoordinate(*pos - *sideDelta) >= 0.0f)
 		{
 			continue;
 		}
@@ -170,7 +170,7 @@ bool FrustrumCulling::TestAgainstRectangle(Vector3 * pos, Vector3 * sideLengths)
 	return true;
 }
 
-bool FrustrumCulling::TestAgainstSphere(Vector3 * pos, float radius)
+bool Frustrum::TestAgainstSphere(Vector3 * pos, float radius)
 {
 	for (int i = 0; i < 6; i++)
 	{

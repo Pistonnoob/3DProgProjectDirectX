@@ -10,6 +10,8 @@ GraphicsHandler::GraphicsHandler()
 	m_DeferredBuffers = nullptr;
 	m_DeferredShader = nullptr;
 	m_LightShader = nullptr;
+	m_frustrum = nullptr;
+	m_quadTree = nullptr;
 
 	rotation = 0.0f;
 }
@@ -45,6 +47,24 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	this->LoadScene(hwnd);
 
+
+	m_frustrum = new Frustrum();
+	if (!m_frustrum)
+	{
+		return false;
+	}
+	m_frustrum->Initialize();
+
+	m_quadTree = new QuadTree();
+	if (!m_quadTree)
+	{
+		return false;
+	}
+	Vector2 min = Vector2(-500.0f, -500.0f);
+	Vector2 max = Vector2(500.0f, 500.0f);
+	this->m_quadTree->Initialize(min, max, 5);
+	m_quadTree->DefineQuadTree(this->m_Models);
+
 	// Create the TextureShader object.
 	m_TextureShader = new TextureHandler();
 	if (!this->m_TextureShader)
@@ -65,6 +85,7 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+
 
 	result = m_FullScreenObject->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight);
 	if (!result)
@@ -133,14 +154,14 @@ void GraphicsHandler::ShutDown()
 	}
 
 	// Release the models within the model list.
-	while (!m_Models.empty())
+	/*while (!m_Models.empty())
 	{
 		D3Object* temp = NULL;
 		temp = m_Models.back();
 		m_Models.pop_back();
 		temp->Shutdown();
 		delete temp;
-	}
+	}*/
 
 	// Release the lights within the light list.
 	while (!m_Lights.empty())
@@ -187,6 +208,19 @@ void GraphicsHandler::ShutDown()
 		this->m_LightShader->Shutdown();
 		delete this->m_LightShader;
 		this->m_LightShader = NULL;
+	}
+
+	if (this->m_frustrum != NULL)
+	{
+		delete this->m_frustrum;
+		this->m_frustrum = NULL;
+	}
+
+	if (this->m_quadTree != NULL)
+	{
+		this->m_quadTree->ShutDown();
+		delete this->m_quadTree;
+		this->m_quadTree = NULL;
 	}
 
 	return;
@@ -326,12 +360,13 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->GenerateBaseViewMatrix();
 
 	//Create the lights.
-	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f) / 255.0f, Vector4(255.0f, 255.0f, 255.0f, 1.0f) / 255.0f, Vector4(255.0f, 255.0f, 255.0f, 1.0f) / 255.0f, Vector4(0.0f, 5.0f, -5.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	Light2->ambientColor.w = Light2->diffuseColor.w = Light2->specularColor.w = 1.0f;
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	for (int index = 0; index < 1; index++)
+	for (int index = 0; index < 2; index++)
 	{
 		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 		if (!result)
@@ -343,11 +378,26 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 			modelSize = m_Models.size();
 		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
 		{
-			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
+			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
 			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
 		}
 
 	}
+
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+
+	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}*/
 	
 
 	//result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Eggpod.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
@@ -412,7 +462,7 @@ bool GraphicsHandler::Render()
 	WVPBufferStruct matrices = { worldMatrix, baseViewMatrix, orthoMatrix };
 	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
-		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 0.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z), 0.0f, cameraPos};
+		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 1.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z), 0.0f, cameraPos};
 		//Do the light shading post processing on our quad
 		//this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
 		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), m_DeferredBuffers->GetShaderResourceView(3), m_DeferredBuffers->GetShaderResourceView(4), &tempLight);
@@ -443,8 +493,14 @@ bool GraphicsHandler::RenderToDeferred()
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	for (std::vector<D3Object*>::iterator model = this->m_Models.begin(); model != this->m_Models.end(); model++)
+	this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
+
+	std::vector<D3Object*> toRender;
+	this->m_quadTree->GetObjectsInFrustrum(&toRender, this->m_frustrum);
+
+	for (std::vector<D3Object*>::iterator model = toRender.begin(); model != toRender.end(); model++)
 	{
+
 		(*model)->GetWorldMatrix(worldMatrix);
 		//Rotate the model
 		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
@@ -458,11 +514,11 @@ bool GraphicsHandler::RenderToDeferred()
 		pMaterial.Kd = Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f);
 		pMaterial.Ks = Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f);
 		pMaterial.Ns = objMaterial.Ns;
-		pMaterial.padding1 = Vector3(0.0f, 0.0f, 0.0f);
+		pMaterial.padding = Vector3(0.0f, 0.0f, 0.0f);
 		//Render the model using our brand new deferred renderer!
 		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
 	}
-
+	//toRender.clear();
 	//Reset the render target to the back buffer
 	m_Direct3D->SetBackBufferRenderTarget();
 	//Reset the viewport

@@ -4,33 +4,51 @@
 #include "StructLibrary.h"
 #include "D3Object.h"
 #include <vector>
+#include "Frustrum.h"
 
+static const int m_max = 10;
 
-struct BoundingBoxNode
+struct BoundingVolume
 {
-	Vector2 min;
-	Vector2 max;
-	BoundingBoxNode* topLeft;
-	BoundingBoxNode* topRight;
-	BoundingBoxNode* botLeft;
-	BoundingBoxNode* botRight;
-	std::vector<D3Object*> models;
+	Vector3 middle;
+	Vector3 sideDelta;
+};
+
+struct Container
+{
+	D3Object* object;
+	BoundingVolume boundingVolume;
+	bool isRendered;
 };
 
 class QuadTree
 {
 private:	//Variables
-	BoundingBoxNode root;
+	Vector2 m_min;
+	Vector2 m_max;
+	QuadTree* topLeft;
+	QuadTree* topRight;
+	QuadTree* bottomLeft;
+	QuadTree* bottomRight;
+	vector<Container*> models;
+	//std::pair<D3Object*, std::pair<BoundingVolume, bool>>
 public:
 	QuadTree();
 	QuadTree(const QuadTree& original);
 	virtual ~QuadTree();
 
 	void ShutDown();
-	void Initialize(int width, int height, int depth);
+	void Initialize(Vector2 m_min, Vector2 m_max, int depth);
+	bool DefineQuadTree(vector<D3Object*> models);
+
+	void GetObjectsInFrustrum(vector<D3Object*> *storeIn, Frustrum* frustrum);
 	
 private:	//Functions
-	void GenerateQuadTree(BoundingBoxNode active, int depth);
+	void DivideToChildren();
+	bool contains(BoundingVolume* volume);
+	bool OverlappsFrustrum(Frustrum* frustrum);
+	void StoreObjects(vector<Container*> &storeIn, Frustrum* frustrum);
+	BoundingVolume GenerateBoundingVolume(D3Object* model);
 };
 
 #endif
