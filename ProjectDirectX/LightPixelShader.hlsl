@@ -61,14 +61,14 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 	float4 diffuseResult = saturate((diffuseLightColor) * lightIntensity);
 	if (lightIntensity > 0.0f)
 	{
-		//diffuseResult *= float4(material.Kd, 1.0f);
+		diffuseResult *= diffuse;
 		additionColor += diffuseResult;
 	}
 	additionColor = saturate(additionColor);
 	result = saturate(color * additionColor);
 	//SPECULAR
 	float4 specularResult = (float4)0;	//The color the specular light will produce
-	if (true/*lightIntensity > 0.0f*/)
+	if (lightIntensity > 0.0f)
 	{
 		float3 lightReflect = 0.0f;
 		float3 viewerDirection = (float3)normalize(cameraPos - position);
