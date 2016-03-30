@@ -356,7 +356,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
 	m_Camera->Render();
 	m_Camera->GenerateBaseViewMatrix();
 
@@ -366,30 +366,42 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
-	int modelSize = 0;
-	for (int index = 0; index < 2; index++)
-	{
-		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-			return false;
-		}
-		if (index == 0)
-			modelSize = m_Models.size();
-		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-		{
-			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
-			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-		}
+	//int modelSize = 0;
+	//for (int index = 0; index < 2; index++)
+	//{
+	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//	if (!result)
+	//	{
+	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//		return false;
+	//	}
+	//	if (index == 0)
+	//		modelSize = m_Models.size();
+	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+	//	{
+	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
+	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	}
 
-	}
+	//}
 
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//	return false;
+	//}
+	int modelIndex = m_Models.size();
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
+	}
+	int modelDist = m_Models.size() - modelIndex;
+	for (int i = modelIndex; i < m_Models.size(); i++)
+	{
+		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 2.0f, 0.0f)));
 	}
 
 
@@ -534,15 +546,17 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	m_Camera->GetViewMatrix(V);
 	V = V.Invert();
 	float vx = 0, vy = 0, viewspaceZ = 1;
-	vx = ((2 * x) / float(screenWidth) - 1) / P(0, 0);
-	vy = (-(2 * y) / float(screenHeight) + 1) / P(1, 1);
+	vx = ((2 * x) / float(screenWidth) - 1) /*/ P(0, 0)*/;
+	vx /= P(0, 0);
+	vy = (-(2 * y) / float(screenHeight) + 1) /*/ P(1, 1)*/;
+	vy /= P(1, 1);
 	viewspaceZ = 1;
 	Vector3 rayO(0.0f, 0.0f, 0.0f);
 	Vector3 rayD(vx, vy, 1.0f);
 	rayO = DirectX::XMVector3TransformCoord(rayO, V);
-	rayD = DirectX::XMVector3Transform(rayD, V);
+	rayD = DirectX::XMVector3TransformNormal(rayD, V);
 
-	Vector3 dir = Vector3(1.0f, 1.0f, 1.0f) / rayD;
+	Vector3 dirfrac = Vector3(1.0f, 1.0f, 1.0f) / rayD;
 	//Now we have our ray origin and direction.
 	vector<Container*> possible;
 	this->m_quadTree->GetObjectsInFrustrum(&possible, m_frustrum);
@@ -557,9 +571,9 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 		//Extract the min and max
 		Vector3 min = testVolume.middle - testVolume.sideDelta;
 		Vector3 max = testVolume.middle + testVolume.sideDelta;
-		float t1 = (min.x - rayO.x) * dir.x, t2 = (max.x - rayO.x) * dir.x;
-		float t3 = (min.y - rayO.y) * dir.y, t4 = (max.y - rayO.y) * dir.y;
-		float t5 = (min.z - rayO.z) * dir.z, t6 = (max.z - rayO.z) * dir.z;
+		float t1 = (min.x - rayO.x) * dirfrac.x, t2 = (max.x - rayO.x) * dirfrac.x;
+		float t3 = (min.y - rayO.y) * dirfrac.y, t4 = (max.y - rayO.y) * dirfrac.y;
+		float t5 = (min.z - rayO.z) * dirfrac.z, t6 = (max.z - rayO.z) * dirfrac.z;
 		float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
 		float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
 
@@ -585,7 +599,7 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 			W = W.Invert();
 			//Apply it on our ray
 			rayO = DirectX::XMVector3TransformCoord(rayO, W);
-			rayD = DirectX::XMVector3Transform(rayD, W);
+			rayD = DirectX::XMVector3TransformNormal(rayD, W);
 			//Get the vertices
 			for (int i = 0; i < object->GetVertexCount() && !intersectionModel; i += 3)
 			{
