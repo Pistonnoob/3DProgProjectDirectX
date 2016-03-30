@@ -245,6 +245,18 @@ bool System::Frame()
 	if (FPS <= 0)	//Correct the 
 		FPS = 1;
 
+	//Do mouse picking
+	if (m_Input->WasKeyPressed(DIK_F))
+	{
+		RECT rcClient, rcWind;
+		GetClientRect(m_hwnd, &rcClient);
+		GetWindowRect(m_hwnd, &rcWind);
+		int x = 0, y = 0;
+		m_Input->GetMouse(x, y);
+		m_Graphics->Click(x, y, rcClient.right, rcClient.bottom);
+		int z = 5;
+	}
+
 	//Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(FPS, frameTime, m_Input);	
 	if (!result)

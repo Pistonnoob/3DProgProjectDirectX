@@ -339,6 +339,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 		resultRotation += startRot;
 		m_Camera->SetRotation(resultRotation);
 	}
+
 #pragma endregion mouse
 	return true;
 }
@@ -524,6 +525,17 @@ bool GraphicsHandler::RenderToDeferred()
 	//Reset the viewport
 	m_Direct3D->ResetViewport();
 	return true;
+}
+
+void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
+{
+	float viewspaceX = 0, viewspaceY = 0, viewspaceZ = 1;
+	/*viewspaceX = (2 * x) / float(screenWidth) - 1;
+	viewspaceY = (2 * y) / float(screenHeight) - 1;
+	viewspaceZ = 1;*/
+
+
+
 }
 
 
