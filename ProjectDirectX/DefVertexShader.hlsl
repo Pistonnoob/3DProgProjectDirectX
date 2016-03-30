@@ -15,14 +15,14 @@ GS_IN_DEF main(VS_IN_DEF input)
 	output.Pos.w = 1.0f;
 	
 	output.UV = input.UV;
-	
-	output.Pos = mul(output.Pos, worldMatrix);
 	output.WorldPos = output.Pos;
+	/*output.Pos = mul(output.Pos, worldMatrix);
+	
 	output.Pos = mul(output.Pos, viewMatrix);
-	output.Pos = mul(output.Pos, projectionMatrix);
+	output.Pos = mul(output.Pos, projectionMatrix);*/
 	
 	output.Normal = float4(input.Normal.x, input.Normal.y, input.Normal.z, 0);
-	output.Normal = mul(output.Normal, worldMatrix);
+	//output.Normal = mul(output.Normal, worldMatrix);
 	output.Normal = normalize(output.Normal);
 	return output;
 }

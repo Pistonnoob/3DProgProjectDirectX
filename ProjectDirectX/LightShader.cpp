@@ -448,6 +448,7 @@ void LightShader::RenderShader(ID3D11DeviceContext * deviceContext, int indexCou
 
 	//Set the shaders used to render the model
 	deviceContext->VSSetShader(this->m_vertexShader, NULL, 0);
+	deviceContext->GSSetShader(NULL, NULL, 0);
 	deviceContext->PSSetShader(this->m_pixelShader, NULL, 0);
 
 	//Set the sampler state in the pixel shader

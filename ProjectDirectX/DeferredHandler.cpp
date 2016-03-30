@@ -427,7 +427,7 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 
 	//Set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
-	//deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
+	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
 	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
 
 	//Set the shader texture resource in the pixel shader.

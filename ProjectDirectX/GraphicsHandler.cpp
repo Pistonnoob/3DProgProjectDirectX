@@ -230,11 +230,11 @@ bool GraphicsHandler::Frame(int fps, float frameTime, InputHandler* inputObj)
 {
 	this->UpdateInput(inputObj, frameTime / 1000);
 	bool result = true;
-	/*this->rotation += 360 * 0.005f * (frameTime / 1000);
+	this->rotation += 360 * 0.005f * (frameTime / 1000);
 	if (this->rotation > 720.0f)
 	{
 		this->rotation = -360.0f;
-	}*/
+	}
 
 	return result;
 }
@@ -360,12 +360,12 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Camera->GenerateBaseViewMatrix();
 
 	//Create the lights.
-	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -10.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
+	LightStruct *Light2 = new LightStruct{ Vector4(50.0f, 50.0f, 50.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(255.0f, 255.0f, 255.0f, 1.0f), Vector4(0.0f, 5.0f, -5.0f, 1.0f), Vector4(0.0f, 0.0f, 0.0f, 1.0f)};
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
 	int modelSize = 0;
-	for (int index = 0; index < 20; index++)
+	for (int index = 0; index < 2; index++)
 	{
 		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 		if (!result)
@@ -377,11 +377,15 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 			modelSize = m_Models.size();
 		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
 		{
-			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(12.0f, 0.0f, 0.0f)*(float)index));
+			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
 			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
 		}
 
 	}
+
+
+
+
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
