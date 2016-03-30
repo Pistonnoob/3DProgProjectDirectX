@@ -537,12 +537,96 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	vx = ((2 * x) / float(screenWidth) - 1) / P(0, 0);
 	vy = (-(2 * y) / float(screenHeight) + 1) / P(1, 1);
 	viewspaceZ = 1;
-	Vector3 rayO(0.0f, 0.0f, 1.0f);
-	Vector3 rayD(vx, vy, 0.0f);
+	Vector3 rayO(0.0f, 0.0f, 0.0f);
+	Vector3 rayD(vx, vy, 1.0f);
 	rayO = DirectX::XMVector3TransformCoord(rayO, V);
 	rayD = DirectX::XMVector3Transform(rayD, V);
-	//Now we have our ray origin and direction.
 
+	Vector3 dir = Vector3(1.0f, 1.0f, 1.0f) / rayD;
+	//Now we have our ray origin and direction.
+	vector<Container*> possible;
+	this->m_quadTree->GetObjectsInFrustrum(&possible, m_frustrum);
+	for (std::vector<Container*>::const_iterator testBound = possible.begin(); testBound != possible.end(); testBound++)
+	{
+		float t = 0.0f;
+		bool intersectionBox = true, intersectionModel = false;
+		float distToModel = 0.0f;
+		//For every model, check ray intersection against OBB
+		//Get the Boundingbox
+		BoundingVolume testVolume = (*testBound)->boundingVolume;
+		//Extract the min and max
+		Vector3 min = testVolume.middle - testVolume.sideDelta;
+		Vector3 max = testVolume.middle + testVolume.sideDelta;
+		float t1 = (min.x - rayO.x) * dir.x, t2 = (max.x - rayO.x) * dir.x;
+		float t3 = (min.y - rayO.y) * dir.y, t4 = (max.y - rayO.y) * dir.y;
+		float t5 = (min.z - rayO.z) * dir.z, t6 = (max.z - rayO.z) * dir.z;
+		float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
+		float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
+
+		if (tmax < 0)
+		{
+			t = tmax;
+			intersectionBox = false;
+		}
+		if (tmin > tmax)
+		{
+			t = tmax;
+			intersectionBox = false;
+		}
+
+		//If there was a successfull intersection
+		if (intersectionBox)
+		{
+			D3Object* object = (*testBound)->object;
+			VertexModel* points = object->getVertedData();
+			//Test intersection against contained model
+			//Get the world matrice
+			object->GetWorldMatrix(W);
+			W = W.Invert();
+			//Apply it on our ray
+			rayO = DirectX::XMVector3TransformCoord(rayO, W);
+			rayD = DirectX::XMVector3Transform(rayD, W);
+			//Get the vertices
+			for (int i = 0; i < object->GetVertexCount() && !intersectionModel; i += 3)
+			{
+				//Test intersection against vertices
+				float det = 0.0f, invDet = 0.0f;
+				float dist = -1, u = 0.0f, v = 0.0f;
+				//get the two edges
+				Vector3 edge1 = points[i + 1].position - points[i].position,
+						edge2 = points[i + 2].position - points[i].position;
+				Vector3 pVec = rayD.Cross(edge2);
+				Vector3 qVec(0.0f, 0.0f, 0.0f);
+				det = edge1.Dot(pVec);
+				if (det < -0.000000001f || det > 0.000000001f)
+				{
+					invDet = 1.0f / det;
+					Vector3 tVec = rayO - points[i].position;
+					u = tVec.Dot(pVec) * invDet;
+					if (u >= 0.0f && u <= 1)
+					{
+						qVec = tVec.Cross(edge1);
+						v = rayD.Dot(qVec);
+						v *= invDet;
+						if (v >= 0.0f && u + v <= 1.0f)
+						{
+							dist = edge2.Dot(qVec) * invDet;
+						}
+					}
+				}
+				if (dist >= 0.0f)
+				{
+					intersectionModel = true;
+					distToModel = dist;
+				}
+			}
+			if (intersectionModel)
+			{
+				bool success = true;
+
+			}
+		}
+	}
 
 }
 
