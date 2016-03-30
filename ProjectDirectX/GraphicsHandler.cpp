@@ -383,7 +383,12 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 
 	}
 
-
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
 
 
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
@@ -508,7 +513,7 @@ bool GraphicsHandler::RenderToDeferred()
 		pMaterial.Kd = Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f);
 		pMaterial.Ks = Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f);
 		pMaterial.Ns = objMaterial.Ns;
-		pMaterial.padding1 = Vector3(0.0f, 0.0f, 0.0f);
+		pMaterial.padding = Vector3(0.0f, 0.0f, 0.0f);
 		//Render the model using our brand new deferred renderer!
 		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
 	}
