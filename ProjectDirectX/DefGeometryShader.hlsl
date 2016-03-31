@@ -48,7 +48,7 @@ void main(
 		element.Pos = mul(element.Pos, viewMatrix);
 		float4 toCamera = normalize(-element.Pos);
 		element.Pos = mul(element.Pos, projectionMatrix);
-
+		element.Tangent = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		element.Normal = normalize(input[i].Normal);
 		//element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
 		element.Normal = mul(element.Normal, worldMatrix);
@@ -62,7 +62,21 @@ void main(
 		//outputStream.Append(element);
 	}
 	if (facingCamera)
+	{
+		//Do normal mapping here
+		float3 edge1 = elements[0].WorldPos - elements[1].WorldPos, edge2 = elements[0].WorldPos - elements[2].WorldPos;
+		/*edge1.w = edge2.w = 0.0f;*/
+		float uEdge1 = elements[0].UV.x - elements[1].UV.x, vEdge1 = elements[0].UV.y - elements[1].UV.y;
+		float uEdge2 = elements[0].UV.x - elements[2].UV.x, vEdge2 = elements[0].UV.y - elements[2].UV.y;
+		float3 tempTangent = (vEdge1 * edge1 - vEdge2 * edge2) * (1.0f / (uEdge1 * vEdge2 - uEdge2 * vEdge1));
+		//tempTangent = tempTangent / 3;
 		for (uint j = 0; j < 3; j++)
+		{
+			elements[j].Tangent.x = tempTangent.x;
+			elements[j].Tangent.y = tempTangent.y;
+			elements[j].Tangent.z = tempTangent.z;
 			outputStream.Append(elements[j]);
+		}
+	}
 	outputStream.RestartStrip();
 }

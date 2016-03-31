@@ -82,6 +82,7 @@ struct PS_IN_DEF
 	float4 Pos : SV_POSITION;
 	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
+	float4 Tangent : NORMAL1;
 	float2 UV : TEXCOORD;
 };
 
