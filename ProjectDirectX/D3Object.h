@@ -34,6 +34,7 @@ public:
 	int GetIndexCount()const;
 	ObjMaterial GetMaterial()const;
 	ID3D11ShaderResourceView* GetTexture();
+	ID3D11ShaderResourceView* GetNormalMap();
 	void GetWorldMatrix(Matrix& worldMatrix);
 	std::vector<VertexModel> getVertexData();
 	int GetVertexCount();

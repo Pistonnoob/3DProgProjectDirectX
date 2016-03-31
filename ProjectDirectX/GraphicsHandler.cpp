@@ -529,7 +529,7 @@ bool GraphicsHandler::RenderToDeferred()
 		pMaterial.Ns = objMaterial.Ns;
 		pMaterial.padding = Vector3(0.0f, 0.0f, 0.0f);
 		//Render the model using our brand new deferred renderer!
-		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
+		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), (*model)->GetNormalMap(), &pMaterial);
 	}
 	//toRender.clear();
 	//Reset the render target to the back buffer

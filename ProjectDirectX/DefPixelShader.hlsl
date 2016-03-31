@@ -1,6 +1,7 @@
 #include "ShaderLibrary.hlsli"
 
 Texture2D c_text : register(t0);
+Texture2D c_normal : register(t1);
 SamplerState samplerType : register(s0);
 
 cbuffer LightBuffer : register(b0) {

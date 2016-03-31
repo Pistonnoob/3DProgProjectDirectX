@@ -102,6 +102,11 @@ ID3D11ShaderResourceView * D3Object::GetTexture()
 	return this->m_texture->GetTextureView();
 }
 
+ID3D11ShaderResourceView * D3Object::GetNormalMap()
+{
+	return this->m_normalMap->GetTextureView();
+}
+
 void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 {
 	worldMatrix = this->m_worldMatrix;
