@@ -86,6 +86,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				newObject->CreateFromData(vertexData);
 				vertexData.clear();
 				indexData.clear();
+				newObject->CalculateModelVectors();
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
 				//Get the material name
@@ -172,6 +173,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	D3Object* newObject = new D3Object();
 	//Load the model data
 	newObject->CreateFromData(vertexData);
+	newObject->CalculateModelVectors();
 	//Initialize vertex and index buffers.
 	newObject->InitializeBuffers(device);
 	//Get the material name

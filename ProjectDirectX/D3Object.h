@@ -12,6 +12,13 @@
 #include <sstream>
 using namespace std;
 
+struct TempVertexType
+{
+	float x, y, z;
+	float tu, tv;
+	float nx, ny, nz;
+};
+
 class D3Object
 {
 private:
@@ -46,6 +53,7 @@ public:
 	void ApplyMatrix(const Matrix applyToWorld);
 	void SetIndices(vector<int> indices);
 
+	void CalculateModelVectors();
 	bool CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData);
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);
@@ -62,6 +70,9 @@ private:
 	void ShutdownBuffers();
 	void ReleaseTexture();
 	void ReleaseModel();
+
+	void CalculateTangentBinormal(TempVertexType& vertex1, TempVertexType& vertex2, TempVertexType& vertex3, Vector3& tangent, Vector3& binormal);
+	void CalculateNormal(Vector3& tangent, Vector3& binormal, Vector3& normal);
 };
 
 #endif

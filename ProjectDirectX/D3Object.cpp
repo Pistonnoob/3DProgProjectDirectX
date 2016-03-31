@@ -157,6 +157,76 @@ VertexModel * D3Object::getVertedData()
 	return m_model;
 }
 
+void D3Object::CalculateModelVectors()
+{
+	int faceCount, i, index;
+	TempVertexType vertex1, vertex2, vertex3;
+	Vector3 tangent, binormal, normal;
+	
+
+	// Calculate the number of faces in the model.
+	faceCount = m_vertexCount / 3;
+
+	// Initialize the index to the model data.
+	index = 0;
+
+	// Go through all the faces and calculate the the tangent, binormal, and normal vectors.
+	for (i = 0; i<faceCount; i++)
+	{
+		// Get the three vertices for this face from the model.
+		vertex1.x = m_model[index].position.x;
+		vertex1.y = m_model[index].position.y;
+		vertex1.z = m_model[index].position.z;
+		vertex1.tu = m_model[index].UV.x;
+		vertex1.tv = m_model[index].UV.y;
+		vertex1.nx = m_model[index].normal.x;
+		vertex1.ny = m_model[index].normal.y;
+		vertex1.nz = m_model[index].normal.z;
+		index++;
+
+		vertex2.x = m_model[index].position.x;
+		vertex2.y = m_model[index].position.y;
+		vertex2.z = m_model[index].position.z;
+		vertex2.tu = m_model[index].UV.x;
+		vertex2.tv = m_model[index].UV.y;
+		vertex2.nx = m_model[index].normal.x;
+		vertex2.ny = m_model[index].normal.y;
+		vertex2.nz = m_model[index].normal.z;
+		index++;
+
+		vertex3.x = m_model[index].position.x;
+		vertex3.y = m_model[index].position.y;
+		vertex3.z = m_model[index].position.z;
+		vertex3.tu = m_model[index].UV.x;
+		vertex3.tv = m_model[index].UV.y;
+		vertex3.nx = m_model[index].normal.x;
+		vertex3.ny = m_model[index].normal.y;
+		vertex3.nz = m_model[index].normal.z;
+		index++;
+
+		// Calculate the tangent and binormal of that face.
+		CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
+
+		// Calculate the new normal using the tangent and binormal.
+		CalculateNormal(tangent, binormal, normal);
+
+		// Store the normal, tangent, and binormal for this face back in the model structure.
+		m_model[index - 1].normal = normal;
+		m_model[index - 1].tangent = tangent;
+		m_model[index - 1].binormal = binormal;
+
+		m_model[index - 2].normal = normal;
+		m_model[index - 2].tangent = tangent;
+		m_model[index - 2].binormal = binormal;
+
+		m_model[index - 3].normal = normal;
+		m_model[index - 3].tangent = tangent;
+		m_model[index - 3].binormal = binormal;
+	}
+
+	return;
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
 {
 	this->m_vertexCount = (int)vertexData.size();
@@ -555,6 +625,83 @@ void D3Object::ReleaseModel()
 		delete[] m_indices;
 		m_indices = NULL;
 	}
+}
+
+void D3Object::CalculateTangentBinormal(TempVertexType& vertex1, TempVertexType& vertex2, TempVertexType& vertex3,
+	Vector3& tangent, Vector3& binormal)
+{
+	float vector1[3], vector2[3];
+	float tuVector[2], tvVector[2];
+	float den;
+	float length;
+
+
+	// Calculate the two vectors for this face.
+	vector1[0] = vertex2.x - vertex1.x;
+	vector1[1] = vertex2.y - vertex1.y;
+	vector1[2] = vertex2.z - vertex1.z;
+
+	vector2[0] = vertex3.x - vertex1.x;
+	vector2[1] = vertex3.y - vertex1.y;
+	vector2[2] = vertex3.z - vertex1.z;
+
+	// Calculate the tu and tv texture space vectors.
+	tuVector[0] = vertex2.tu - vertex1.tu;
+	tvVector[0] = vertex2.tv - vertex1.tv;
+
+	tuVector[1] = vertex3.tu - vertex1.tu;
+	tvVector[1] = vertex3.tv - vertex1.tv;
+
+	// Calculate the denominator of the tangent/binormal equation.
+	den = 1.0f / (tuVector[0] * tvVector[1] - tuVector[1] * tvVector[0]);
+
+	// Calculate the cross products and multiply by the coefficient to get the tangent and binormal.
+	tangent.x = (tvVector[1] * vector1[0] - tvVector[0] * vector2[0]) * den;
+	tangent.y = (tvVector[1] * vector1[1] - tvVector[0] * vector2[1]) * den;
+	tangent.z = (tvVector[1] * vector1[2] - tvVector[0] * vector2[2]) * den;
+
+	binormal.x = (tuVector[0] * vector2[0] - tuVector[1] * vector1[0]) * den;
+	binormal.y = (tuVector[0] * vector2[1] - tuVector[1] * vector1[1]) * den;
+	binormal.z = (tuVector[0] * vector2[2] - tuVector[1] * vector1[2]) * den;
+
+	// Calculate the length of this normal.
+	length = sqrt((tangent.x * tangent.x) + (tangent.y * tangent.y) + (tangent.z * tangent.z));
+
+	// Normalize the normal and then store it
+	tangent.x = tangent.x / length;
+	tangent.y = tangent.y / length;
+	tangent.z = tangent.z / length;
+
+	// Calculate the length of this normal.
+	length = sqrt((binormal.x * binormal.x) + (binormal.y * binormal.y) + (binormal.z * binormal.z));
+
+	// Normalize the normal and then store it
+	binormal.x = binormal.x / length;
+	binormal.y = binormal.y / length;
+	binormal.z = binormal.z / length;
+
+	return;
+}
+
+void D3Object::CalculateNormal(Vector3& tangent, Vector3& binormal, Vector3& normal)
+{
+	float length;
+
+
+	// Calculate the cross product of the tangent and binormal which will give the normal vector.
+	normal.x = (tangent.y * binormal.z) - (tangent.z * binormal.y);
+	normal.y = (tangent.z * binormal.x) - (tangent.x * binormal.z);
+	normal.z = (tangent.x * binormal.y) - (tangent.y * binormal.x);
+
+	// Calculate the length of the normal.
+	length = sqrt((normal.x * normal.x) + (normal.y * normal.y) + (normal.z * normal.z));
+
+	// Normalize the normal.
+	normal.x = normal.x / length;
+	normal.y = normal.y / length;
+	normal.z = normal.z / length;
+
+	return;
 }
 
 

@@ -45,7 +45,7 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 //return outputColor;
 
 	float4 result = (float4)0;
-	float4 additionColor = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	float4 additionColor = float4(0.6f, 0.6f, 0.6f, 1.0f);
 	float4 diffuseLightColor = (lightColor, 1.0f);
 	//Get the color from the G_Buffer
 	float4 color = colorTex.Sample(samplerType, input.UV);
