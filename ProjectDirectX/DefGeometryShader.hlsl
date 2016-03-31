@@ -48,7 +48,7 @@ void main(
 		element.Pos = mul(element.Pos, viewMatrix);
 		float4 toCamera = normalize(-element.Pos);
 		element.Pos = mul(element.Pos, projectionMatrix);
-		element.Tangent = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		element.Tangent = float3(0.0f, 0.0f, 0.0f);
 		element.Normal = normalize(input[i].Normal);
 		//element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
 		element.Normal = mul(element.Normal, worldMatrix);
