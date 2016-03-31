@@ -10,6 +10,7 @@ D3Object::D3Object()
 	m_indexCount = 0;
 	m_indices = NULL;
 	m_texture = NULL;
+	m_normalMap = NULL;
 	m_model = NULL;
 	
 	m_material = DEFAULT_MATERIAL;
@@ -495,6 +496,12 @@ void D3Object::ReleaseTexture()
 		m_texture->Shutdown();
 		delete m_texture;
 		m_texture = NULL;
+	}
+	if (m_normalMap != NULL)
+	{
+		m_normalMap->Shutdown();
+		delete m_normalMap;
+		m_normalMap = NULL;
 	}
 	return;
 }

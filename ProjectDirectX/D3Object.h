@@ -19,6 +19,7 @@ private:
 	int m_vertexCount, m_indexCount;
 	int* m_indices;
 	TextureObject* m_texture;
+	TextureObject* m_normalMap;
 	VertexModel* m_model;
 	ObjMaterial m_material;
 	Matrix m_worldMatrix;
