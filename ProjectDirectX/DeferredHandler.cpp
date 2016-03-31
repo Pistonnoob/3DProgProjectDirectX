@@ -42,22 +42,39 @@ void DeferredHandler::Shutdown()
 	this->FreeMemory();
 }
 
-bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * resourceView, PixelMaterial * material)
+bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * texture, ID3D11ShaderResourceView * bumpMap, PixelMaterial * material)
 {
-	bool result = false;
-
-	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, material, resourceView);
-	if (!result)
-	{
-		return false;
-	}
-
-	//Now render the prepared buffers with the shader
-	RenderShader(deviceContext, indexCount);
-
-	return true;
+		bool result = false;
+	
+		//Set the shader parameters that we will use when rendering
+		result = SetShaderParameters(deviceContext, matrices, material, texture, bumpMap);
+		if (!result)
+		{
+			return false;
+		}
+	
+		//Now render the prepared buffers with the shader
+		RenderShader(deviceContext, indexCount);
+	
+		return true;
 }
+
+//bool DeferredHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct* matrices, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* bumpMap, PixelMaterial* material);
+//{
+//	bool result = false;
+//
+//	//Set the shader parameters that we will use when rendering
+//	result = SetShaderParameters(deviceContext, matrices, material, resourceView);
+//	if (!result)
+//	{
+//		return false;
+//	}
+//
+//	//Now render the prepared buffers with the shader
+//	RenderShader(deviceContext, indexCount);
+//
+//	return true;
+//}
 
 bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR* gsFilename, WCHAR * psFilename)
 {
@@ -373,7 +390,7 @@ void DeferredHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND h
 
 }
 
-bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, PixelMaterial* material, ID3D11ShaderResourceView * resourceView)
+bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, PixelMaterial* material, ID3D11ShaderResourceView * texture, ID3D11ShaderResourceView * bumpMap)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -431,7 +448,8 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
 
 	//Set the shader texture resource in the pixel shader.
-	deviceContext->PSSetShaderResources(0, 1, &resourceView);
+	deviceContext->PSSetShaderResources(0, 1, &texture);
+	deviceContext->PSGetShaderResources(1, 1, &bumpMap);
 
 	return true;
 }
