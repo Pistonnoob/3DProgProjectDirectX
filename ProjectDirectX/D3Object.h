@@ -48,7 +48,8 @@ public:
 	bool CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData);
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);
-	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName, TextureFormat fileFormat);
+	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFileName, TextureFormat fileFormat);
+	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, ObjMaterial* material);
 private:
 	void RenderBuffers(ID3D11DeviceContext* deviceContext);
 

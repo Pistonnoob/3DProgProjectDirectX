@@ -100,7 +100,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 					}
 				}
 				//Load the texture for this model
-				newObject->LoadTexture(device, deviceContext, localMaterial.texture, localMaterial.textureFormat);
+				newObject->LoadTexture(device, deviceContext, &localMaterial);
 				newObject->SetMaterial(localMaterial);
 				storeIn.push_back(newObject);
 			}

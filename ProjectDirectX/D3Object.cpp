@@ -303,9 +303,41 @@ bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceCont
 	{
 		return false;
 	}
-
 	//Now initialize the texture object
 	result = m_texture->Initialize(device, deviceContext, fileName, fileFormat);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool D3Object::LoadTexture(ID3D11Device * device, ID3D11DeviceContext * deviceContext, ObjMaterial * material)
+{
+	bool result = false;
+
+	//Create the texture object
+	this->m_texture = new TextureObject();
+	if (this->m_texture == NULL)
+	{
+		return false;
+	}
+	//Now initialize the texture object
+	result = m_texture->Initialize(device, deviceContext, material->texture, material->textureFormat);
+	if (!result)
+	{
+		return false;
+	}
+
+	//Create the normal map object
+	this->m_normalMap = new TextureObject();
+	if (this->m_texture == NULL)
+	{
+		return false;
+	}
+	//Now initialize normal map object
+	result = this->m_normalMap->Initialize(device, deviceContext, material->normalmap, material->normalmapFormat);
 	if (!result)
 	{
 		return false;
