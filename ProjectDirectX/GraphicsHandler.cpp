@@ -366,24 +366,24 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
-	//int modelSize = 0;
-	//for (int index = 0; index < 2; index++)
-	//{
-	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	//	if (!result)
-	//	{
-	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//		return false;
-	//	}
-	//	if (index == 0)
-	//		modelSize = m_Models.size();
-	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-	//	{
-	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
-	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-	//	}
+	int modelSize = 0;
+	for (int index = 0; index < 2; index++)
+	{
+		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+			return false;
+		}
+		if (index == 0)
+			modelSize = m_Models.size();
+		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+		{
+			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
+			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+		}
 
-	//}
+	}
 
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)

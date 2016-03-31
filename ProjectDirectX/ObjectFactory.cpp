@@ -306,6 +306,28 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 					mat.textureFormat = TextureFormat::TARGA;
 				}
 			}
+			else if (line.substr(0, 4) == "bump")
+			{
+				//Normal map
+				string textureType = "";
+				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.normalmap, mat.MATERIAL_NAME_LENGTH);
+				textureType = mat.normalmap;
+				textureType = textureType.substr(textureType.find('.', 0), mat.MATERIAL_NAME_LENGTH);
+				if (textureType.size() > 1)
+					textureType = textureType.substr(1, 20);
+				if (textureType == "jpg")
+				{
+					mat.normalmapFormat = TextureFormat::JPEG;
+				}
+				else if (textureType == "png")
+				{
+					mat.normalmapFormat = TextureFormat::PNG;
+				}
+				else if (textureType == "tga")
+				{
+					mat.normalmapFormat = TextureFormat::TARGA;
+				}
+			}
 			//else if (line.substr(0, 2) == "Ni")
 			//{
 			//	// Ni
