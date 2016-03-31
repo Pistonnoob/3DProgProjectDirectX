@@ -30,6 +30,7 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	float3x3 texToObject = float3x3(input.Tangent, biTangent, input.Normal.xyz);
 	//Convert the normal map values from tangent to object space
 	output.Normal = float4(normalize(mul(normalMap, texToObject)), 0.0f);
+	//output.Normal = normalMap;
 	//Store the position
 	output.Position = input.WorldPos;
 	//Store the diffuse material
@@ -37,6 +38,6 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	//output.Diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	//Store the specular material
 	output.Specular = float4(specularColor.r, specularColor.g, specularColor.b, Ns);
-	//output.Specular = float4(0.5f, 0.5f, 0.5f, 60.0f);
+	output.Specular = float4(0.5f, 0.5f, 0.5f, 60.0f);
 	return output;
 }

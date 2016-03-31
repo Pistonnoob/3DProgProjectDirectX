@@ -43,16 +43,17 @@ void main(
 		PS_IN_DEF element = (PS_IN_DEF)0;
 		element.Pos = input[i].Pos;
 		element.UV = input[i].UV;
+		element.Normal = normalize(input[i].Normal);
+		//element.Normal = normalize(float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0));
+		element.Normal = mul(element.Normal, worldMatrix);
+		element.Normal = normalize(element.Normal);
 		element.Pos = mul(element.Pos, worldMatrix);
 		element.WorldPos = element.Pos;
 		element.Pos = mul(element.Pos, viewMatrix);
 		float4 toCamera = normalize(-element.Pos);
 		element.Pos = mul(element.Pos, projectionMatrix);
 		element.Tangent = float3(0.0f, 0.0f, 0.0f);
-		element.Normal = normalize(input[i].Normal);
-		//element.Normal = float4(cross(input[1].Pos - input[0].Pos, input[2].Pos - input[0].Pos), 0);
-		element.Normal = mul(element.Normal, worldMatrix);
-		element.Normal = normalize(element.Normal);
+
 		float4 viewNormal = normalize(mul(element.Normal, viewMatrix));
 		if (dot(viewNormal, toCamera) > -0.0f)
 		{
@@ -64,17 +65,28 @@ void main(
 	if (facingCamera)
 	{
 		//Do normal mapping here
-		float3 edge1 = elements[0].WorldPos - elements[1].WorldPos, edge2 = elements[0].WorldPos - elements[2].WorldPos;
-		/*edge1.w = edge2.w = 0.0f;*/
-		float uEdge1 = elements[0].UV.x - elements[1].UV.x, vEdge1 = elements[0].UV.y - elements[1].UV.y;
-		float uEdge2 = elements[0].UV.x - elements[2].UV.x, vEdge2 = elements[0].UV.y - elements[2].UV.y;
+		///*edge1.w = edge2.w = 0.0f;*/
+		//float uEdge1 = elements[0].UV.x - elements[1].UV.x, vEdge1 = elements[0].UV.y - elements[1].UV.y;
+		//float uEdge2 = elements[0].UV.x - elements[2].UV.x, vEdge2 = elements[0].UV.y - elements[2].UV.y;
+		/*float3 edge1 = input[0].Pos - input[1].Pos, edge2 = input[0].Pos - input[2].Pos;*/
+		float3 edge1 = input[1].Pos.xyz - input[0].Pos.xyz, edge2 = input[2].Pos.xyz - input[0].Pos.xyz;
+		float uEdge1 = elements[1].UV.x - elements[0].UV.x, vEdge1 = elements[1].UV.y - elements[0].UV.x;
+		float uEdge2 = elements[2].UV.x - elements[0].UV.x, vEdge2 = elements[2].UV.y - elements[0].UV.x;
+		float2 texEdge0 = elements[1].UV - elements[0].UV, texEdge1 = elements[2].UV - elements[0].UV;
 		float3 tempTangent = (vEdge1 * edge1 - vEdge2 * edge2) * (1.0f / (uEdge1 * vEdge2 - uEdge2 * vEdge1));
+		float3 tTangent;
+		tTangent.x = (texEdge0.y * edge1.x - texEdge1.y * edge2.x) * (1.0f / (texEdge0.x * texEdge1.y - texEdge1.x * texEdge0.y));
+		tTangent.y = (texEdge0.y * edge1.y - texEdge1.y * edge2.y) * (1.0f / (texEdge0.x * texEdge1.y - texEdge1.x * texEdge0.y));
+		tTangent.z = (texEdge0.y * edge1.z - texEdge1.y * edge2.z) * (1.0f / (texEdge0.x * texEdge1.y - texEdge1.x * texEdge0.y));
+		tTangent = normalize(tTangent);
+		//tempTangent = mul(tempTangent, worldMatrix);
 		//tempTangent = tempTangent / 3;
+		tempTangent = normalize(tempTangent);
 		for (uint j = 0; j < 3; j++)
 		{
-			elements[j].Tangent.x = tempTangent.x;
-			elements[j].Tangent.y = tempTangent.y;
-			elements[j].Tangent.z = tempTangent.z;
+			elements[j].Tangent.x = tTangent.x;
+			elements[j].Tangent.y = tTangent.y;
+			elements[j].Tangent.z = tTangent.z;
 			outputStream.Append(elements[j]);
 		}
 	}

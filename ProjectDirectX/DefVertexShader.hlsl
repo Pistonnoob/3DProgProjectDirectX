@@ -15,7 +15,6 @@ GS_IN_DEF main(VS_IN_DEF input)
 	output.Pos.w = 1.0f;
 	
 	output.UV = input.UV;
-	output.WorldPos = output.Pos;
 	/*output.Pos = mul(output.Pos, worldMatrix);
 	
 	output.Pos = mul(output.Pos, viewMatrix);
