@@ -339,6 +339,7 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 		resultRotation += startRot;
 		m_Camera->SetRotation(resultRotation);
 	}
+
 #pragma endregion mouse
 	return true;
 }
@@ -355,7 +356,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
 	m_Camera->Render();
 	m_Camera->GenerateBaseViewMatrix();
 
@@ -365,30 +366,42 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
-	int modelSize = 0;
-	for (int index = 0; index < 2; index++)
-	{
-		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-			return false;
-		}
-		if (index == 0)
-			modelSize = m_Models.size();
-		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-		{
-			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
-			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-		}
+	//int modelSize = 0;
+	//for (int index = 0; index < 2; index++)
+	//{
+	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	//	if (!result)
+	//	{
+	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//		return false;
+	//	}
+	//	if (index == 0)
+	//		modelSize = m_Models.size();
+	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+	//	{
+	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
+	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+	//	}
 
-	}
+	//}
 
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
+	}
+	int modelIndex = m_Models.size();
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+	int modelDist = m_Models.size() - modelIndex;
+	for (int i = modelIndex; i < m_Models.size(); i++)
+	{
+		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 2.0f, 0.0f)));
 	}
 
 
@@ -524,6 +537,113 @@ bool GraphicsHandler::RenderToDeferred()
 	//Reset the viewport
 	m_Direct3D->ResetViewport();
 	return true;
+}
+
+void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
+{
+	Matrix P, V, W;
+	m_Direct3D->GetProjectionMatrix(P);
+	m_Camera->GetViewMatrix(V);
+	V = V.Invert();
+	float vx = 0, vy = 0, viewspaceZ = 1;
+	vx = ((2 * x) / float(screenWidth) - 1) /*/ P(0, 0)*/;
+	vx /= P(0, 0);
+	vy = (-(2 * y) / float(screenHeight) + 1) /*/ P(1, 1)*/;
+	vy /= P(1, 1);
+	viewspaceZ = 1;
+	Vector3 rayO(0.0f, 0.0f, 0.0f);
+	Vector3 rayD(vx, vy, 1.0f);
+	rayO = DirectX::XMVector3TransformCoord(rayO, V);
+	rayD = DirectX::XMVector3TransformNormal(rayD, V);
+
+	Vector3 dirfrac = Vector3(1.0f, 1.0f, 1.0f) / rayD;
+	//Now we have our ray origin and direction.
+	vector<Container*> possible;
+	this->m_quadTree->GetObjectsInFrustrum(&possible, m_frustrum);
+	for (std::vector<Container*>::const_iterator testBound = possible.begin(); testBound != possible.end(); testBound++)
+	{
+		float t = 0.0f;
+		bool intersectionBox = true, intersectionModel = false;
+		float distToModel = 0.0f;
+		//For every model, check ray intersection against OBB
+		//Get the Boundingbox
+		BoundingVolume testVolume = (*testBound)->boundingVolume;
+		//Extract the min and max
+		Vector3 min = testVolume.middle - testVolume.sideDelta;
+		Vector3 max = testVolume.middle + testVolume.sideDelta;
+		float t1 = (min.x - rayO.x) * dirfrac.x, t2 = (max.x - rayO.x) * dirfrac.x;
+		float t3 = (min.y - rayO.y) * dirfrac.y, t4 = (max.y - rayO.y) * dirfrac.y;
+		float t5 = (min.z - rayO.z) * dirfrac.z, t6 = (max.z - rayO.z) * dirfrac.z;
+		float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
+		float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
+
+		if (tmax < 0)
+		{
+			t = tmax;
+			intersectionBox = false;
+		}
+		if (tmin > tmax)
+		{
+			t = tmax;
+			intersectionBox = false;
+		}
+
+		//If there was a successfull intersection
+		if (intersectionBox)
+		{
+			D3Object* object = (*testBound)->object;
+			VertexModel* points = object->getVertedData();
+			//Test intersection against contained model
+			//Get the world matrice
+			object->GetWorldMatrix(W);
+			W = W.Invert();
+			//Apply it on our ray
+			rayO = DirectX::XMVector3TransformCoord(rayO, W);
+			rayD = DirectX::XMVector3TransformNormal(rayD, W);
+			//Get the vertices
+			for (int i = 0; i < object->GetVertexCount() && !intersectionModel; i += 3)
+			{
+				//Test intersection against vertices
+				float det = 0.0f, invDet = 0.0f;
+				float dist = -1, u = 0.0f, v = 0.0f;
+				//get the two edges
+				Vector3 edge1 = points[i + 1].position - points[i].position,
+						edge2 = points[i + 2].position - points[i].position;
+				Vector3 pVec = rayD.Cross(edge2);
+				Vector3 qVec(0.0f, 0.0f, 0.0f);
+				det = edge1.Dot(pVec);
+				if (det < -0.000000001f || det > 0.000000001f)
+				{
+					invDet = 1.0f / det;
+					Vector3 tVec = rayO - points[i].position;
+					u = tVec.Dot(pVec) * invDet;
+					if (u >= 0.0f && u <= 1)
+					{
+						qVec = tVec.Cross(edge1);
+						v = rayD.Dot(qVec);
+						v *= invDet;
+						if (v >= 0.0f && u + v <= 1.0f)
+						{
+							dist = edge2.Dot(qVec) * invDet;
+						}
+					}
+				}
+				if (dist >= 0.0f)
+				{
+					intersectionModel = true;
+					distToModel = dist;
+				}
+			}
+			if (intersectionModel)
+			{
+				bool success = true;
+				ObjMaterial material = object->GetMaterial();
+				material.Ns = 1.0f;
+				object->SetMaterial(material);
+			}
+		}
+	}
+
 }
 
 

@@ -141,6 +141,16 @@ std::vector<VertexModel> D3Object::getVertexData()
 	return points;
 }
 
+int D3Object::GetVertexCount()
+{
+	return m_vertexCount;
+}
+
+VertexModel * D3Object::getVertedData()
+{
+	return m_model;
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
 {
 	this->m_vertexCount = (int)vertexData.size();

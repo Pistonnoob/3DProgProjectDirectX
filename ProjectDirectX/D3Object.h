@@ -34,6 +34,9 @@ public:
 	ObjMaterial GetMaterial()const;
 	ID3D11ShaderResourceView* GetTexture();
 	void GetWorldMatrix(Matrix& worldMatrix);
+	std::vector<VertexModel> getVertexData();
+	int GetVertexCount();
+	VertexModel* getVertedData();
 #pragma endregion getters
 
 	bool SetMaterial(ObjMaterial material);
@@ -41,7 +44,6 @@ public:
 	void ApplyMatrix(const Matrix applyToWorld);
 	void SetIndices(vector<int> indices);
 
-	std::vector<VertexModel> getVertexData();
 	bool CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData);
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);

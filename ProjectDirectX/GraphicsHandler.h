@@ -70,9 +70,7 @@ private:	//Variables
 	DeferredHandler* m_DeferredShader;
 	//The post processing done with the data from DefferedBuffers
 	LightShader* m_LightShader;
-
-
-
+	
 	//A rotation value used for debugging
 	float rotation;
 public:
@@ -85,6 +83,8 @@ public:
 	bool Frame(int fps, float frameTime, InputHandler* inputObj);
 	bool Render();
 	bool RenderToDeferred();
+
+	void Click(int x, int y, int screenWidth, int screenHeight);
 
 private:	//Functions
 	bool UpdateInput(InputHandler* inputObj, float dT);
