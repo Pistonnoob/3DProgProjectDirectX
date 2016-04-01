@@ -91,15 +91,15 @@ int D3Object::GetIndexCount()const
 	return this->m_indexCount;
 }
 
-<<<<<<< HEAD
+
 int D3Object::GetVertexCount() const
 {
 	return this->m_vertexCount;
-=======
+}
 ObjMaterial D3Object::GetMaterial() const
 {
 	return this->m_material;
->>>>>>> refs/remotes/origin/develop
+
 }
 
 ID3D11ShaderResourceView * D3Object::GetTexture()
@@ -112,7 +112,7 @@ void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 	worldMatrix = this->m_worldMatrix;
 }
 
-<<<<<<< HEAD
+
 #pragma region
 void D3Object::SetIndexCount(int nr )
 {
@@ -145,14 +145,13 @@ void D3Object::SetVertexModel(VertexModel * model)
 {
 	this->m_model = model;
 }
-=======
+
 bool D3Object::SetMaterial(ObjMaterial material)
 {
 	this->m_material = material;
 	return true;
 }
 
->>>>>>> refs/remotes/origin/develop
 void D3Object::SetWorldMatrix(const Matrix worldMatrix)
 {
 	this->m_worldMatrix = worldMatrix;
@@ -165,6 +164,14 @@ void D3Object::ApplyMatrix(const Matrix applyToWorld)
 	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
 }
 
+void D3Object::SetIndices()
+{
+	this->m_indices = new int[this->GetIndexCount()];
+	for (int i = 0; i < this->GetIndexCount(); i++)
+	{
+		this->m_indices[i] = i;
+	}
+}
 void D3Object::SetIndices(vector<int> indices)
 {
 	this->m_indices = new int[indices.size()];

@@ -31,18 +31,14 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);	//Move model geometry to device context / Graphicscard
 #pragma region
 	int GetIndexCount()const;
-<<<<<<< HEAD
 	int GetVertexCount()const;
-=======
 	ObjMaterial GetMaterial()const;
->>>>>>> refs/remotes/origin/develop
 	ID3D11ShaderResourceView* GetTexture();
 	void GetWorldMatrix(Matrix& worldMatrix);
 	std::vector<VertexModel> getVertexData();
 	int GetVertexCount();
 	VertexModel* getVertedData();
 #pragma endregion getters
-<<<<<<< HEAD
 #pragma region
 	void SetIndexCount(int);
 	void SetVertexCount(int);
@@ -50,10 +46,8 @@ public:
 	void SetVertexBuffer(ID3D11Buffer*);
 	void SetIndexBuffer(ID3D11Buffer*);
 	void SetVertexModel(VertexModel*);
-=======
 
 	bool SetMaterial(ObjMaterial material);
->>>>>>> refs/remotes/origin/develop
 	void SetWorldMatrix(const Matrix worldMatrix);
 #pragma endregion setters
 	void ApplyMatrix(const Matrix applyToWorld);

@@ -192,9 +192,33 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	return true;
 }
 
-bool ObjectFactory::CreateFromHeightMap(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName, vector<D3Object*>& storeIn, int invert)
+bool ObjectFactory::CreateFromHeightMap(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * fileName, vector<D3Object*>& storeIn)
 {
-	return false;
+	const unsigned int NAMELENGTH = 30;
+	ObjMaterial missingMaterial = DEFAULT_MATERIAL;
+	vector<ObjMaterial> materials;
+	char objectMaterial[NAMELENGTH];
+	HeightMap* newObject = new HeightMap();
+	//Load the model data
+	newObject->CreateFlatMesh();
+	//Initialize vertex and index buffers.
+	newObject->InitializeBuffers(device);
+	//Get the material name
+	string textureName = "";
+	//Initialize the material as "missing material"
+	ObjMaterial localMaterial = missingMaterial;
+	for (vector<ObjMaterial>::iterator mat = materials.begin(); mat != materials.end(); mat++)
+	{
+		if (strcmp((*mat).name, objectMaterial) == 0)
+		{
+			localMaterial = (*mat);
+		}
+	}
+	//Load the texture for this model
+	newObject->LoadTexture(device, deviceContext, localMaterial.texture, localMaterial.textureFormat);
+	newObject->SetMaterial(localMaterial);
+	storeIn.push_back(newObject);
+	return true;
 }
 
 
