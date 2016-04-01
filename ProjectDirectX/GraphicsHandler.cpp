@@ -384,14 +384,22 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	//	}
 
 	//}
-
-	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromHeightMap(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "heightmap01.bmp", this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
-	}*/
-	/*int modelIndex = m_Models.size();
+	}
+	
+	/*
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+	*/
+	int modelIndex = m_Models.size();
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
@@ -403,13 +411,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	{
 		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 2.0f, 0.0f)));
 	}
-*/
-	result = factory.CreateFromHeightMap(m_Direct3D->GetDevice(),m_Direct3D->GetDeviceContext(),"heightmap01.bmp", this->m_Models);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{

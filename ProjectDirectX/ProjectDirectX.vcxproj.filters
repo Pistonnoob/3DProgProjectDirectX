@@ -1,236 +1,210 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{3ed5f24e-5321-4789-81b2-a12ae381203d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries">
-      <UniqueIdentifier>{8b149845-0802-4c4e-8e82-0f410e3e36da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\Imported">
-      <UniqueIdentifier>{a9db1cfe-d101-4bd5-b01e-b575b35eb3fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Deferred">
-      <UniqueIdentifier>{54033ae8-0aaa-4d78-a666-676668b2144b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Deferred\Lighting">
-      <UniqueIdentifier>{5d6c5a2d-2343-44ae-9912-b900601eb4a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Deferred\G-Buffers">
-      <UniqueIdentifier>{8cc62dd2-76ac-4bc9-80ea-71f87b24e8c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Model Types">
-      <UniqueIdentifier>{7e9c2336-b0a2-4e0f-980a-2249517b0b22}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D3DClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D3Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D2Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FPSHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ScreenGrab.cpp">
-      <Filter>Libraries\Imported</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Libraries\Imported</Filter>
-    </ClCompile>
-    <ClCompile Include="WICTextureLoader.cpp">
-      <Filter>Libraries\Imported</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="HeightMap.cpp">
-=======
-    <ClCompile Include="DeferredBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LightShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QuadModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Frustrum.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QuadTree.cpp">
->>>>>>> refs/remotes/origin/develop
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StructLibrary.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WICTextureLoader.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
-    <ClInclude Include="ScreenGrab.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformHelpers.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXHelpers.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
-    <ClInclude Include="dds.h">
-      <Filter>Libraries\Imported</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="HeightMap.h">
-=======
-    <ClInclude Include="DeferredBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DeferredHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D2Object.h">
-      <Filter>Header Files\Model Types</Filter>
-    </ClInclude>
-    <ClInclude Include="D3Object.h">
-      <Filter>Header Files\Model Types</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadModel.h">
-      <Filter>Header Files\Model Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Frustrum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadTree.h">
->>>>>>> refs/remotes/origin/develop
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="GeometryShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="DefVertexShader.hlsl">
-      <Filter>Shaders\Deferred\G-Buffers</Filter>
+      <Filter>Others</Filter>
     </FxCompile>
     <FxCompile Include="DefGeometryShader.hlsl">
-      <Filter>Shaders\Deferred\G-Buffers</Filter>
+      <Filter>Others</Filter>
     </FxCompile>
     <FxCompile Include="DefPixelShader.hlsl">
-      <Filter>Shaders\Deferred\G-Buffers</Filter>
+      <Filter>Others</Filter>
     </FxCompile>
-    <FxCompile Include="LightVertexShader.hlsl">
-      <Filter>Shaders\Deferred\Lighting</Filter>
+    <FxCompile Include="DefVertexShader.hlsl">
+      <Filter>Others</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryShader.hlsl">
+      <Filter>Others</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
-      <Filter>Shaders\Deferred\Lighting</Filter>
+      <Filter>Others</Filter>
     </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>Others</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Others</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DeferredHandler.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="D2Object.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DClass.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="D3Object.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredBuffer.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSHandler.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustrum.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsHandler.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMap.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactory.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadModel.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenGrab.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureObject.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureHandler.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader.cpp">
+      <Filter>Definitions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D2Object.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DClass.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D3Object.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dds.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredBuffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXHelpers.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustrum.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMap.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformHelpers.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadModel.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenGrab.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="StructLibrary.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureHandler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureObject.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Others</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderLibrary.hlsli">
-      <Filter>Libraries</Filter>
+      <Filter>Others</Filter>
     </None>
     <None Include="SimpleMath.inl">
-      <Filter>Libraries\Imported</Filter>
+      <Filter>Others</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{0e59e066-ee84-483d-98d1-6e22625f4908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{f870ffcb-2041-4a5e-8071-49ef72b038cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Others">
+      <UniqueIdentifier>{15bf02ee-994a-48ba-b525-8e6f4c7d6784}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
     <ResourceCompile Include="ProjectDirectX.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>Others</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -133,7 +133,7 @@ void HeightMap::ShutDownHM()
 bool HeightMap::InitializeBuffersHeightMap(ID3D11Device *device)
 {
 	
-	Vertex* vertices = NULL;
+	VertexModel* vertices = NULL;
 	unsigned long* indices = NULL;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
@@ -146,7 +146,7 @@ bool HeightMap::InitializeBuffersHeightMap(ID3D11Device *device)
 	this->SetIndexCount(Count);
 
 	// Create the vertex array.
-	vertices = new Vertex[m_vertexCount];
+	vertices = new VertexModel[m_vertexCount];
 	if (!vertices)
 	{
 		return false;
@@ -171,82 +171,97 @@ bool HeightMap::InitializeBuffersHeightMap(ID3D11Device *device)
 			index3 = (m_terrainHeight * (j + 1)) + i;      // Upper left.
 			index4 = (m_terrainHeight * (j + 1)) + (i + 1);  // Upper right.
 
-															 // Upper left.
+			// Upper left.
 			vertices[index].position = m_heightMap[index3].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(0.0f,0.0f);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
 			vertices[index].position = m_heightMap[index4].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(0.0f, 1.0f);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
 			vertices[index].position = m_heightMap[index4].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(0.0f, 1.0f);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = m_heightMap[index1].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(1.0f, 0.0f);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = m_heightMap[index1].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(1.0f, 0.0f);
 			indices[index] = index;
 			index++;
 
 			// Upper left.
 			vertices[index].position = m_heightMap[index3].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(0.0f, 0.0f);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = m_heightMap[index1].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(1.0f, .0f);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
 			vertices[index].position = m_heightMap[index4].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(0.0f, 1.0f);
 			indices[index] = index;
 			index++;
 
 			// Upper right.
 			vertices[index].position = m_heightMap[index4].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(0.0f, 1.0f);
 			indices[index] = index;
 			index++;
 
 			// Bottom right.
 			vertices[index].position = m_heightMap[index2].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(1.0f, 1.0f);
 			indices[index] = index;
 			index++;
 
 			// Bottom right.
 			vertices[index].position = m_heightMap[index2].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(1.0f, 1.0f);
 			indices[index] = index;
 			index++;
 
 			// Bottom left.
 			vertices[index].position = m_heightMap[index1].position;
-			vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+			vertices[index].normal = Vector3(0.0f, 1.0f, 0.0f);
+			vertices[index].UV = Vector2(1.0f, 0.0f);
+			/*vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);*/
 			indices[index] = index;
+
 			index++;
 		}
 	}
+	m_model = vertices;
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexModel) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
