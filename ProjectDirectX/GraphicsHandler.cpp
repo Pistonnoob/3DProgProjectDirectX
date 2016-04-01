@@ -366,24 +366,35 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Lights.push_back(Light2);
 	// Create the model objects.
 	ObjectFactory factory;
-	//int modelSize = 0;
-	//for (int index = 0; index < 2; index++)
-	//{
-	//	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	//	if (!result)
-	//	{
-	//		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//		return false;
-	//	}
-	//	if (index == 0)
-	//		modelSize = m_Models.size();
-	//	for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
-	//	{
-	//		m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
-	//		//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
-	//	}
 
-	//}
+	int modelSize = 0;
+	for (int index = 0; index < 2; index++)
+	{
+		result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Ogre.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+			return false;
+		}
+		if (index == 0)
+			modelSize = m_Models.size();
+		for (int modelIndex = index * modelSize; modelIndex < index * modelSize + modelSize; modelIndex++)
+		{
+			m_Models[modelIndex]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 0.0f, -20.0f)*(float)index));
+			//m_Models[index]->ApplyMatrix(XMMatrixScaling(1, 1, -1));
+		}
+
+	}
+	/*int index = m_Models.size();
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "Brick_Cube.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_Models[m_Models.size() - 1]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 5.0f, -5.0f)));
+	*/
 
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
@@ -391,7 +402,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	/*int modelIndex = m_Models.size();
+	int modelIndex = m_Models.size();
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
@@ -401,8 +412,8 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	int modelDist = m_Models.size() - modelIndex;
 	for (int i = modelIndex; i < m_Models.size(); i++)
 	{
-		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 2.0f, 0.0f)));
-	}*/
+		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 5.0f, -5.0f)));
+	}
 
 
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
@@ -478,7 +489,7 @@ bool GraphicsHandler::Render()
 		LightStructTemp tempLight = {Vector3((*light)->lightPos.x, (*light)->lightPos.y, (*light)->lightPos.z), 1.0f, Vector3((*light)->diffuseColor.x, (*light)->diffuseColor.y, (*light)->diffuseColor.z), 0.0f, cameraPos};
 		//Do the light shading post processing on our quad
 		//this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceViews(), &tempLight);
-		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), m_DeferredBuffers->GetShaderResourceView(3), m_DeferredBuffers->GetShaderResourceView(4), &tempLight);
+ 		result = this->m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_FullScreenObject->GetIndexCount(), &matrices, m_DeferredBuffers->GetShaderResourceView(0), m_DeferredBuffers->GetShaderResourceView(1), m_DeferredBuffers->GetShaderResourceView(2), m_DeferredBuffers->GetShaderResourceView(3), m_DeferredBuffers->GetShaderResourceView(4), &tempLight);
 		if (!result)
 		{
 			return false;
@@ -638,7 +649,7 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 			{
 				bool success = true;
 				ObjMaterial material = object->GetMaterial();
-				material.Ns = 1.0f;
+				material.Kd = Vector3(0.3f, 0.3f, 0.3f);
 				object->SetMaterial(material);
 			}
 		}
