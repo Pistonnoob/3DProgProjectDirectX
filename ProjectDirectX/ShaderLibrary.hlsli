@@ -69,6 +69,7 @@ struct GS_IN_DEF
 {
 	float4 Pos : SV_POSITION;
 	float4 WorldPos : POSITION;
+	float4 ToCamera : POSITION1;
 	float4 Normal : NORMAL;
 	float3 Tangent : TANGENT;
 	float3 Binormal : BINORMAL;

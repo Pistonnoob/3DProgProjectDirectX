@@ -14,19 +14,61 @@ void main(
 	)
 {
 	bool facingCamera = false;
-	for (uint i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		PS_IN_DEF element = (PS_IN_DEF)0;
-		element.Pos = input[i].Pos;
-		element.WorldPos = input[i].WorldPos;
-		element.Normal = input[i].Normal;
-		element.Tangent = input[i].Tangent;
-		element.Binormal = input[i].Binormal;
-		element.UV = input[i].UV;
-		outputStream.Append(element);
+		float angle = dot(input[i].ToCamera, input[i].Normal);
+		if (angle >= 0.0f)
+			facingCamera = true;
+	}
+	if (facingCamera)
+	{
+		float3 edge1 = normalize(input[1].WorldPos - input[0].WorldPos);
+		float3 edge2 = normalize(input[2].WorldPos - input[0].WorldPos);
+
+		float2 texEdge1 = normalize(input[1].UV - input[0].UV);
+		float2 texEdge2 = normalize(input[2].UV - input[0].UV);
+
+		float det = (texEdge1.x * texEdge2.y) - (texEdge1.y * texEdge2.x);
+
+		float3 tangent = float3(0.0f, 0.0f, 0.0f);
+		tangent = (texEdge2.y * edge1 - texEdge1.y * edge2) * det;
+		tangent = normalize(tangent);
+
+		for (uint i = 0; i < 3; i++)
+		{
+			PS_IN_DEF element = (PS_IN_DEF)0;
+			element.Pos = input[i].Pos;
+			element.WorldPos = input[i].WorldPos;
+			element.Normal = input[i].Normal;
+			element.Tangent = tangent;
+			element.Binormal = input[i].Binormal;
+			element.UV = input[i].UV;
+			outputStream.Append(element);
+		}
 	}
 	outputStream.RestartStrip();
 }
+
+//[maxvertexcount(3)]
+//void main(
+//	triangle GS_IN_DEF input[3] : SV_POSITION,
+//	inout TriangleStream< PS_IN_DEF > outputStream
+//	)
+//{
+//	bool facingCamera = false;
+//	for (uint i = 0; i < 3; i++)
+//	{
+//		PS_IN_DEF element = (PS_IN_DEF)0;
+//		element.Pos = input[i].Pos;
+//		element.WorldPos = input[i].WorldPos;
+//		element.Normal = input[i].Normal;
+//		element.Tangent = input[i].Tangent;
+//		element.Binormal = input[i].Binormal;
+//		element.UV = input[i].UV;
+//		outputStream.Append(element);
+//	}
+//	outputStream.RestartStrip();
+//}
 //[maxvertexcount(3)]
 //void main(
 //	triangle GS_IN_DEF input[3] : SV_POSITION,
