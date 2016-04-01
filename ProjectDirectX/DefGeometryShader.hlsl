@@ -20,6 +20,7 @@ void main(
 		if (angle >= 0.0f)
 			facingCamera = true;
 	}
+	facingCamera = true;
 	if (facingCamera)
 	{
 		float3 edge1 = normalize(input[1].WorldPos - input[0].WorldPos);

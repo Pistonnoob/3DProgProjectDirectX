@@ -181,7 +181,7 @@ void D3Object::CalculateModelVectors()
 		//vertex1.nx = m_model[index].normal.x;
 		//vertex1.ny = m_model[index].normal.y;
 		//vertex1.nz = m_model[index].normal.z;
-		//index++;
+		index++;
 
 		//vertex2.x = m_model[index].position.x;
 		//vertex2.y = m_model[index].position.y;
@@ -191,7 +191,7 @@ void D3Object::CalculateModelVectors()
 		//vertex2.nx = m_model[index].normal.x;
 		//vertex2.ny = m_model[index].normal.y;
 		//vertex2.nz = m_model[index].normal.z;
-		//index++;
+		index++;
 
 		//vertex3.x = m_model[index].position.x;
 		//vertex3.y = m_model[index].position.y;
@@ -201,7 +201,7 @@ void D3Object::CalculateModelVectors()
 		//vertex3.nx = m_model[index].normal.x;
 		//vertex3.ny = m_model[index].normal.y;
 		//vertex3.nz = m_model[index].normal.z;
-		//index++;
+		index++;
 
 		//// Calculate the tangent and binormal of that face.
 		//CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
