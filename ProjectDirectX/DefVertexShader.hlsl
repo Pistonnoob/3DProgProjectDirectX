@@ -24,12 +24,6 @@ GS_IN_DEF main(VS_IN_DEF input)
 	output.Normal = mul(output.Normal, worldMatrix);
 	output.Normal = normalize(output.Normal);
 
-	output.Tangent = mul(input.Tangent, (float3x3)worldMatrix);
-	output.Tangent = normalize(output.Tangent);
-
-	output.Binormal = mul(input.binormal, (float3x3)worldMatrix);
-	output.Binormal = normalize(output.Binormal);
-
 	return output;
 }
 

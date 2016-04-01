@@ -41,7 +41,6 @@ void main(
 			element.WorldPos = input[i].WorldPos;
 			element.Normal = input[i].Normal;
 			element.Tangent = tangent;
-			element.Binormal = input[i].Binormal;
 			element.UV = input[i].UV;
 			outputStream.Append(element);
 		}

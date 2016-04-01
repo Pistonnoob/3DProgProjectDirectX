@@ -22,8 +22,6 @@ struct VS_IN_DEF
 	float4 Pos : POSITION;
 	float2 UV : TEXCOORD;
 	float3 Normal : NORMAL;
-	float3 Tangent : TANGENT;
-	float3 binormal : BINORMAL;
 };
 
 //struct VS_IN_DEF
@@ -70,8 +68,6 @@ struct GS_IN_DEF
 	float4 Pos : SV_POSITION;
 	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
-	float3 Tangent : TANGENT;
-	float3 Binormal : BINORMAL;
 	float2 UV : TEXCOORD;
 };
 
@@ -101,7 +97,6 @@ struct PS_IN_DEF
 	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
 	float3 Tangent : TANGENT;
-	float3 Binormal : BINORMAL;
 	float2 UV : TEXCOORD;
 };
 

@@ -35,7 +35,7 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	output.Position = input.WorldPos;
 	//Store the diffuse material
 	output.Diffuse = diffuseColor;
-	//output.Diffuse = float4(0.3f, 0.3f, 0.3f, 1.0f);
+	output.Diffuse = float4(0.4f, 0.4f, 0.4f, 1.0f);
 	//Store the specular material
 	output.Specular = float4(specularColor.r, specularColor.g, specularColor.b, Ns);
 	//output.Specular = float4(0.5f, 0.5f, 0.5f, 60.0f);

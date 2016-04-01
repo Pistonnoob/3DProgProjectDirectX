@@ -12,13 +12,6 @@
 #include <sstream>
 using namespace std;
 
-struct TempVertexType
-{
-	float x, y, z;
-	float tu, tv;
-	float nx, ny, nz;
-};
-
 class D3Object
 {
 private:
@@ -70,9 +63,6 @@ private:
 	void ShutdownBuffers();
 	void ReleaseTexture();
 	void ReleaseModel();
-
-	void CalculateTangentBinormal(TempVertexType& vertex1, TempVertexType& vertex2, TempVertexType& vertex3, Vector3& tangent, Vector3& binormal);
-	void CalculateNormal(Vector3& tangent, Vector3& binormal, Vector3& normal);
 };
 
 #endif
