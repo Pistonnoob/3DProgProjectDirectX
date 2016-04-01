@@ -13,11 +13,6 @@ public:
 	void NormalizeHeightMap();
 	void ShutDownHM();
 	bool InitializeBuffersHeightMap(ID3D11Device *device);
-					
-	/*bool CreateFlatMesh();
-	bool DisplaceVertices();*/
-
-
 };
 
 #endif

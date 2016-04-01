@@ -404,7 +404,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 2.0f, 0.0f)));
 	}
 */
-	result = factory.CreateFromHeightMap(m_Direct3D->GetDevice(),m_Direct3D->GetDeviceContext(),"GrassPlane.obj", this->m_Models);
+	result = factory.CreateFromHeightMap(m_Direct3D->GetDevice(),m_Direct3D->GetDeviceContext(),"heightmap01.bmp", this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
