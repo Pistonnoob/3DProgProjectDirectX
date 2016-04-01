@@ -161,8 +161,7 @@ void D3Object::CalculateModelVectors()
 {
 	int faceCount, i, index;
 	TempVertexType vertex1, vertex2, vertex3;
-	Vector3 tangent, binormal, normal;
-	
+	Vector3 tangent(0.0f, 0.0f, 0.0f), binormal(0.0f, 0.0f, 0.0f), normal;
 
 	// Calculate the number of faces in the model.
 	faceCount = m_vertexCount / 3;
@@ -173,53 +172,53 @@ void D3Object::CalculateModelVectors()
 	// Go through all the faces and calculate the the tangent, binormal, and normal vectors.
 	for (i = 0; i<faceCount; i++)
 	{
-		// Get the three vertices for this face from the model.
-		vertex1.x = m_model[index].position.x;
-		vertex1.y = m_model[index].position.y;
-		vertex1.z = m_model[index].position.z;
-		vertex1.tu = m_model[index].UV.x;
-		vertex1.tv = m_model[index].UV.y;
-		vertex1.nx = m_model[index].normal.x;
-		vertex1.ny = m_model[index].normal.y;
-		vertex1.nz = m_model[index].normal.z;
-		index++;
+		//// Get the three vertices for this face from the model.
+		//vertex1.x = m_model[index].position.x;
+		//vertex1.y = m_model[index].position.y;
+		//vertex1.z = m_model[index].position.z;
+		//vertex1.tu = m_model[index].UV.x;
+		//vertex1.tv = m_model[index].UV.y;
+		//vertex1.nx = m_model[index].normal.x;
+		//vertex1.ny = m_model[index].normal.y;
+		//vertex1.nz = m_model[index].normal.z;
+		//index++;
 
-		vertex2.x = m_model[index].position.x;
-		vertex2.y = m_model[index].position.y;
-		vertex2.z = m_model[index].position.z;
-		vertex2.tu = m_model[index].UV.x;
-		vertex2.tv = m_model[index].UV.y;
-		vertex2.nx = m_model[index].normal.x;
-		vertex2.ny = m_model[index].normal.y;
-		vertex2.nz = m_model[index].normal.z;
-		index++;
+		//vertex2.x = m_model[index].position.x;
+		//vertex2.y = m_model[index].position.y;
+		//vertex2.z = m_model[index].position.z;
+		//vertex2.tu = m_model[index].UV.x;
+		//vertex2.tv = m_model[index].UV.y;
+		//vertex2.nx = m_model[index].normal.x;
+		//vertex2.ny = m_model[index].normal.y;
+		//vertex2.nz = m_model[index].normal.z;
+		//index++;
 
-		vertex3.x = m_model[index].position.x;
-		vertex3.y = m_model[index].position.y;
-		vertex3.z = m_model[index].position.z;
-		vertex3.tu = m_model[index].UV.x;
-		vertex3.tv = m_model[index].UV.y;
-		vertex3.nx = m_model[index].normal.x;
-		vertex3.ny = m_model[index].normal.y;
-		vertex3.nz = m_model[index].normal.z;
-		index++;
+		//vertex3.x = m_model[index].position.x;
+		//vertex3.y = m_model[index].position.y;
+		//vertex3.z = m_model[index].position.z;
+		//vertex3.tu = m_model[index].UV.x;
+		//vertex3.tv = m_model[index].UV.y;
+		//vertex3.nx = m_model[index].normal.x;
+		//vertex3.ny = m_model[index].normal.y;
+		//vertex3.nz = m_model[index].normal.z;
+		//index++;
 
-		// Calculate the tangent and binormal of that face.
-		CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
+		//// Calculate the tangent and binormal of that face.
+		//CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
 
-		// Calculate the new normal using the tangent and binormal.
-		CalculateNormal(tangent, binormal, normal);
+		//// Calculate the new normal using the tangent and binormal.
+		//CalculateNormal(tangent, binormal, normal);
 
-		// Store the normal, tangent, and binormal for this face back in the model structure.
-		m_model[index - 1].normal = normal;
+		//// Store the normal, tangent, and binormal for this face back in the model structure.
+		//m_model[index - 1].normal = normal;
 		m_model[index - 1].tangent = tangent;
 		m_model[index - 1].binormal = binormal;
 
-		m_model[index - 2].normal = normal;
+		//m_model[index - 2].normal = normal;
 		m_model[index - 2].tangent = tangent;
 		m_model[index - 2].binormal = binormal;
 
-		m_model[index - 3].normal = normal;
+		//m_model[index - 3].normal = normal;
 		m_model[index - 3].tangent = tangent;
 		m_model[index - 3].binormal = binormal;
 	}
