@@ -71,6 +71,15 @@ bool System::Initialize()
 	}
 
 
+	RECT rcClient, rcWind;
+	GetClientRect(m_hwnd, &rcClient);
+	GetWindowRect(m_hwnd, &rcWind);
+	int posX = 0, posY = 0;
+	posX = rcWind.left;
+	posY = rcWind.top;
+	
+	SetCursorPos(posX, posY);
+
 	return result;
 }
 
@@ -205,9 +214,13 @@ bool System::Frame()
 	{
 		return false;
 	}
+
+
+
+
 	if (m_Input->WasKeyPressed(DIK_L))
 	{
-		ShowCursor(m_lockCursor);
+		//ShowCursor(m_lockCursor);
 		if (m_lockCursor)
 		{
 			m_lockCursor = false;
@@ -217,17 +230,24 @@ bool System::Frame()
 			m_lockCursor = true;
 		}
 	}
-	if (m_lockCursor && GetActiveWindow() != NULL)
+	if (GetActiveWindow() != NULL)
 	{
 		int posX = 0, posY = 0;
-
 		RECT rcClient, rcWind;
 		GetClientRect(m_hwnd, &rcClient);
 		GetWindowRect(m_hwnd, &rcWind);
-		posX = rcWind.right - rcClient.right / 2;
-		posY = rcWind.top + rcClient.bottom / 2;
-
-		SetCursorPos(posX, posY);
+		
+		if (m_lockCursor)
+		{
+			posX = rcWind.right - rcClient.right / 2;
+			posY = rcWind.top + rcClient.bottom / 2;
+			const RECT b = { posX, posY, posX + 1, posY + 1 };
+			ClipCursor(&b);
+		}
+		else
+		{
+			ClipCursor(&rcWind);
+		}
 	}
 
 	//Let the FPS and Timer objects to their frame processing.
@@ -239,6 +259,19 @@ bool System::Frame()
 	float frameTime = this->m_timer->GetTime();
 	if (FPS <= 0)	//Correct the 
 		FPS = 1;
+
+	//Do mouse picking
+	if (m_Input->WasKeyPressed(DIK_F))
+	{
+		RECT rcClient, rcWind;
+		GetClientRect(m_hwnd, &rcClient);
+		GetWindowRect(m_hwnd, &rcWind);
+		int x = 0, y = 0;
+		m_Input->GetMouse(x, y);
+		//m_Graphics->Click(x, y, rcClient.right, rcClient.bottom);
+		m_Graphics->Click(x, y, rcWind.right - rcWind.left, rcWind.bottom - rcWind.top);
+		int z = 5;
+	}
 
 	//Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(FPS, frameTime, m_Input);	
@@ -270,7 +303,7 @@ void System::InitializeWindows(int & width, int & height)
 	m_hinstance = GetModuleHandle(NULL);
 
 	//Give the application a name.
-	m_applicationName = L"Engine";
+	m_applicationName = WINDOW_NAME;
 
 	//Setup the windows class with default settings.
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -323,7 +356,7 @@ void System::InitializeWindows(int & width, int & height)
 
 	//Create the window with the screen settings and get the handle to it.
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_OVERLAPPEDWINDOW,
+		/*WS_OVERLAPPEDWINDOW*/ WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		posX, posY, width, height, NULL, NULL, m_hinstance, NULL);
 
 	//Bring the window up on the screen and set it as main focus.
@@ -333,6 +366,8 @@ void System::InitializeWindows(int & width, int & height)
 
 	//Hide the mouse cursor
 	//ShowCursor(true);
+
+	
 	return;
 }
 

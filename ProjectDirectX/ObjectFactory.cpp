@@ -54,29 +54,14 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	char materialFile[NAMELENGTH];
 	char objectMaterial[NAMELENGTH];
 	vector<VertexModel> vertexData;
+	vector<int> indexData;
 	vector<ObjMaterial> materials;
-	ObjMaterial missingMaterial;
+	/*This should not be needed but may be used to make small test changes
+	to the default material without causing a ripple effect on the system*/
+	ObjMaterial missingMaterial = DEFAULT_MATERIAL;
 	Vector3 vtx = { 0, 0, 0 }, vn = { 0, 0, 0 };
 	Vector2 vt = { 0, 0 };
-	
-	char missingMaterialName[] = "missing";
-	memcpy(&missingMaterial.name, &missingMaterialName, sizeof(missingMaterialName));
-	missingMaterial.illum = 1;
-	missingMaterial.Kd = Vector3(1.0f, 1.0f, 1.0f);
-	missingMaterial.Ka = Vector3(1.0f, 1.0f, 1.0f);
-	missingMaterial.Ks = Vector3(0.0f, 0.0f, 0.0f);
-	memcpy(&missingMaterial.texture, DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
-#pragma region
-	string missingTextureNameTemp = missingMaterial.texture;
-	TextureFormat missingTextureFormat = TextureFormat::JPEG;
-	missingTextureNameTemp = missingTextureNameTemp.substr(missingTextureNameTemp.find('.', 0), 20);
-	if (missingTextureNameTemp.size() > 1)
-		missingTextureNameTemp = missingTextureNameTemp.substr(1, sizeof(missingMaterialName));
-	if (missingTextureNameTemp == "jpg"){			missingTextureFormat = TextureFormat::JPEG;
-	}else if (missingTextureNameTemp == "png"){		missingTextureFormat = TextureFormat::PNG;
-	}else if (missingTextureNameTemp == "tga") {	missingTextureFormat = TextureFormat::TARGA; }
-	missingMaterial.textureFormat = missingTextureFormat;
-#pragma endregion fixing texture format
+
 	char temp[512];
 
 	fileIn.open(fileName, ios::in);
@@ -99,6 +84,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				D3Object* newObject = new D3Object();
 				//Load the model data
 				newObject->CreateFromData(vertexData);
+				vertexData.clear();
+				indexData.clear();
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
 				//Get the material name
@@ -114,12 +101,15 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				}
 				//Load the texture for this model
 				newObject->LoadTexture(device, deviceContext, localMaterial.texture, localMaterial.textureFormat);
+				newObject->SetMaterial(localMaterial);
 				storeIn.push_back(newObject);
 			}
 			// Vertex Position
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vtx.x, &vtx.y, &vtx.z);
 			//vtx.z *= invert;
 			//inputString >> special >> vtx.x >> vtx.y >> vtx.z;
+			/*if (invert < 0)
+				vtx.z = -vtx.z;*/
 			vertices.push_back(vtx);
 		}
 		else if (line2.substr(0, 2) == "vt")
@@ -136,8 +126,8 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 			// Vertex Normal
 			sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &vn.x, &vn.y, &vn.z);
 			//inputString >> special >> vn.x >> vn.y >> vn.z;
-			if (invert < 0)
-				vn.z = -vn.z;
+			/*if (invert < 0)
+				vn.z = -vn.z;*/
 			normals.push_back(vn);
 		}
 		else if (line2.substr(0, 2) == "f ")
@@ -196,6 +186,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	}
 	//Load the texture for this model
 	newObject->LoadTexture(device, deviceContext, localMaterial.texture, localMaterial.textureFormat);
+	newObject->SetMaterial(localMaterial);
 	storeIn.push_back(newObject);
 
 	return true;
@@ -229,9 +220,9 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 
 	char temp[512];
 
-	ObjMaterial mat;
+	ObjMaterial mat = DEFAULT_MATERIAL;
 	//Set the default texture for materials without texturing
-	memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+	//memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 	fileIn.open(filename, ios::in);
 	if (fileIn.is_open())
 	{
@@ -247,16 +238,13 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				{
 					ObjMaterial newMat = mat;
 					materialData.push_back(newMat);
-					memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
+					mat = DEFAULT_MATERIAL;
+					//Right now we push old settings to new materials, other alternative is setting new materials to default
+					//memcpy(&mat.texture, &DEFAULT_TEXTURE, sizeof(DEFAULT_TEXTURE));
 				}else
 					first = false;
 				// newmtl
 				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.name, mat.MATERIAL_NAME_LENGTH);
-			}
-			else if (line.substr(0, 5) == "illum")
-			{
-				// illum
-				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.illum);
 			}
 			else if (line.substr(0, 2) == "Kd")
 			{
@@ -270,8 +258,35 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 			}
 			else if (line.substr(0, 2) == "Ks")
 			{
-				// Tf
+				// Ks
 				sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Ks.x, &mat.Ks.y, &mat.Ks.z);
+			}
+			else if (line.substr(0, 2) == "Ns")
+			{
+				// Ns
+				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.Ns);
+			}
+			else if (line.substr(0, 2) == "d ")
+			{
+				// d
+				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.d);
+			}
+			else if (line.substr(0, 2) == "Tr")
+			{
+				// Tr which is the inverted version of 'd'
+				sscanf_s(temp, "%s %f", specialChar, SPECIALCHARSIZE, &mat.d);
+				// Invert the value for 'd'
+				mat.d = 1 - mat.d;
+			}
+			else if (line.substr(0, 5) == "illum")
+			{
+				// illum
+				sscanf_s(temp, "%s %i\n", specialChar, SPECIALCHARSIZE, &mat.illum);
+			}
+			else if (line.substr(0, 2) == "Tf")
+			{
+				// Tf
+				//sscanf_s(temp, "%s %f %f %f\n", specialChar, SPECIALCHARSIZE, &mat.Tf.x, &mat.Tf.y, &mat.Tf.z);
 			}
 			else if (line.substr(0, 6) == "map_Kd")
 			{

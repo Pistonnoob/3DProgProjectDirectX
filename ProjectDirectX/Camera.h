@@ -5,6 +5,7 @@
 #include "StructLibrary.h"
 
 using namespace DirectX::SimpleMath;
+using namespace DirectX;
 class Camera
 {
 private:
@@ -12,6 +13,7 @@ private:
 	Vector3 m_rotation;
 	Vector3 m_up;
 	Matrix m_viewMatrix;
+	Matrix m_baseViewMatrix;
 public:
 	Camera();
 	Camera(const Camera &original);
@@ -32,7 +34,9 @@ public:
 
 	Matrix GetViewMatrix();
 	void GetViewMatrix(Matrix& storeIn);
+	void GetBaseViewMatrix(Matrix& storeIn);
 	void GetViewMatrix(WVPBufferStruct& storeIn);
+	void GenerateBaseViewMatrix();
 };
 
 #endif

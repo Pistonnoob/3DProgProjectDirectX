@@ -22,6 +22,18 @@
     <Filter Include="Libraries\Imported">
       <UniqueIdentifier>{a9db1cfe-d101-4bd5-b01e-b575b35eb3fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Deferred">
+      <UniqueIdentifier>{54033ae8-0aaa-4d78-a666-676668b2144b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Deferred\Lighting">
+      <UniqueIdentifier>{5d6c5a2d-2343-44ae-9912-b900601eb4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Deferred\G-Buffers">
+      <UniqueIdentifier>{8cc62dd2-76ac-4bc9-80ea-71f87b24e8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model Types">
+      <UniqueIdentifier>{7e9c2336-b0a2-4e0f-980a-2249517b0b22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -72,7 +84,26 @@
     <ClCompile Include="WICTextureLoader.cpp">
       <Filter>Libraries\Imported</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="HeightMap.cpp">
+=======
+    <ClCompile Include="DeferredBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustrum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+>>>>>>> refs/remotes/origin/develop
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,13 +132,7 @@
     <ClInclude Include="TextureObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D3Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextureHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D2Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectFactory.h">
@@ -137,7 +162,35 @@
     <ClInclude Include="dds.h">
       <Filter>Libraries\Imported</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="HeightMap.h">
+=======
+    <ClInclude Include="DeferredBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D2Object.h">
+      <Filter>Header Files\Model Types</Filter>
+    </ClInclude>
+    <ClInclude Include="D3Object.h">
+      <Filter>Header Files\Model Types</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadModel.h">
+      <Filter>Header Files\Model Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustrum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+>>>>>>> refs/remotes/origin/develop
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -151,6 +204,21 @@
     <FxCompile Include="PixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="DefVertexShader.hlsl">
+      <Filter>Shaders\Deferred\G-Buffers</Filter>
+    </FxCompile>
+    <FxCompile Include="DefGeometryShader.hlsl">
+      <Filter>Shaders\Deferred\G-Buffers</Filter>
+    </FxCompile>
+    <FxCompile Include="DefPixelShader.hlsl">
+      <Filter>Shaders\Deferred\G-Buffers</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>Shaders\Deferred\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Shaders\Deferred\Lighting</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderLibrary.hlsli">
@@ -159,5 +227,10 @@
     <None Include="SimpleMath.inl">
       <Filter>Libraries\Imported</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ProjectDirectX.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -8,8 +8,12 @@ D3Object::D3Object()
 	m_indexBuffer = NULL;
 	m_vertexCount = 0;
 	m_indexCount = 0;
-	m_model = NULL;
+	m_indices = NULL;
 	m_texture = NULL;
+	m_model = NULL;
+	
+	m_material = DEFAULT_MATERIAL;
+
 	// Initialize the world matrix to the identity matrix.
 	m_worldMatrix = DirectX::XMMatrixIdentity();
 }
@@ -71,7 +75,6 @@ void D3Object::Shutdown()
 	this->ShutdownBuffers();
 	//Release the model data.
 	this->ReleaseModel();
-
 	return;
 }
 
@@ -88,9 +91,15 @@ int D3Object::GetIndexCount()const
 	return this->m_indexCount;
 }
 
+<<<<<<< HEAD
 int D3Object::GetVertexCount() const
 {
 	return this->m_vertexCount;
+=======
+ObjMaterial D3Object::GetMaterial() const
+{
+	return this->m_material;
+>>>>>>> refs/remotes/origin/develop
 }
 
 ID3D11ShaderResourceView * D3Object::GetTexture()
@@ -103,6 +112,7 @@ void D3Object::GetWorldMatrix(Matrix & worldMatrix)
 	worldMatrix = this->m_worldMatrix;
 }
 
+<<<<<<< HEAD
 #pragma region
 void D3Object::SetIndexCount(int nr )
 {
@@ -135,6 +145,14 @@ void D3Object::SetVertexModel(VertexModel * model)
 {
 	this->m_model = model;
 }
+=======
+bool D3Object::SetMaterial(ObjMaterial material)
+{
+	this->m_material = material;
+	return true;
+}
+
+>>>>>>> refs/remotes/origin/develop
 void D3Object::SetWorldMatrix(const Matrix worldMatrix)
 {
 	this->m_worldMatrix = worldMatrix;
@@ -147,6 +165,48 @@ void D3Object::ApplyMatrix(const Matrix applyToWorld)
 	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
 }
 
+void D3Object::SetIndices(vector<int> indices)
+{
+	this->m_indices = new int[indices.size()];
+	for (int i = 0; i < indices.size(); i++)
+	{
+		this->m_indices[i] = indices[i];
+	}
+}
+
+std::vector<VertexModel> D3Object::getVertexData()
+{
+	std::vector<VertexModel> points;
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		points.push_back(this->m_model[i]);
+	}
+	return points;
+}
+
+int D3Object::GetVertexCount()
+{
+	return m_vertexCount;
+}
+
+VertexModel * D3Object::getVertedData()
+{
+	return m_model;
+}
+
+bool D3Object::CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData)
+{
+	this->m_vertexCount = (int)vertexData.size();
+	this->m_indexCount = (int)indiceData.size();
+	this->m_model = new VertexModel[this->m_vertexCount];
+	for (int j = 0; j < m_vertexCount; j++)
+	{
+		this->m_model[j] = vertexData[m_vertexCount - j - 1];
+	}
+	this->SetIndices(indiceData);
+	return true;
+}
+
 bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 {
 	this->m_vertexCount = (int)vertexData.size();
@@ -155,6 +215,11 @@ bool D3Object::CreateFromData(vector<VertexModel> vertexData)
 	for (int j = 0; j < m_vertexCount; j++)
 	{
 		this->m_model[j] = vertexData[m_vertexCount - j - 1];
+	}
+	m_indices = new int[m_indexCount];
+	for (int i = 0; i < m_indexCount; i++)
+	{
+		this->m_indices[i] = i;
 	}
 	return true;
 }
@@ -192,7 +257,11 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 		vertices[i].position = m_model[i].position;
 		vertices[i].UV = m_model[i].UV;
 		vertices[i].normal = m_model[i].normal;
-		indices[i] = i;
+	}
+
+	for (int i = 0; i < this->m_indexCount; i++)
+	{
+		indices[i] = m_indices[i];
 	}
 
 	// Set up the description of the static vertex buffer.
@@ -243,6 +312,8 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 
 	return true;
 }
+
+
 
 
 void D3Object::RenderBuffers(ID3D11DeviceContext *deviceContext)
@@ -477,6 +548,11 @@ void D3Object::ReleaseModel()
 	{
 		delete[] m_model;
 		m_model = NULL;
+	}
+	if (this->m_indices != NULL)
+	{
+		delete[] m_indices;
+		m_indices = NULL;
 	}
 }
 

@@ -51,7 +51,7 @@ bool InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int width, int hei
 	}
 
 	// Set the cooperative level of the keyboard to not share with other programs.
-	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
 		return false;
@@ -198,8 +198,8 @@ void InputHandler::GetMouse(int & x, int & y)
 
 void InputHandler::GetMouseDelta(int & x, int & y)
 {
-	x = this->m_dMouse.x;
-	y = this->m_dMouse.y;
+	x = (int)this->m_dMouse.x;
+	y = (int)this->m_dMouse.y;
 }
 
 void InputHandler::GetMouseDelta(Vector2 & storeIn)
@@ -262,7 +262,7 @@ bool InputHandler::ReadMouse()
 void InputHandler::ProcessInput()
 {
 	// Update the change in mouse position
-	m_dMouse = Vector2(m_mouseState.lX, m_mouseState.lY);
+	m_dMouse = Vector2((float)m_mouseState.lX, (float)m_mouseState.lY);
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 	m_mouseX += m_mouseState.lX;
 	m_mouseY += m_mouseState.lY;

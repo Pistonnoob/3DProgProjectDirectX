@@ -145,14 +145,20 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="D3Object.cpp" />
+    <ClCompile Include="DeferredBuffer.cpp" />
+    <ClCompile Include="DeferredHandler.cpp" />
     <ClCompile Include="FPSHandler.cpp" />
+    <ClCompile Include="Frustrum.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="D2Object.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="QuadModel.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="ScreenGrab.cpp" />
     <ClCompile Include="TextureHandler.cpp" />
     <ClCompile Include="System.cpp" />
@@ -165,15 +171,22 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="D3Object.h" />
     <ClInclude Include="dds.h" />
+    <ClInclude Include="DeferredBuffer.h" />
+    <ClInclude Include="DeferredHandler.h" />
     <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="FPSHandler.h" />
+    <ClInclude Include="Frustrum.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="D2Object.h" />
+    <ClInclude Include="LightShader.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlatformHelpers.h" />
+    <ClInclude Include="QuadModel.h" />
+    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenGrab.h" />
     <ClInclude Include="TextureHandler.h" />
     <ClInclude Include="SimpleMath.h" />
@@ -184,6 +197,24 @@
     <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DefGeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="DefPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="DefVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="GeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
@@ -192,6 +223,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
@@ -210,6 +253,9 @@
   <ItemGroup>
     <None Include="ShaderLibrary.hlsli" />
     <None Include="SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ProjectDirectX.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
