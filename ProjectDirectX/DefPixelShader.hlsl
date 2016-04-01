@@ -21,14 +21,15 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	//Store the normal
 	output.Normal = input.Normal;
 	//Get the normal from the bump map
-	float4 bumpMap = c_normal.Sample(samplerType, input.UV);
-	bumpMap.w = 0.0f;
-	bumpMap = (2.0f * bumpMap) - 1.0f;
-
-	float3 bumpNormal = (bumpMap.x * input.Tangent) + (bumpMap.y * input.Binormal) + (bumpMap.z * input.Normal);
-	bumpNormal = normalize(bumpNormal);
-
-	output.Normal = float4(bumpNormal.x, bumpNormal.y, bumpNormal.z, 0.0f);
+	float4 normalMap = c_normal.Sample(samplerType, input.UV);
+	normalMap = (2 * normalMap) - 1.0f;
+	//Make sure tangent is orthogonal to normal
+	input.Tangent = normalize(input.Tangent - dot(input.Tangent, input.Normal) * input.Normal);
+	//Create the bitangent
+	float3 biTangent = cross(input.Normal, input.Tangent);
+	float3x3 texToObject = float3x3(input.Tangent, biTangent, input.Normal.xyz);
+	//Convert the normal map values from tangent to object space
+	output.Normal = float4(normalize(mul(normalMap, texToObject)), 0.0f);
 	//output.Normal = bumpMap;
 	//Store the position
 	output.Position = input.WorldPos;
