@@ -28,13 +28,13 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	float3 bumpNormal = (bumpMap.x * input.Tangent) + (bumpMap.y * input.Binormal) + (bumpMap.z * input.Normal);
 	bumpNormal = normalize(bumpNormal);
 
-	output.Normal = float4(bumpNormal, 0.0f);
-	output.Normal = bumpMap;
+	output.Normal = float4(bumpNormal.x, bumpNormal.y, bumpNormal.z, 0.0f);
+	//output.Normal = bumpMap;
 	//Store the position
 	output.Position = input.WorldPos;
 	//Store the diffuse material
 	output.Diffuse = diffuseColor;
-	//output.Diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	output.Diffuse = float4(0.3f, 0.3f, 0.3f, 1.0f);
 	//Store the specular material
 	output.Specular = float4(specularColor.r, specularColor.g, specularColor.b, Ns);
 	//output.Specular = float4(0.5f, 0.5f, 0.5f, 60.0f);
