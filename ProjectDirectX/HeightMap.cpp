@@ -258,7 +258,7 @@ bool HeightMap::InitializeBuffersHeightMap(ID3D11Device *device)
 			index++;
 		}
 	}
-	m_model = vertices;
+	this->m_model = vertices;
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexModel) * m_vertexCount;
@@ -296,5 +296,6 @@ bool HeightMap::InitializeBuffersHeightMap(ID3D11Device *device)
 	{
 		return false;
 	}
+
 	return true;
 }
