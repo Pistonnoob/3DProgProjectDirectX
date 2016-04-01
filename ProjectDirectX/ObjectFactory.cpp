@@ -200,9 +200,9 @@ bool ObjectFactory::CreateFromHeightMap(ID3D11Device * device, ID3D11DeviceConte
 	char objectMaterial[NAMELENGTH];
 	HeightMap* newObject = new HeightMap();
 	//Load the model data
-	newObject->CreateFlatMesh();
+	newObject->LoadHeightMap(fileName);
 	//Initialize vertex and index buffers.
-	newObject->InitializeBuffers(device);
+	newObject->InitializeBuffersHeightMap(device);
 	//Get the material name
 	string textureName = "";
 	//Initialize the material as "missing material"

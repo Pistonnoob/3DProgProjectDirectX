@@ -158,20 +158,11 @@ void D3Object::SetWorldMatrix(const Matrix worldMatrix)
 }
 #pragma endregion Setters
 
-
 void D3Object::ApplyMatrix(const Matrix applyToWorld)
 {
 	this->m_worldMatrix = DirectX::XMMatrixMultiply(m_worldMatrix, applyToWorld);
 }
 
-void D3Object::SetIndices()
-{
-	this->m_indices = new int[this->GetIndexCount()];
-	for (int i = 0; i < this->GetIndexCount(); i++)
-	{
-		this->m_indices[i] = i;
-	}
-}
 void D3Object::SetIndices(vector<int> indices)
 {
 	this->m_indices = new int[indices.size()];
@@ -320,9 +311,6 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 	return true;
 }
 
-
-
-
 void D3Object::RenderBuffers(ID3D11DeviceContext *deviceContext)
 {
 	unsigned int stride = 0;
@@ -362,10 +350,7 @@ bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceCont
 
 	return true;
 }
-
-
-
-
+ 
 bool D3Object::LoadModelObjLH(char * fileName)
 {
 	return this->LoadModelObj(fileName, 1);
