@@ -72,6 +72,9 @@
     <ClCompile Include="WICTextureLoader.cpp">
       <Filter>Libraries\Imported</Filter>
     </ClCompile>
+    <ClCompile Include="HeightMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -133,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="dds.h">
       <Filter>Libraries\Imported</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
