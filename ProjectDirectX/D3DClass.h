@@ -48,6 +48,8 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 
+	ID3D11Texture2D* getBackBuffer();
+
 	void GetProjectionMatrix(Matrix&);
 	void GetWorldMatrix(Matrix&);
 	void GetOrthoMatrix(Matrix&);

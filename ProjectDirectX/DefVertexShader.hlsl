@@ -18,7 +18,6 @@ GS_IN_DEF main(VS_IN_DEF input)
 	output.Pos = mul(output.Pos, worldMatrix);
 	output.WorldPos = output.Pos;
 	output.Pos = mul(output.Pos, viewMatrix);
-	output.ToCamera = -output.Pos;
 	output.Pos = mul(output.Pos, projectionMatrix);
 	
 	output.Normal = float4(input.Normal.x, input.Normal.y, input.Normal.z, 0);

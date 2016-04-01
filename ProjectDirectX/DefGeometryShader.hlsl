@@ -16,11 +16,10 @@ void main(
 	bool facingCamera = false;
 	for (int i = 0; i < 3; i++)
 	{
-		float angle = dot(input[i].ToCamera, input[i].Normal);
+		float angle = dot(normalize(-mul(input[i].WorldPos, viewMatrix)), normalize(mul(input[i].Normal, viewMatrix)));
 		if (angle >= 0.0f)
 			facingCamera = true;
 	}
-	facingCamera = true;
 	if (facingCamera)
 	{
 		float3 edge1 = normalize(input[1].WorldPos - input[0].WorldPos);
