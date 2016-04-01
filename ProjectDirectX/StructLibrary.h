@@ -30,7 +30,10 @@ enum Keyboard_Key
 	KEY_D = 68,
 	KEY_RESET = 82
 };
-
+struct HeightMapPos
+{
+	Vector3 position;
+};
 struct Vertex
 {
 	Vector3 position;

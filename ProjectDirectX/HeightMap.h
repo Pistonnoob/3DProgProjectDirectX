@@ -8,6 +8,9 @@ private:
 public:
 	HeightMap();
 	~HeightMap();
+	bool LoadHeightMap(char *);
+	void NormalizeHeightMap();
+	void ShutDownHM();
 	bool CreateFlatMesh();
 	bool DisplaceVertices();
 
