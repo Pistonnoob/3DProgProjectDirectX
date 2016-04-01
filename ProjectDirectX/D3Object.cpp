@@ -290,6 +290,8 @@ bool D3Object::InitializeBuffers(ID3D11Device *device)
 		vertices[i].position = m_model[i].position;
 		vertices[i].UV = m_model[i].UV;
 		vertices[i].normal = m_model[i].normal;
+		vertices[i].tangent = m_model[i].tangent;
+		vertices[i].binormal = m_model[i].binormal;
 	}
 
 	for (int i = 0; i < this->m_indexCount; i++)
