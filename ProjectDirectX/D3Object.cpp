@@ -25,6 +25,7 @@ D3Object::D3Object(const D3Object & original)
 
 D3Object::~D3Object()
 {
+	Shutdown();
 }
 
 bool D3Object::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFileName, FactoryObjectFormat format)

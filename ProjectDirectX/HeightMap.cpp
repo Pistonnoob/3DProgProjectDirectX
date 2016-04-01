@@ -8,7 +8,7 @@ HeightMap::HeightMap()
 }
 HeightMap::~HeightMap()
 {
-
+	ShutDownHM();
 }
 
 bool HeightMap::LoadHeightMap(char * filename)
@@ -73,6 +73,7 @@ bool HeightMap::LoadHeightMap(char * filename)
 	{
 		return false;
 	}
+	filePtr = nullptr;
 	
 	// Create the structure to hold the height map data.
 	m_heightMap = new HeightMapPos[m_terrainWidth * m_terrainHeight];
@@ -102,7 +103,7 @@ bool HeightMap::LoadHeightMap(char * filename)
 	}
 	// Release the bitmap image data.
 	delete[] bitmapImage;
-	bitmapImage = 0;
+	bitmapImage = nullptr;
 
 	return true;
 }
