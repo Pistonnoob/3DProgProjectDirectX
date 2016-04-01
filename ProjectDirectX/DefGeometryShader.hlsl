@@ -31,8 +31,7 @@ void main(
 		float det = (texEdge1.x * texEdge2.y) - (texEdge1.y * texEdge2.x);
 
 		float3 tangent = float3(0.0f, 0.0f, 0.0f);
-		tangent = (texEdge2.y * edge1 - texEdge1.y * edge2) * det;
-		tangent = normalize(tangent);
+		tangent = normalize((texEdge2.y * edge1 - texEdge1.y * edge2) * det);
 
 		for (uint i = 0; i < 3; i++)
 		{

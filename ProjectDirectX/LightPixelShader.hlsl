@@ -62,8 +62,8 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 	float4 diffuseResult = saturate((diffuseLightColor) * lightIntensity);
 	if (lightIntensity > 0.0f)
 	{
-		/*diffuseResult *= diffuse;
-		additionColor += diffuseResult;*/
+		diffuseResult *= diffuse;
+		additionColor += diffuseResult;
 	}
 	additionColor = saturate(additionColor);
 	result = saturate(color * additionColor);
@@ -75,12 +75,9 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 		float3 viewerDirection = (float3)normalize(cameraPos - position);
 		// r = l + 2u = l + 2(n' - l) = 2(dot(n, l))*n - l = r
 		float3 l = dot((float3)normal, lightDirection);
-		lightReflect = normalize(2 * (lightIntensity * (float3)normal) - lightIntensity);
-		float3 refVec = normalize(reflect(-viewerDirection, normal));    //Create the the reflection
-		float specIntensity = saturate(dot(refVec, viewerDirection));
-		specularResult = pow(dot(lightReflect, viewerDirection), Ns);
-		specularResult = specularResult * float4(specular.r, specular.g, specular.b, 0.0f);
-		specularResult = float4(specular * lightColor * saturate(pow(specIntensity, Ns)), 1.0f);
+		lightReflect = normalize(reflect(-viewerDirection, normal));//Create the the reflection
+		float specIntensity = saturate(dot(lightReflect, viewerDirection));
+		specularResult = float4(specular * lightColor * saturate(pow(specIntensity, Ns)), 1.0f);	//Result with applied material and light
 		specularResult = saturate(specularResult);
 	}
 	result = saturate(result + specularResult);
