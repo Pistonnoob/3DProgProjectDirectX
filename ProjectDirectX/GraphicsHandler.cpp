@@ -557,12 +557,11 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	m_Direct3D->GetProjectionMatrix(P);
 	m_Camera->GetViewMatrix(V);
 	V = V.Invert();
-	float vx = 0, vy = 0, viewspaceZ = 1;
+	float vx = 0, vy = 0;
 	vx = ((2 * x) / float(screenWidth) - 1) /*/ P(0, 0)*/;
 	vx /= P(0, 0);
 	vy = (-(2 * y) / float(screenHeight) + 1) /*/ P(1, 1)*/;
 	vy /= P(1, 1);
-	viewspaceZ = 1;
 	Vector3 rayO(0.0f, 0.0f, 0.0f);
 	Vector3 rayD(vx, vy, 1.0f);
 	rayO = DirectX::XMVector3TransformCoord(rayO, V);
