@@ -17,7 +17,7 @@ void main(
 	for (int i = 0; i < 3; i++)
 	{
 		float angle = dot(normalize(-mul(input[i].WorldPos, viewMatrix)), normalize(mul(input[i].Normal, viewMatrix)));
-		if (angle >= 0.0f)
+		if (angle >= 0.8f)
 			facingCamera = true;
 	}
 	if (facingCamera)

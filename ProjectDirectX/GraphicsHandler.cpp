@@ -562,7 +562,7 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	vx /= P(0, 0);
 	vy = (-(2 * y) / float(screenHeight) + 1) /*/ P(1, 1)*/;
 	vy /= P(1, 1);
-	Vector3 rayO(0.0f, 0.0f, 0.0f);
+	Vector3 rayO(0.0f, 0.0f, 1.0f);
 	Vector3 rayD(vx, vy, 1.0f);
 	rayO = DirectX::XMVector3TransformCoord(rayO, V);
 	rayD = DirectX::XMVector3TransformNormal(rayD, V);
