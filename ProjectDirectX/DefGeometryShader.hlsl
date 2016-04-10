@@ -14,12 +14,15 @@ void main(
 	)
 {
 	bool facingCamera = false;
-	for (int i = 0; i < 3; i++)
+	float3 newNormal = cross(input[1].WorldPos - input[0].WorldPos, input[2].WorldPos - input[0].WorldPos);
+	float angle = dot(normalize(-mul(input[1].WorldPos, viewMatrix)), normalize(mul(newNormal, viewMatrix)));
+	/*for (int i = 0; i < 3; i++)
 	{
 		float angle = dot(normalize(-mul(input[i].WorldPos, viewMatrix)), normalize(mul(input[i].Normal, viewMatrix)));
 		if (angle >= 0.8f)
 			facingCamera = true;
-	}
+	}*/
+	facingCamera = angle >= 0.3f;
 	if (facingCamera)
 	{
 		float3 edge1 = normalize(input[1].WorldPos - input[0].WorldPos);
