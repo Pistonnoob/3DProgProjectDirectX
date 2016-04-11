@@ -248,8 +248,13 @@ bool System::Frame()
 		{
 			ClipCursor(&rcWind);
 		}
-	}
 
+		int mouseX = 0, mouseY = 0;
+		this->m_Input->GetMouse(mouseX, mouseY);
+		mouseX += rcWind.left;
+		mouseY += rcWind.top;
+		SetCursorPos(mouseX, mouseY);
+	}
 	//Let the FPS and Timer objects to their frame processing.
 	this->m_FPS->Frame();
 	this->m_timer->Frame();

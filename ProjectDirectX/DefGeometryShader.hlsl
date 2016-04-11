@@ -22,7 +22,7 @@ void main(
 		if (angle >= 0.8f)
 			facingCamera = true;
 	}*/
-	facingCamera = angle >= 0.3f;
+	facingCamera = angle >= 0.0f;
 	if (facingCamera)
 	{
 		float3 edge1 = normalize(input[1].WorldPos - input[0].WorldPos);
