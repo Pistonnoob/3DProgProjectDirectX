@@ -582,8 +582,6 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	std::vector<std::pair<float, D3Object*>> intersections;
 	for (std::vector<Container*>::const_iterator testBound = possible.begin(); testBound != possible.end(); testBound++)
 	{
-
-		float tTemp = 0.0f;
 		//For every model, check ray intersection against OBB
 		//Get the Boundingbox
 		BoundingVolume testVolume = (*testBound)->boundingVolume;
@@ -598,35 +596,24 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 
 		if (tmax < 0)
 		{
-			tTemp = tmax;
 			intersectionBox = false;
 		}
 		else if (tmin > tmax)
 		{
-			tTemp = tmax;
 			intersectionBox = false;
 		}
 		else
 		{
 			if (tmin < t)
 			{
-				t = tmin;
-				input.first = t;
+				input.first = tmin;
 				input.second = (*testBound)->object;
-				//input.second = (*testBound)->object;
-				//intersections.push_back(input);
+				intersections.push_back(input);
 			}
 		}
 
 	}
-	if (input.second != NULL)
-	{
-		ObjMaterial material = input.second->GetMaterial();
-		material.Kd = Vector3(1.0f, 1.0f, 1.0f);
-		input.second->SetMaterial(material);
-
-	}
-	/*if (intersections.size())
+	if (intersections.size())
 	{
 		for (int i = 0; i < intersections.size() - 1; i++)
 		{
@@ -645,76 +632,67 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 			intersections[place] = temp;
 		}
 	}
+	//If there was a successfull intersection
 	if (intersections.size())
 	{
-		closest = intersections.back().second;
-		ObjMaterial material = closest->GetMaterial();
-		material.Kd = Vector3(1.0f, 1.0f, 1.0f);
-		closest->SetMaterial(material);
-
-	}*/
-	
-	////If there was a successfull intersection
-	//if (intersections.size())
-	//{
-	//	//For every bounding volume
-	//	while (intersections.size() && !intersectionModel)
-	//	{
-	//		closest = intersections.back().second;
-	//		VertexModel* points = closest->getVertedData();
-	//		//Test intersection against contained model
-	//		//Get the world matrice
-	//		closest->GetWorldMatrix(W);
-	//		W = W.Invert();
-	//		//Apply it on our ray
-	//		Vector3 tRayO = rayO, tRayD = rayD;
-	//		tRayO = DirectX::XMVector3TransformCoord(rayO, W);
-	//		tRayD = DirectX::XMVector3TransformNormal(rayD, W);
-	//		//Get the vertices and test intersections against them
-	//		for (int i = 0; i < closest->GetVertexCount() && !intersectionModel; i += 3)
-	//		{
-	//			//Test intersection against vertices
-	//			float det = 0.0f, invDet = 0.0f;
-	//			float dist = -1, u = 0.0f, v = 0.0f;
-	//			//get the two edges
-	//			Vector3 edge1 = points[i + 1].position - points[i].position,
-	//				edge2 = points[i + 2].position - points[i].position;
-	//			Vector3 pVec = tRayD.Cross(edge2);
-	//			Vector3 qVec(0.0f, 0.0f, 0.0f);
-	//			det = edge1.Dot(pVec);
-	//			if (det < -0.000000001f || det > 0.000000001f)
-	//			{
-	//				invDet = 1.0f / det;
-	//				Vector3 tVec = tRayO - points[i].position;
-	//				u = tVec.Dot(pVec) * invDet;
-	//				if (u >= 0.0f && u <= 1)
-	//				{
-	//					qVec = tVec.Cross(edge1);
-	//					v = tRayD.Dot(qVec);
-	//					v *= invDet;
-	//					if (v >= 0.0f && u + v <= 1.0f)
-	//					{
-	//						dist = edge2.Dot(qVec) * invDet;
-	//					}
-	//				}
-	//			}
-	//			if (dist >= 0.0f)
-	//			{
-	//				intersectionModel = true;
-	//				distToModel = dist;
-	//			}
-	//		}
-	//		if (intersectionModel)
-	//		{
-	//			bool success = true;
-	//			ObjMaterial material = closest->GetMaterial();
-	//			material.Kd = Vector3(1.0f, 1.0f, 1.0f);
-	//			closest->SetMaterial(material);
-	//		}
-	//		intersections.pop_back();
-	//	}
-	//	
-	//}
+		//For every bounding volume
+		while (intersections.size() && !intersectionModel)
+		{
+			closest = intersections.back().second;
+			VertexModel* points = closest->getVertedData();
+			//Test intersection against contained model
+			//Get the world matrice
+			closest->GetWorldMatrix(W);
+			W = W.Invert();
+			//Apply it on our ray
+			Vector3 tRayO = rayO, tRayD = rayD;
+			tRayO = DirectX::XMVector3TransformCoord(rayO, W);
+			tRayD = DirectX::XMVector3TransformNormal(rayD, W);
+			//Get the vertices and test intersections against them
+			for (int i = 0; i < closest->GetVertexCount() && !intersectionModel; i += 3)
+			{
+				//Test intersection against vertices
+				float det = 0.0f, invDet = 0.0f;
+				float dist = -1, u = 0.0f, v = 0.0f;
+				//get the two edges
+				Vector3 edge1 = points[i + 1].position - points[i].position,
+					edge2 = points[i + 2].position - points[i].position;
+				Vector3 pVec = tRayD.Cross(edge2);
+				Vector3 qVec(0.0f, 0.0f, 0.0f);
+				det = edge1.Dot(pVec);
+				if (det < -0.000000001f || det > 0.000000001f)
+				{
+					invDet = 1.0f / det;
+					Vector3 tVec = tRayO - points[i].position;
+					u = tVec.Dot(pVec) * invDet;
+					if (u >= 0.0f && u <= 1)
+					{
+						qVec = tVec.Cross(edge1);
+						v = tRayD.Dot(qVec);
+						v *= invDet;
+						if (v >= 0.0f && u + v <= 1.0f)
+						{
+							dist = edge2.Dot(qVec) * invDet;
+						}
+					}
+				}
+				if (dist >= 0.0f)
+				{
+					intersectionModel = true;
+					distToModel = dist;
+				}
+			}
+			if (intersectionModel)
+			{
+				bool success = true;
+				ObjMaterial material = closest->GetMaterial();
+				material.Kd = Vector3(1.0f, 1.0f, 1.0f);
+				closest->SetMaterial(material);
+			}
+			intersections.pop_back();
+		}
+		
+	}
 
 }
 
