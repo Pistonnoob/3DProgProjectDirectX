@@ -556,7 +556,7 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	Matrix P, V, W;
 	m_Direct3D->GetProjectionMatrix(P);
 	m_Camera->GetViewMatrix(V);
-	V = V.Invert();
+	V = DirectX::XMMatrixInverse(NULL, V);
 	float vx = 0, vy = 0;
 	vx = ((2 * x) / float(screenWidth) - 1) /*/ P(0, 0)*/;
 	vx /= P(0, 0);
@@ -576,6 +576,9 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 	float distToModel = 0.0f;
 	bool intersectionBox = true, intersectionModel = false;
 	D3Object* closest = NULL;
+	std::pair<float, D3Object*> input;
+	input.first = 9999.0f;
+	input.second = NULL;
 	std::vector<std::pair<float, D3Object*>> intersections;
 	for (std::vector<Container*>::const_iterator testBound = possible.begin(); testBound != possible.end(); testBound++)
 	{
@@ -598,22 +601,32 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 			tTemp = tmax;
 			intersectionBox = false;
 		}
-		if (tmin > tmax)
+		else if (tmin > tmax)
 		{
 			tTemp = tmax;
 			intersectionBox = false;
 		}
-		if (tmax > 0.0f && tmax < t)
+		else
 		{
-			t = tmin;
-			std::pair<float, D3Object*> input;
-			input.first = tmax;
-			input.second = (*testBound)->object;
-			intersections.push_back(input);
+			if (tmin < t)
+			{
+				t = tmin;
+				input.first = t;
+				input.second = (*testBound)->object;
+				//input.second = (*testBound)->object;
+				//intersections.push_back(input);
+			}
 		}
 
 	}
-	if (intersections.size())
+	if (input.second != NULL)
+	{
+		ObjMaterial material = input.second->GetMaterial();
+		material.Kd = Vector3(1.0f, 1.0f, 1.0f);
+		input.second->SetMaterial(material);
+
+	}
+	/*if (intersections.size())
 	{
 		for (int i = 0; i < intersections.size() - 1; i++)
 		{
@@ -639,7 +652,7 @@ void GraphicsHandler::Click(int x, int y, int screenWidth, int screenHeight)
 		material.Kd = Vector3(1.0f, 1.0f, 1.0f);
 		closest->SetMaterial(material);
 
-	}
+	}*/
 	
 	////If there was a successfull intersection
 	//if (intersections.size())
