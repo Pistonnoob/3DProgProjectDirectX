@@ -29,7 +29,7 @@ PS_OUT_DEF main(PS_IN_DEF input) : SV_TARGET
 	float3 biTangent = cross(input.Normal, input.Tangent);
 	float3x3 texToObject = float3x3(input.Tangent, biTangent, input.Normal.xyz);
 	//Convert the normal map values from tangent to object space
-	output.Normal = float4(normalize(mul(normalMap, texToObject)), 1.0f);
+	output.Normal = float4(normalize(mul(normalMap, (texToObject))), 1.0f);
 	//Store the position
 	output.Position = input.WorldPos;
 	//Store the diffuse material

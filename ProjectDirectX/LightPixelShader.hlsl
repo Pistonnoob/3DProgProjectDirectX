@@ -43,27 +43,28 @@ float4 main(PS_IN_LIGHT input) : SV_TARGET
 	//Creathe the normalized vector from position to camera
 	float3 viewDir = normalize(cameraPos - position);
 
-	float specIntensity = saturate(dot(refVec, viewDir));
+	//float specIntensity = saturate(dot(refVec, viewDir));
 
 	/*float3 specular = specularTex.Sample(samplerType, input.UV);*/
 	float3 lightDirection = (float3)normalize(lightPos - (float3)position);
 	float lightIntensity = (dot((float3)normal, lightDirection));
 	float4 diffuseResult = saturate((diffuseLightColor) * lightIntensity);
+	diffuseResult = float4(saturate(dot(normalize(lightPos - position), normal) * lightColor), 0.0f);
 	if (lightIntensity > 0.0f)
 	{
 		diffuseResult *= diffuse;
-		//additionColor += diffuseResult;
+		additionColor += diffuseResult;
 	}
 	additionColor = saturate(additionColor);
-	//result = saturate(color * additionColor);
+	result = saturate(color * additionColor);
 	//SPECULAR
 	float4 specularResult = (float4)0;	//The color the specular light will produce
 	if (lightIntensity > 0.0f || true)
 	{
 		float3 viewerDirection = (float3)normalize(cameraPos - position);
 		// r = l + 2u = l + 2(n' - l) = 2(dot(n, l))*n - l = r
-		float3 lightReflect = normalize(reflect(-lightDirection, normal));//Create the reflection
-		float specIntensity = saturate(dot(refVec, viewDir));
+		float3 lightReflect = normalize(reflect(normalize(lightDirection), normalize(normal)));//Create the reflection
+		float specIntensity = saturate(dot(refVec, viewerDirection));
 		specularResult = float4(specular * lightColor * max(pow(specIntensity, Ns), 0.0f), 1.0f);	//Result with applied material and light
 		specularResult = saturate(specularResult);
 	}
