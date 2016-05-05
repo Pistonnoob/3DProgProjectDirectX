@@ -483,7 +483,7 @@ bool GraphicsHandler::Render()
 
 	//Now put the fullscreen Quads vertices and indices to be rendered
 	this->m_FullScreenObject->Render(this->m_Direct3D->GetDeviceContext());
-	WVPBufferStruct matrices = { worldMatrix, baseViewMatrix, orthoMatrix };
+	WVPBufferStruct matrices = { worldMatrix, worldMatrix, baseViewMatrix, orthoMatrix };
 
 	for (std::vector<LightStruct*>::iterator light = m_Lights.begin(); light != m_Lights.end(); light++)
 	{
@@ -531,8 +531,7 @@ bool GraphicsHandler::RenderToDeferred()
 		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 		//Bind the vertices and indices to the pipeline
 		(*model)->Render(m_Direct3D->GetDeviceContext());
-
-		WVPBufferStruct matrices = { worldMatrix, viewMatrix, projectionMatrix };
+		WVPBufferStruct matrices = { worldMatrix,  worldMatrix.Invert().Transpose(), viewMatrix, projectionMatrix };
 		ObjMaterial objMaterial = (*model)->GetMaterial();
 		PixelMaterial pMaterial = { Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3()};
 		pMaterial.Ka = Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f);

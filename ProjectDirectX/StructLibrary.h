@@ -54,6 +54,7 @@ struct VertexModel
 struct WVPBufferStruct
 {
 	Matrix world;
+	Matrix inverseWorld;
 	Matrix view;
 	Matrix projection;
 };

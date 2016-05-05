@@ -455,10 +455,11 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 	unsigned int bufferNumber;
 	PixelMaterial* dataPtr2;
 
-	Matrix worldMatrix, viewMatrix, projectionMatrix;
+	Matrix worldMatrix, inverseWorldMatrix, viewMatrix, projectionMatrix;
 
 	// Transpose the matrices to prepare them for the shader.
 	worldMatrix = DirectX::XMMatrixTranspose(matrices->world);
+	inverseWorldMatrix = DirectX::XMMatrixTranspose(matrices->inverseWorld);
 	viewMatrix = DirectX::XMMatrixTranspose(matrices->view);
 	projectionMatrix = DirectX::XMMatrixTranspose(matrices->projection);
 
@@ -473,6 +474,7 @@ bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, W
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = worldMatrix;
+	dataPtr->inverseWorld = inverseWorldMatrix;
 	dataPtr->view = viewMatrix;
 	dataPtr->projection = projectionMatrix;
 
