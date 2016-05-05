@@ -73,6 +73,8 @@ private:	//Variables
 	
 	//A rotation value used for debugging
 	float rotation;
+	//A base view matrix for the frustrum culling test
+	Matrix frustrumTestView;
 public:
 	GraphicsHandler();
 	GraphicsHandler(const GraphicsHandler& other);

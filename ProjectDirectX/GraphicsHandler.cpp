@@ -55,6 +55,8 @@ bool GraphicsHandler::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 	m_frustrum->Initialize();
 
+	this->m_Camera->GetViewMatrix(this->frustrumTestView);
+
 	m_quadTree = new QuadTree();
 	if (!m_quadTree)
 	{
@@ -356,7 +358,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
+	m_Camera->SetPosition(0.0f, 10.0f, -5.0f);
 	m_Camera->Render();
 	m_Camera->GenerateBaseViewMatrix();
 
@@ -396,25 +398,36 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	m_Models[m_Models.size() - 1]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 5.0f, -5.0f)));
 	*/
 
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "GrassPlane.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "ground.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	int modelIndex = m_Models.size();
-	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
-	if (!result)
+	int width = 5, height = 5;
+	Vector3 cubeOrigin = Vector3(0.0f, 5.0f, -5.0f);
+	Vector3 cubeOffsetX = Vector3(15.0f, 0.0f, 0.0f);
+	Vector3 cubeOffsetZ = Vector3(0.0f, 0.0f, 15.0f);
+	for (int x = -5; x < width; x++)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-	int modelDist = m_Models.size() - modelIndex;
-	for (int i = modelIndex; i < m_Models.size(); i++)
-	{
-		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 5.0f, -5.0f)));
+		for (int z = -5; z < height; z++)
+		{
+			int modelIndex = m_Models.size();
+			result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
+			if (!result)
+			{
+				MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+				return false;
+			}
+			int modelDist = m_Models.size() - modelIndex;
+			for (int i = modelIndex; i < m_Models.size(); i++)
+			{
+				m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(cubeOrigin + cubeOffsetX * x + cubeOffsetZ * z));
+			}
+		}
 	}
 
+	
 
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
@@ -518,6 +531,7 @@ bool GraphicsHandler::RenderToDeferred()
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
+	//this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
 	this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
 
 	std::vector<D3Object*> toRender;
@@ -531,7 +545,8 @@ bool GraphicsHandler::RenderToDeferred()
 		worldMatrix = XMMatrixMultiply(XMMatrixRotationAxis(SimpleMath::Vector4(0, 1, 0, 0), rotation), worldMatrix);
 		//Bind the vertices and indices to the pipeline
 		(*model)->Render(m_Direct3D->GetDeviceContext());
-		WVPBufferStruct matrices = { worldMatrix,  worldMatrix.Invert().Transpose(), viewMatrix, projectionMatrix };
+		
+		WVPBufferStruct matrices = { worldMatrix,  worldMatrix.Invert().Transpose(), this->frustrumTestView , projectionMatrix };
 		ObjMaterial objMaterial = (*model)->GetMaterial();
 		PixelMaterial pMaterial = { Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3()};
 		pMaterial.Ka = Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f);
