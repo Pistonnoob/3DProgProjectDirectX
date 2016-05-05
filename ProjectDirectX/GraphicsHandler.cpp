@@ -12,6 +12,7 @@ GraphicsHandler::GraphicsHandler()
 	m_LightShader = nullptr;
 	m_frustrum = nullptr;
 	m_quadTree = nullptr;
+	testFrustrum = false;
 
 	rotation = 0.0f;
 }
@@ -327,6 +328,8 @@ bool GraphicsHandler::UpdateInput(InputHandler* inputObj, float dT)
 		m_Camera->SetPosition(ORIG);
 		m_Camera->SetRotation(Vector3(0, 0, 0));
 	}
+
+	this->testFrustrum = inputObj->IsKeyPressed(DIK_F);
 	
 #pragma endregion keyboard
 #pragma region
@@ -531,7 +534,6 @@ bool GraphicsHandler::RenderToDeferred()
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	//this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
 	this->m_frustrum->GenerateFrustrum(viewMatrix, projectionMatrix, SCREEN_FAR);
 
 	std::vector<D3Object*> toRender;
@@ -546,7 +548,9 @@ bool GraphicsHandler::RenderToDeferred()
 		//Bind the vertices and indices to the pipeline
 		(*model)->Render(m_Direct3D->GetDeviceContext());
 		
-		WVPBufferStruct matrices = { worldMatrix,  worldMatrix.Invert().Transpose(), this->frustrumTestView , projectionMatrix };
+		WVPBufferStruct matrices = { worldMatrix,  worldMatrix.Invert().Transpose(), viewMatrix , projectionMatrix };
+		if (this->testFrustrum)
+			matrices.view = this->frustrumTestView;
 		ObjMaterial objMaterial = (*model)->GetMaterial();
 		PixelMaterial pMaterial = { Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f), Vector4(objMaterial.Kd.x, objMaterial.Kd.y, objMaterial.Kd.z, 0.0f), Vector4(objMaterial.Ks.x, objMaterial.Ks.y, objMaterial.Ks.z, 0.0f), objMaterial.Ns, Vector3()};
 		pMaterial.Ka = Vector4(objMaterial.Ka.x, objMaterial.Ka.y, objMaterial.Ka.z, 0.0f);

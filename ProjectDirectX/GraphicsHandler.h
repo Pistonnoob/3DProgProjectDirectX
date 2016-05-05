@@ -75,6 +75,7 @@ private:	//Variables
 	float rotation;
 	//A base view matrix for the frustrum culling test
 	Matrix frustrumTestView;
+	bool testFrustrum;
 public:
 	GraphicsHandler();
 	GraphicsHandler(const GraphicsHandler& other);
