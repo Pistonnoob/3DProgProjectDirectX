@@ -27,6 +27,8 @@ void main(
 	{
 		float3 edge1 = normalize(input[0].WorldPos - input[1].WorldPos);
 		float3 edge2 = normalize(input[2].WorldPos - input[1].WorldPos);
+		edge1 = normalize(input[0].WorldPos - input[1].WorldPos);
+		edge2 = normalize(input[0].WorldPos - input[2].WorldPos);
 
 		float2 texEdge1 = normalize(input[0].UV - input[1].UV);
 		float2 texEdge2 = normalize(input[0].UV - input[2].UV);
