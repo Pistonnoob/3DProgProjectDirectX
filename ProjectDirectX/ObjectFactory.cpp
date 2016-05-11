@@ -86,6 +86,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 				newObject->CreateFromData(vertexData);
 				vertexData.clear();
 				indexData.clear();
+				newObject->CalculateModelVectors();
 				//Initialize vertex and index buffers.
 				newObject->InitializeBuffers(device);
 				//Get the material name
@@ -100,7 +101,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 					}
 				}
 				//Load the texture for this model
-				newObject->LoadTexture(device, deviceContext, localMaterial.texture, localMaterial.textureFormat);
+				newObject->LoadTexture(device, deviceContext, &localMaterial);
 				newObject->SetMaterial(localMaterial);
 				storeIn.push_back(newObject);
 			}
@@ -172,6 +173,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 	D3Object* newObject = new D3Object();
 	//Load the model data
 	newObject->CreateFromData(vertexData);
+	newObject->CalculateModelVectors();
 	//Initialize vertex and index buffers.
 	newObject->InitializeBuffers(device);
 	//Get the material name
@@ -186,7 +188,7 @@ bool ObjectFactory::CreateFromObj(ID3D11Device* device, ID3D11DeviceContext* dev
 		}
 	}
 	//Load the texture for this model
-	newObject->LoadTexture(device, deviceContext, localMaterial.texture, localMaterial.textureFormat);
+	newObject->LoadTexture(device, deviceContext, &localMaterial);
 	newObject->SetMaterial(localMaterial);
 	storeIn.push_back(newObject);
 
@@ -304,6 +306,28 @@ vector<ObjMaterial> ObjectFactory::ReadObjMaterial(string filename)
 				else if (textureType == "tga")
 				{
 					mat.textureFormat = TextureFormat::TARGA;
+				}
+			}
+			else if (line.substr(0, 4) == "bump")
+			{
+				//Normal map
+				string textureType = "";
+				sscanf_s(temp, "%s %s\n", specialChar, SPECIALCHARSIZE, &mat.normalmap, mat.MATERIAL_NAME_LENGTH);
+				textureType = mat.normalmap;
+				textureType = textureType.substr(textureType.find('.', 0), mat.MATERIAL_NAME_LENGTH);
+				if (textureType.size() > 1)
+					textureType = textureType.substr(1, 20);
+				if (textureType == "jpg")
+				{
+					mat.normalmapFormat = TextureFormat::JPEG;
+				}
+				else if (textureType == "png")
+				{
+					mat.normalmapFormat = TextureFormat::PNG;
+				}
+				else if (textureType == "tga")
+				{
+					mat.normalmapFormat = TextureFormat::TARGA;
 				}
 			}
 			//else if (line.substr(0, 2) == "Ni")

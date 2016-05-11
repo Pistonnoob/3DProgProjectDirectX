@@ -48,6 +48,8 @@ struct VertexModel
 	Vector3 position;
 	Vector2 UV;
 	Vector3 normal;
+	Vector3 tangent;
+	Vector3 binormal;
 };
 
 
@@ -109,6 +111,8 @@ struct ObjMaterial
 	int illum;		//Illumination model
 	char texture[MATERIAL_NAME_LENGTH];	//The texture file
 	TextureFormat textureFormat;		//The texture file type
+	char normalmap[MATERIAL_NAME_LENGTH];//The normal map file
+	TextureFormat normalmapFormat;		//The normal map file type
 };
 
 struct PixelMaterial
@@ -144,7 +148,9 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_3D[] = {
 static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_DEFERRED[] = {
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
 //The one for the deferred renderers second pass, the light shader
@@ -155,9 +161,9 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_LIGHT[] = {
 
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";
-
+static const char DEFAULT_NORMALMAP[] = "missing_normalmap.png";
 //Default Material
-static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture.png", TextureFormat::JPEG};
+static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture.png", TextureFormat::PNG, "missing_normalmap.png", TextureFormat::PNG};
 
 
 //Default window name

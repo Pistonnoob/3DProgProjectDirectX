@@ -391,7 +391,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-	int modelIndex = m_Models.size();
+	/*int modelIndex = m_Models.size();
 	result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "cubes.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
 	if (!result)
 	{
@@ -402,7 +402,7 @@ bool GraphicsHandler::LoadScene(HWND hwnd)
 	for (int i = modelIndex; i < m_Models.size(); i++)
 	{
 		m_Models[i]->ApplyMatrix(XMMatrixTranslationFromVector(Vector3(0.0f, 2.0f, 0.0f)));
-	}
+	}*/
 
 
 	/*result = factory.CreateFromFile(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), "City.obj", FactoryObjectFormat::OBJ_RH, this->m_Models);
@@ -529,7 +529,7 @@ bool GraphicsHandler::RenderToDeferred()
 		pMaterial.Ns = objMaterial.Ns;
 		pMaterial.padding = Vector3(0.0f, 0.0f, 0.0f);
 		//Render the model using our brand new deferred renderer!
-		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), &pMaterial);
+		m_DeferredShader->Render(m_Direct3D->GetDeviceContext(), (*model)->GetIndexCount(), &matrices, (*model)->GetTexture(), (*model)->GetNormalMap(), &pMaterial);
 	}
 	//toRender.clear();
 	//Reset the render target to the back buffer
