@@ -24,6 +24,13 @@ struct VS_IN_DEF
 	float3 Normal : NORMAL;
 };
 
+//struct VS_IN_DEF
+//{
+//	float4 Pos : POSITION;
+//	float2 UV : TEXCOORD;
+//	float3 Normal : NORMAL;
+//};
+
 struct VS_IN_LIGHT
 {
 	float4 Pos : POSITION;
@@ -48,6 +55,13 @@ struct GS_IN_3D
 	float2 UV : TEXCOORD;
 	float4 Normal : NORMAL;
 };
+
+//struct GS_IN_DEF
+//{
+//	float4 Pos : SV_POSITION;
+//	float4 Normal : NORMAL;
+//	float2 UV : TEXCOORD;
+//};
 
 struct GS_IN_DEF
 {
@@ -82,6 +96,7 @@ struct PS_IN_DEF
 	float4 Pos : SV_POSITION;
 	float4 WorldPos : POSITION;
 	float4 Normal : NORMAL;
+	float3 Tangent : TANGENT;
 	float2 UV : TEXCOORD;
 };
 

@@ -10,6 +10,7 @@ D3Object::D3Object()
 	m_indexCount = 0;
 	m_indices = NULL;
 	m_texture = NULL;
+	m_normalMap = NULL;
 	m_model = NULL;
 	
 	m_material = DEFAULT_MATERIAL;
@@ -99,6 +100,11 @@ ObjMaterial D3Object::GetMaterial() const
 ID3D11ShaderResourceView * D3Object::GetTexture()
 {
 	return this->m_texture->GetTextureView();
+}
+
+ID3D11ShaderResourceView * D3Object::GetNormalMap()
+{
+	return this->m_normalMap->GetTextureView();
 }
 
 void D3Object::GetWorldMatrix(Matrix & worldMatrix)
@@ -302,9 +308,41 @@ bool D3Object::LoadTexture(ID3D11Device *device, ID3D11DeviceContext *deviceCont
 	{
 		return false;
 	}
-
 	//Now initialize the texture object
 	result = m_texture->Initialize(device, deviceContext, fileName, fileFormat);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool D3Object::LoadTexture(ID3D11Device * device, ID3D11DeviceContext * deviceContext, ObjMaterial * material)
+{
+	bool result = false;
+
+	//Create the texture object
+	this->m_texture = new TextureObject();
+	if (this->m_texture == NULL)
+	{
+		return false;
+	}
+	//Now initialize the texture object
+	result = m_texture->Initialize(device, deviceContext, material->texture, material->textureFormat);
+	if (!result)
+	{
+		return false;
+	}
+
+	//Create the normal map object
+	this->m_normalMap = new TextureObject();
+	if (this->m_texture == NULL)
+	{
+		return false;
+	}
+	//Now initialize normal map object
+	result = this->m_normalMap->Initialize(device, deviceContext, material->normalmap, material->normalmapFormat);
 	if (!result)
 	{
 		return false;
@@ -495,6 +533,12 @@ void D3Object::ReleaseTexture()
 		m_texture->Shutdown();
 		delete m_texture;
 		m_texture = NULL;
+	}
+	if (m_normalMap != NULL)
+	{
+		m_normalMap->Shutdown();
+		delete m_normalMap;
+		m_normalMap = NULL;
 	}
 	return;
 }

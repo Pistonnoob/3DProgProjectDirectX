@@ -42,12 +42,29 @@ void DeferredHandler::Shutdown()
 	this->FreeMemory();
 }
 
-bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * resourceView, PixelMaterial * material)
+bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView * texture, ID3D11ShaderResourceView * bumpMap, PixelMaterial * material)
+{
+		bool result = false;
+	
+		//Set the shader parameters that we will use when rendering
+		result = SetShaderParameters(deviceContext, matrices, material, texture, bumpMap);
+		if (!result)
+		{
+			return false;
+		}
+	
+		//Now render the prepared buffers with the shader
+		RenderShader(deviceContext, indexCount);
+	
+		return true;
+}
+
+bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, WVPBufferStruct * matrices, ID3D11ShaderResourceView ** resourceViews, PixelMaterial* material)
 {
 	bool result = false;
 
 	//Set the shader parameters that we will use when rendering
-	result = SetShaderParameters(deviceContext, matrices, material, resourceView);
+	result = SetShaderParameters(deviceContext, matrices, material, resourceViews);
 	if (!result)
 	{
 		return false;
@@ -58,6 +75,23 @@ bool DeferredHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount
 
 	return true;
 }
+
+//bool DeferredHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, WVPBufferStruct* matrices, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* bumpMap, PixelMaterial* material);
+//{
+//	bool result = false;
+//
+//	//Set the shader parameters that we will use when rendering
+//	result = SetShaderParameters(deviceContext, matrices, material, resourceView);
+//	if (!result)
+//	{
+//		return false;
+//	}
+//
+//	//Now render the prepared buffers with the shader
+//	RenderShader(deviceContext, indexCount);
+//
+//	return true;
+//}
 
 bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR* gsFilename, WCHAR * psFilename)
 {
@@ -188,38 +222,15 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 	}
 #pragma endregion Creating shader buffers
 
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[5];
 	unsigned int numElements;
 	// Create the vertex input layout description.
-	polygonLayout[0].SemanticName = "POSITION";
-	polygonLayout[0].SemanticIndex = 0;
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[0].InputSlot = 0;
-	polygonLayout[0].AlignedByteOffset = 0;
-	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[0].InstanceDataStepRate = 0;
-
-	polygonLayout[1].SemanticName = "TEXCOORD";
-	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	polygonLayout[1].InputSlot = 0;
-	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[1].InstanceDataStepRate = 0;
-
-	polygonLayout[2].SemanticName = "NORMAL";
-	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[2].InputSlot = 0;
-	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[2].InstanceDataStepRate = 0;
 
 	// Get a count of the elements in the layout.
-	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
+	numElements = sizeof(INPUT_DESC_DEFERRED) / sizeof(INPUT_DESC_DEFERRED[0]);
 
 	// Create the vertex input layout.
-	hResult = device->CreateInputLayout(polygonLayout, numElements, pVS->GetBufferPointer(), pVS->GetBufferSize(),
+	hResult = device->CreateInputLayout(INPUT_DESC_DEFERRED, numElements, pVS->GetBufferPointer(), pVS->GetBufferSize(),
 		&m_layout);
 	//unsigned int numElements = ARRAYSIZE(INPUT_DESC_DEFERRED);
 	//hResult = device->CreateInputLayout(INPUT_DESC_DEFERRED, numElements, pVS->GetBufferPointer(), pVS->GetBufferSize(), &m_layout);
@@ -253,12 +264,12 @@ bool DeferredHandler::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR *
 
 	//Create the material buffer
 	memset(&materialBufferDesc, 0, sizeof(materialBufferDesc));
-	materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	materialBufferDesc.ByteWidth = sizeof(PixelMaterial);
+	materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	materialBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	materialBufferDesc.MiscFlags = 0;
 	materialBufferDesc.StructureByteStride = 0;
-	materialBufferDesc.ByteWidth = sizeof(PixelMaterial);
 
 	hResult = device->CreateBuffer(&materialBufferDesc, NULL, &m_materialBuffer);
 	if (FAILED(hResult))
@@ -372,66 +383,211 @@ void DeferredHandler::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND h
 	return;
 
 }
+//bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, PixelMaterial* material, ID3D11ShaderResourceView * texture, ID3D11ShaderResourceView * bumpMap)
+//{
+//	HRESULT result;
+//	D3D11_MAPPED_SUBRESOURCE mappedResource;
+//	WVPBufferStruct* dataPtr = NULL;
+//	PixelMaterial* materialPtr = NULL;
+//	unsigned int bufferNumber = 0;
+//	//Transpose the matrices to prepare them for the shader
+//
+//	//Lock the m_matrix
+//	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+//	if (FAILED(result))
+//	{
+//		return false;
+//	}
+//
+//	//Get a pointer to the data
+//	dataPtr = (WVPBufferStruct*)mappedResource.pData;
+//	WVPBufferStruct tempMatrices;
+//	tempMatrices.world = matrices->world.Transpose();
+//	tempMatrices.view = matrices->view.Transpose();
+//	tempMatrices.projection = matrices->projection.Transpose();
+//	//Now we copy the matrices into the mapped data
+//	dataPtr->world = tempMatrices.world;
+//	dataPtr->view = tempMatrices.view;
+//	dataPtr->projection = tempMatrices.projection;
+//
+//	//Unlock/unmap the constant buffer
+//	deviceContext->Unmap(this->m_matrixBuffer, 0);
+//
+//	//set the position of the constant buffer in the vertex shader
+//	bufferNumber = 0;
+//
+//	// Lock/map the m_material
+//	result = deviceContext->Map(this->m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+//	if (FAILED(result))
+//	{
+//		return false;
+//	}
+//	//Get a pointer to the data
+//	materialPtr = (PixelMaterial*)mappedResource.pData;
+//	materialPtr->Ka = material->Ka;
+//	materialPtr->Kd = material->Kd;
+//	materialPtr->Ks = material->Ks;
+//	materialPtr->Ns = material->Ns;
+//	materialPtr->padding = material->padding;
+//	//memcpy(&materialPtr, &material, sizeof(material));
+//
+//	//Unlock/unmap the constant buffer
+//	deviceContext->Unmap(this->m_materialBuffer, 0);
+//
+//
+//	//Set the constant buffer in the vertex shader with the updated values
+//	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
+//	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
+//	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
+//
+//	//Set the shader texture resource in the pixel shader.
+//	deviceContext->PSSetShaderResources(0, 1, &texture);
+//	deviceContext->PSGetShaderResources(1, 1, &bumpMap);
+//
+//	return true;
+//}
 
-bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, PixelMaterial* material, ID3D11ShaderResourceView * resourceView)
+bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct* matrices, PixelMaterial* material, ID3D11ShaderResourceView * texture, ID3D11ShaderResourceView * bumpMap)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	WVPBufferStruct* dataPtr = NULL;
-	PixelMaterial* materialPtr = NULL;
-	unsigned int bufferNumber = 0;
-	//Transpose the matrices to prepare them for the shader
+	WVPBufferStruct* dataPtr;
+	unsigned int bufferNumber;
+	PixelMaterial* dataPtr2;
 
-	//Lock the m_matrix
-	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	Matrix worldMatrix, inverseWorldMatrix, viewMatrix, projectionMatrix;
+
+	// Transpose the matrices to prepare them for the shader.
+	worldMatrix = DirectX::XMMatrixTranspose(matrices->world);
+	inverseWorldMatrix = DirectX::XMMatrixTranspose(matrices->inverseWorld);
+	viewMatrix = DirectX::XMMatrixTranspose(matrices->view);
+	projectionMatrix = DirectX::XMMatrixTranspose(matrices->projection);
+
+	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	//Get a pointer to the data
+	// Get a pointer to the data in the constant buffer.
 	dataPtr = (WVPBufferStruct*)mappedResource.pData;
-	WVPBufferStruct tempMatrices;
-	tempMatrices.world = matrices->world.Transpose();
-	tempMatrices.view = matrices->view.Transpose();
-	tempMatrices.projection = matrices->projection.Transpose();
-	//Now we copy the matrices into the mapped data
-	dataPtr->world = tempMatrices.world;
-	dataPtr->view = tempMatrices.view;
-	dataPtr->projection = tempMatrices.projection;
 
-	//Unlock/unmap the constant buffer
-	deviceContext->Unmap(this->m_matrixBuffer, 0);
+	// Copy the matrices into the constant buffer.
+	dataPtr->world = worldMatrix;
+	dataPtr->inverseWorld = inverseWorldMatrix;
+	dataPtr->view = viewMatrix;
+	dataPtr->projection = projectionMatrix;
 
-	//set the position of the constant buffer in the vertex shader
+	// Unlock the matrix constant buffer.
+	deviceContext->Unmap(m_matrixBuffer, 0);
+
+	// Set the position of the matrix constant buffer in the vertex shader.
 	bufferNumber = 0;
 
-	// Lock/map the m_material
-	result = deviceContext->Map(this->m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	// Now set the matrix constant buffer in the vertex shader with the updated values.
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+
+	// Set shader texture array resource in the pixel shader.
+	deviceContext->PSSetShaderResources(0, 1, &texture);
+	deviceContext->PSSetShaderResources(1, 1, &bumpMap);
+
+
+	// Lock the light constant buffer so it can be written to.
+	result = deviceContext->Map(m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	//Get a pointer to the data
-	materialPtr = (PixelMaterial*)mappedResource.pData;
-	materialPtr->Ka = material->Ka;
-	materialPtr->Kd = material->Kd;
-	materialPtr->Ks = material->Ks;
-	materialPtr->Ns = material->Ns;
-	materialPtr->padding = material->padding;
-	//memcpy(&materialPtr, &material, sizeof(material));
 
-	//Unlock/unmap the constant buffer
-	deviceContext->Unmap(this->m_materialBuffer, 0);
+	// Get a pointer to the data in the constant buffer.
+	dataPtr2 = (PixelMaterial*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	dataPtr2->Ka = material->Ka;
+	dataPtr2->Kd = material->Kd;
+	dataPtr2->Ks = material->Ks;
+	dataPtr2->Ns = material->Ns;
+
+	// Unlock the constant buffer.
+	deviceContext->Unmap(m_materialBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 0;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_materialBuffer);
+
+	return true;
+}
 
 
-	//Set the constant buffer in the vertex shader with the updated values
-	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
-	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->m_matrixBuffer);
-	deviceContext->PSSetConstantBuffers(1, 1, &this->m_materialBuffer);
+bool DeferredHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBufferStruct * matrices, PixelMaterial * material, ID3D11ShaderResourceView ** resourceViews)
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	WVPBufferStruct* dataPtr;
+	unsigned int bufferNumber;
+	PixelMaterial* dataPtr2;
 
-	//Set the shader texture resource in the pixel shader.
-	deviceContext->PSSetShaderResources(0, 1, &resourceView);
+	Matrix worldMatrix, viewMatrix, projectionMatrix;
+
+	// Transpose the matrices to prepare them for the shader.
+	worldMatrix = DirectX::XMMatrixTranspose(matrices->world);
+	viewMatrix = DirectX::XMMatrixTranspose(matrices->view);
+	projectionMatrix = DirectX::XMMatrixTranspose(matrices->projection);
+
+	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr = (WVPBufferStruct*)mappedResource.pData;
+
+	// Copy the matrices into the constant buffer.
+	dataPtr->world = worldMatrix;
+	dataPtr->view = viewMatrix;
+	dataPtr->projection = projectionMatrix;
+
+	// Unlock the matrix constant buffer.
+	deviceContext->Unmap(m_matrixBuffer, 0);
+
+	// Set the position of the matrix constant buffer in the vertex shader.
+	bufferNumber = 0;
+
+	// Now set the matrix constant buffer in the vertex shader with the updated values.
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+
+	// Set shader texture array resource in the pixel shader.
+	deviceContext->PSSetShaderResources(0, 2, resourceViews);
+
+	// Lock the light constant buffer so it can be written to.
+	result = deviceContext->Map(m_materialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr2 = (PixelMaterial*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	dataPtr2->Ka = material->Ka;
+	dataPtr2->Kd = material->Kd;
+	dataPtr2->Ks = material->Ks;
+	dataPtr2->Ns = material->Ns;
+
+	// Unlock the constant buffer.
+	deviceContext->Unmap(m_materialBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 0;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_materialBuffer);
 
 	return true;
 }

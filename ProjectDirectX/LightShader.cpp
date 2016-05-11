@@ -393,6 +393,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext * deviceContext, WVPBu
 
 	//Now we copy the matrices into the mapped data transposed
 	dataPtr->world = matrices->world.Transpose();
+	dataPtr->inverseWorld = matrices->inverseWorld.Transpose();
 	dataPtr->view = matrices->view.Transpose();
 	dataPtr->projection = matrices->projection.Transpose();
 

@@ -19,6 +19,7 @@ private:
 	int m_vertexCount, m_indexCount;
 	int* m_indices;
 	TextureObject* m_texture;
+	TextureObject* m_normalMap;
 	VertexModel* m_model;
 	ObjMaterial m_material;
 	Matrix m_worldMatrix;
@@ -33,6 +34,7 @@ public:
 	int GetIndexCount()const;
 	ObjMaterial GetMaterial()const;
 	ID3D11ShaderResourceView* GetTexture();
+	ID3D11ShaderResourceView* GetNormalMap();
 	void GetWorldMatrix(Matrix& worldMatrix);
 	std::vector<VertexModel> getVertexData();
 	int GetVertexCount();
@@ -44,10 +46,12 @@ public:
 	void ApplyMatrix(const Matrix applyToWorld);
 	void SetIndices(vector<int> indices);
 
+	void CalculateModelVectors();
 	bool CreateFromData(vector<VertexModel> vertexData, vector<int> indiceData);
 	bool CreateFromData(vector<VertexModel> vertexData);	//Allows for loading an external definition of vertices into the D3Object
 	bool InitializeBuffers(ID3D11Device* device);
-	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext *deviceContext, char* textureFileName, TextureFormat fileFormat);
+	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFileName, TextureFormat fileFormat);
+	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, ObjMaterial* material);
 private:
 	void RenderBuffers(ID3D11DeviceContext* deviceContext);
 

@@ -54,6 +54,7 @@ struct VertexModel
 struct WVPBufferStruct
 {
 	Matrix world;
+	Matrix inverseWorld;
 	Matrix view;
 	Matrix projection;
 };
@@ -109,6 +110,8 @@ struct ObjMaterial
 	int illum;		//Illumination model
 	char texture[MATERIAL_NAME_LENGTH];	//The texture file
 	TextureFormat textureFormat;		//The texture file type
+	char normalmap[MATERIAL_NAME_LENGTH];//The normal map file
+	TextureFormat normalmapFormat;		//The normal map file type
 };
 
 struct PixelMaterial
@@ -155,9 +158,10 @@ static const D3D11_INPUT_ELEMENT_DESC INPUT_DESC_LIGHT[] = {
 
 //Default Texture
 static const char DEFAULT_TEXTURE[] = "missing_texture.png";
-
+static const char DEFAULT_NORMALMAP[] = "missing_texture_NRM.jpg";
+static const char* DEFAULT_NORMALMAP_PTR = "missing_texture_NRM.jpg";
 //Default Material
-static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture.png", TextureFormat::JPEG};
+static const ObjMaterial DEFAULT_MATERIAL = {"missing", Vector3(1.0f, 1.0f, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), 60.0f, 1.0f, 1, "missing_texture.png", TextureFormat::PNG, "missing_texture_NRM.jpg", TextureFormat::JPEG};
 
 
 //Default window name

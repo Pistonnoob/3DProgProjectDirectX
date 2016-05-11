@@ -26,7 +26,7 @@
 
 
 const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = false;
+const bool VSYNC_ENABLED = true;
 const float SCREEN_FAR = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
@@ -73,6 +73,9 @@ private:	//Variables
 	
 	//A rotation value used for debugging
 	float rotation;
+	//A base view matrix for the frustrum culling test
+	Matrix frustrumTestView;
+	bool testFrustrum;
 public:
 	GraphicsHandler();
 	GraphicsHandler(const GraphicsHandler& other);
